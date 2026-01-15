@@ -177,12 +177,28 @@ After completing the basic version, a **roguelike system** and **event system** 
 ### Project Structure
 
 ```plaintext
-girlsBandGame/
-├── README.md # Project documentation(zh.)
-├── requirements.txt # Python dependencies
-└── docs/ # Design documentation
-├── design.md # System design
-└── api-plan.md # API planning
+girls_band_game/
+├── core/
+│   ├── assets/
+│   ├── card_system/
+│   │   └── __init__.py
+│   ├── db_connect/
+│   │   └── __init__.py
+│   ├── gacha/
+│   │   └── __init__.py
+│   ├── live/
+│   │   └── __init__.py
+│   ├── skills/
+│   │   └── __init__.py
+│   └── test/
+│       └── __init__.py
+├── __init__.py
+├── .gitignore
+├── LICENSE
+├── main.py
+├── metadata.yaml
+├── README_en.md
+└── README.md
 ```
 
 ~~ Detailed overview ~~

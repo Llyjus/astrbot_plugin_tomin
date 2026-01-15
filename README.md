@@ -143,12 +143,29 @@ git clone https://github.com/Llyjus/girlsBandGame
 ## 开发者文档
    - 项目架构
 ```plaintext
-girlsBandGame/
-├── README.md # 项目说明文档
-├── requirements.txt # Python依赖列表
-└── docs/ # 设计文档目录
-├── design.md # 系统设计文档
-└── api-plan.md # API接口规划
+
+girls_band_game/
+├── core/
+│   ├── assets/
+│   ├── card_system/
+│   │   └── __init__.py
+│   ├── db_connect/
+│   │   └── __init__.py
+│   ├── gacha/
+│   │   └── __init__.py
+│   ├── live/
+│   │   └── __init__.py
+│   ├── skills/
+│   │   └── __init__.py
+│   └── test/
+│       └── __init__.py
+├── __init__.py
+├── .gitignore
+├── LICENSE
+├── main.py
+├── metadata.yaml
+├── README_en.md
+└── README.md
 ```
 
 
