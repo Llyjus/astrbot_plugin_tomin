@@ -1,6 +1,13 @@
-name: helloworld # 插件唯一识别名，以 astrbot_plugin_ 前缀开头
-display_name: helloworld # 用于展示的名字，可以是方便人类阅读的名字（需要版本 >= v4.5.0，低版本不会报错，请放心填写）
-desc: AstrBot 插件示例。 # 插件简短描述
-version: v1.3.0 # 插件版本号。格式：v1.1.1 或者 v1.1
-author: Soulter # 作者
-repo: https://github.com/Soulter/helloworld # 插件的仓库地址
+name: astrbot_plugin_girls_band_game
+display_name: 少女乐队游戏
+desc: 一个简单的少女乐队游戏插件，实现抽卡、演出等功能。 
+version: v0.0.1 
+author: Llyjus 
+repo: https://github.com/Llyjus/girls_band_game
+license: MIT
+
+requires:
+  - astrbot >=4.10.3
+
+
+python_requires: ">=3.12.0"
