@@ -178,27 +178,37 @@ After completing the basic version, a **roguelike system** and **event system** 
 
 ```plaintext
 girls_band_game/
-├── core/
-│   ├── assets/
-│   ├── card_system/
-│   │   └── __init__.py
-│   ├── db_connect/
-│   │   └── __init__.py
-│   ├── gacha/
-│   │   └── __init__.py
-│   ├── live/
-│   │   └── __init__.py
-│   ├── skills/
-│   │   └── __init__.py
-│   └── test/
-│       └── __init__.py
-├── __init__.py
-├── .gitignore
+├── core
+│   ├── assets
+│   │   └── images
+│   │       ├── backgrounds
+│   │       └── cards
+│   ├── card_system
+│   │   └── __init__.py
+│   ├── data_management
+│   │   ├── connection.py
+│   │   ├── initialization.py
+│   │   └── __init__.py
+│   ├── gacha
+│   │   └── __init__.py
+│   ├── live
+│   │   └── __init__.py
+│   ├── skills
+│   │   └── __init__.py
+│   └── ulti
+│       ├── __init__.py
+│       └── multi_arg_dec.py
 ├── LICENSE
 ├── main.py
 ├── metadata.yaml
 ├── README_en.md
-└── README.md
+├── README.md
+└── tests
+    ├── conftest.py
+    ├── database
+    ├── __init__.py
+    └── test_database.py
+
 ```
 
 ~~ Detailed overview ~~
