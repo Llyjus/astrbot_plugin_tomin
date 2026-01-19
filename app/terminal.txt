@@ -1,0 +1,1 @@
+tree -I "$(cat .treeignore | tr '\n' '|' | sed 's/|$//')"

@@ -1,0 +1,36 @@
+from typing import Protocol
+
+class function_ports(Protocol):
+
+
+
+    def create_table(self) -> None:...
+
+
+
+    def create_user(self, user_id: str) -> None:...
+
+    def search_user(self, user_id: str):...
+
+
+
+    def create_card(self,
+                    card_id:int, user_id:str, character:str,
+                    o_band:str,pos:str,rarity:int,
+                    power:int,speed:int,resistance:int,
+                    skill_1,skill_2,skill_3) -> None:...
+    
+    def search_card_id(self, card_id: int):...
+    def search_card_user(self, user_id:str):...
+
+    def delete_card_id(self, card_id: int) -> None:...
+    def set_card_owner(self, card_id: int, user_id: str) -> None:...
+
+
+
+    def create_band(self, user_id: str) -> None:...
+
+    def search_band(self, user_id: str):...
+
+    def delete_band(self, user_id: str, band_id: int) -> None:...
+

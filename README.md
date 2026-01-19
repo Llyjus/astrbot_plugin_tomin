@@ -129,7 +129,7 @@ git clone https://github.com/Llyjus/girlsBandGame
 - [x] 搭建数据库结构
 
 ### 阶段2 功能实现
-- [ ] 数据库创建（早期版本全部使用sqlite，根据需求升级）
+- [x] 数据库创建（基于本地存储数据的小游戏故使用sqlite，根据需求升级）
 - [ ] 简单抽卡系统实现
 - [ ] 玩家交互，数据存储
 - [ ] 技能类实现
@@ -145,7 +145,9 @@ git clone https://github.com/Llyjus/girlsBandGame
 ```plaintext
 
 girls_band_game/
-├── core
+├── app
+│   ├── application
+│   │   └── init.py
 │   ├── assets
 │   │   └── images
 │   │       ├── backgrounds
@@ -153,9 +155,12 @@ girls_band_game/
 │   ├── card_system
 │   │   └── __init__.py
 │   ├── data_management
-│   │   ├── connection.py
-│   │   ├── initialization.py
-│   │   └── __init__.py
+│   │   ├── __init__.py
+│   │   ├── ports.py
+│   │   └── services
+│   │       ├── connection.py
+│   │       ├── repository.py
+│   │       └── sql.py
 │   ├── gacha
 │   │   └── __init__.py
 │   ├── live
@@ -165,16 +170,16 @@ girls_band_game/
 │   └── ulti
 │       ├── __init__.py
 │       └── multi_arg_dec.py
-├── LICENSE
 ├── main.py
 ├── metadata.yaml
 ├── README_en.md
 ├── README.md
 └── tests
-    ├── conftest.py
-    ├── database
-    ├── __init__.py
-    └── test_database.py
+    └── database
+        ├── conftest.py
+        ├── __init__.py
+        └── test_database.py
+
 
 ```
 

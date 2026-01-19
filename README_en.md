@@ -155,11 +155,11 @@ After completing the basic version, a **roguelike system** and **event system** 
 ### Phase 1 – Core Architecture
 - [x] Game concept design
 - [x] System architecture design
-- [ ] Project base structure setup
-- [ ] Database schema design
+- [x] Project base structure setup
+- [x] Database schema design
 
 ### Phase 2 – Feature Implementation
-- [ ] Database creation (SQLite for early versions, upgraded as needed)
+- [x] Database creation (SQLite for early versions, upgraded as needed)
 - [ ] Basic gacha system
 - [ ] Player interaction and data persistence
 - [ ] Skill system implementation
@@ -177,8 +177,9 @@ After completing the basic version, a **roguelike system** and **event system** 
 ### Project Structure
 
 ```plaintext
-girls_band_game/
-├── core
+├── app
+│   ├── application
+│   │   └── init.py
 │   ├── assets
 │   │   └── images
 │   │       ├── backgrounds
@@ -186,9 +187,12 @@ girls_band_game/
 │   ├── card_system
 │   │   └── __init__.py
 │   ├── data_management
-│   │   ├── connection.py
-│   │   ├── initialization.py
-│   │   └── __init__.py
+│   │   ├── __init__.py
+│   │   ├── ports.py
+│   │   └── services
+│   │       ├── connection.py
+│   │       ├── repository.py
+│   │       └── sql.py
 │   ├── gacha
 │   │   └── __init__.py
 │   ├── live
@@ -198,16 +202,16 @@ girls_band_game/
 │   └── ulti
 │       ├── __init__.py
 │       └── multi_arg_dec.py
-├── LICENSE
 ├── main.py
 ├── metadata.yaml
 ├── README_en.md
 ├── README.md
 └── tests
-    ├── conftest.py
-    ├── database
-    ├── __init__.py
-    └── test_database.py
+    └── database
+        ├── conftest.py
+        ├── __init__.py
+        └── test_database.py
+
 
 ```
 
