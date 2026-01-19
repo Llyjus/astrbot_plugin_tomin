@@ -50,7 +50,7 @@ class Repository:
         sql = user_interact_sql()[1]
 
         try:
-            result = cursor.execute(sql,(user_id, )).fetchone()
+            result = cursor.execute(sql, (user_id, )).fetchone()
         except Exception as e:
             
             raise RuntimeError('未能成功查询，数据库连接错误，请稍候再试') from e
@@ -66,11 +66,14 @@ class Repository:
         sql = user_interact_sql()[2]
 
         try:
-            result = cursor.execute(sql,(user_id, fund))
+            result = cursor.execute(sql, (fund, user_id, fund))
+            
         except Exception as e:
             
             raise RuntimeError('未能成功查询，数据库连接错误，请稍候再试') from e
         
+        if cursor.rowcount == 0:
+                raise ValueError('余额不足或用户不存在')
         else:
             
             return result

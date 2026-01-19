@@ -65,11 +65,12 @@ USER_INSERT_SQL = '''
 USER_CHECK_SQL = '''
     SELECT * 
     FROM users
-    WHERE user_id = ?
+    WHERE user_id = ?;
 '''
 
 FUND_GIVEN_SQL = '''
     UPDATE users
     SET fund = fund + ?
-    WEHRE user_id = ?
+    WHERE user_id = ? 
+        AND fund + ? > 0;
 '''
