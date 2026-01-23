@@ -1,1 +1,0 @@
-tree -I "$(grep -v "^#" .gitignore | grep -v "^$" | tr "\n" "|" | sed "s/|$//" 2>/dev/null || echo "node_modules|dist|build")"

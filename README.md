@@ -59,7 +59,7 @@ Tomin - 少女乐队游戏是 AstrBot的一个内置插件，玩家可以收集�
 
 ```plaintext
 astrbot >= 4.10.3
-python >= 3.12.0
+python >= 3.8.0
 ```
 
 - 安装方法
@@ -117,7 +117,17 @@ export OPENBLAS=$(brew --prefix openblas)
       -  抵抗在对手的卡牌释放技能干扰自身的时候按概率可能会生效。
 
 
-    - ~~指令~~
+    - 指令
+    
+      1. ```招募```或```zm```来花费默认10资金招募角色；```招募 x```（x为资金数量）最高可一次使用100资金招募，每10资金可提升1%的稀有度超过2的角色出现。即花费100资金进行一次招募，概率为：
+      | 稀有度 | 概率 |
+      |--------|------|
+      | 1      | 0%  |
+      | 2      | 28%  |
+      | 3      | 28%  |
+      | 4      | 19%  |
+      | 5      | 15%   |
+      | 6      | 10%   |
 
 ### 演出系统
 
@@ -145,15 +155,21 @@ export OPENBLAS=$(brew --prefix openblas)
 
 ### 阶段2 功能实现
 - [x] 数据库创建（基于本地存储数据的小游戏故使用sqlite，根据需求升级）
-- [ ] 简单抽卡系统实现
-- [ ] 玩家交互，数据存储
-- [ ] 技能类实现
-- [ ] 角色拓展，演出功能实现
+- [x] 简单抽卡系统实现
+- [x] 玩家交互，数据存储
+
+
 
 ### 阶段3 实现可用版本
-- [ ] 实现指令方法
-- [ ] 接口对接
+- [x] 实现指令方法
+- [x] 接口对接
+
+### 后续开发规划
+- [ ] 角色拓展，演出功能实现
+- [ ] 技能类实现
 - [ ] 完善UI(使用图片等展示抽卡结果，演出过程等等)
+- [ ] 肉鸽系统
+- [ ] 活动系统
 
 ## 开发者文档
    - 项目架构
@@ -161,7 +177,9 @@ export OPENBLAS=$(brew --prefix openblas)
 .
 ├── app
 │   ├── application
-│   │   └── __init__.py
+│   │   ├── gacha_app.py
+│   │   ├── __init__.py
+│   │   └── init.py
 │   ├── assets
 │   │   └── images
 │   │       ├── backgrounds
@@ -179,15 +197,24 @@ export OPENBLAS=$(brew --prefix openblas)
 │   │       ├── repository.py
 │   │       └── sql.py
 │   ├── gacha
-│   │   └── __init__.py
+│   │   ├── characters.py
+│   │   ├── __init__.py
+│   │   ├── service
+│   │   │   └── gacha.py
+│   │   └── util.py
 │   ├── __init__.py
 │   ├── live
 │   │   └── __init__.py
+│   ├── schemas
+│   │   ├── errors.py
+│   │   ├── __init__.py
+│   │   └── schemas.py
 │   └── skills
 │       └── __init__.py
 ├── LICENSE
 ├── main.py
 ├── metadata.yaml
+├── pytest.ini
 ├── README_en.md
 ├── README.md
 ├── requirements.txt
@@ -195,16 +222,24 @@ export OPENBLAS=$(brew --prefix openblas)
     ├── __init__.py
     ├── test_intergration
     │   ├── conftest.py
-    │   └── test_database.py
+    │   ├── test_database.py
+    │   └── test_gacha_in.py
     └── test_unit
+        ├── test_gacha.py
+        └── test_interface.py
+
 
 
 
 ```
 
 
-   ~~- 细节概要~~
-
+   - 细节概要
+      1. **架构**：本项目将采用分层架构设计，除接口层外不依赖astrbot，实现了可迁移系统，具有良好的可移植性和复用性。整体架构一共分为4个层级：接口层，应用层，逻辑层和数据层。
+      2. **数据层**：数据层使用sqlite3，用于本地化轻量级数据存储。数据库通过统一接口封装，后期如果用户数量增大或依照开发需求便于迁移。
+      3. **逻辑层**：逻辑层与数据层和应用层交互，负责具体的单项任务实现，如访问用户数据，生成卡牌等等，单逻辑不与其它逻辑耦合，仅通过明确接口调用。
+      4. **应用层**：应用层接收接口层统一化的输入，并且调用逻辑层进行间接地对数据库的操作和逻辑执行（如生成卡牌），最后返回给接口层。目前应用层还只结构化数据的输入，未来如需支持多语言或跨进程接口交互，可进一步引入 JSON 等通用数据格式。
+      5. **接口层**：接收前端信息并对信息进行基础校验（如数据类型、格式与必要字段），通过后调用应用层进行处理，并将结果返回到调用方。
 
 ## 贡献
 

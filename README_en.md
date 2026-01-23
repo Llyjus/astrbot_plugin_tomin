@@ -137,7 +137,19 @@ Planned rarity tiers (6 levels) with default probabilities:
 
 - Higher rarity increases overall power, skills, and resistance. Overall power, speed, and resistance are randomly generated within a range and follow a normal distribution. Resistance has a probability to activate when opposing cards attempt to interfere using skills.
 
-#### ~~Commands~~
+#### Commands
+
+- Commands
+    
+    1. Use ```招募``` or ```zm``` to spend the default 10 funds to recruit characters; ```招募 x``` (where x is the amount of funds) allows spending up to 100 funds per recruitment. For every 10 funds spent, the appearance rate of characters with rarity 2 or higher increases by 1%. For example, spending 100 funds for a single recruitment results in the following probabilities:
+      | Rarity | Probability |
+      |--------|-------------|
+      | 1      | 0%          |
+      | 2      | 28%         |
+      | 3      | 28%         |
+      | 4      | 19%         |
+      | 5      | 15%         |
+      | 6      | 10%         |
 
 ---
 
@@ -165,25 +177,29 @@ After completing the basic version, a **roguelike system** and **event system** 
 
 ---
 
-## Development Roadmap
+## Development Plan
 
-### Phase 1 – Core Architecture
+### Phase 1: Foundation Architecture Implementation
 - [x] Game concept design
-- [x] System architecture design
-- [x] Project base structure setup
-- [x] Database schema design
+- [x] System architecture
+- [x] Project foundation architecture setup
+- [x] Database structure setup
 
-### Phase 2 – Feature Implementation
-- [x] Database creation (SQLite for early versions, upgraded as needed)
-- [ ] Basic gacha system
-- [ ] Player interaction and data persistence
+### Phase 2: Feature Implementation
+- [x] Database creation (using SQLite for local storage in this small game; upgradeable based on requirements)
+- [x] Basic gacha system implementation
+- [x] Player interaction and data storage
+
+### Phase 3: Usable Version Implementation
+- [x] Command method implementation
+- [x] Interface integration
+
+### Future Development Plan
+- [ ] Character expansion and performance feature implementation
 - [ ] Skill system implementation
-- [ ] Character expansion and performance system
-
-### Phase 3 – Usable Version
-- [ ] Command implementation
-- [ ] API integration
-- [ ] UI improvements (image-based gacha results, performance displays, etc.)
+- [ ] UI enhancement (using images to display gacha results, performance processes, etc.)
+- [ ] Roguelike system
+- [ ] Event system
 
 ---
 
@@ -195,7 +211,9 @@ After completing the basic version, a **roguelike system** and **event system** 
 .
 ├── app
 │   ├── application
-│   │   └── __init__.py
+│   │   ├── gacha_app.py
+│   │   ├── __init__.py
+│   │   └── init.py
 │   ├── assets
 │   │   └── images
 │   │       ├── backgrounds
@@ -213,15 +231,24 @@ After completing the basic version, a **roguelike system** and **event system** 
 │   │       ├── repository.py
 │   │       └── sql.py
 │   ├── gacha
-│   │   └── __init__.py
+│   │   ├── characters.py
+│   │   ├── __init__.py
+│   │   ├── service
+│   │   │   └── gacha.py
+│   │   └── util.py
 │   ├── __init__.py
 │   ├── live
 │   │   └── __init__.py
+│   ├── schemas
+│   │   ├── errors.py
+│   │   ├── __init__.py
+│   │   └── schemas.py
 │   └── skills
 │       └── __init__.py
 ├── LICENSE
 ├── main.py
 ├── metadata.yaml
+├── pytest.ini
 ├── README_en.md
 ├── README.md
 ├── requirements.txt
@@ -229,15 +256,26 @@ After completing the basic version, a **roguelike system** and **event system** 
     ├── __init__.py
     ├── test_intergration
     │   ├── conftest.py
-    │   └── test_database.py
+    │   ├── test_database.py
+    │   └── test_gacha_in.py
     └── test_unit
+        ├── test_gacha.py
+        └── test_interface.py
+
 
 
 
 
 ```
 
-~~ Detailed overview ~~
+
+- Detailed Overview
+
+      1. **Architecture**: This project adopts a layered architecture design. Except for the interface layer, it does not depend on astrbot, achieving a migratable system with good portability and reusability. The overall architecture consists of 4 layers: Interface Layer, Application Layer, Logic Layer, and Data Layer.
+      2. **Data Layer**: The data layer uses SQLite3 for local lightweight data storage. The database is encapsulated through a unified interface, making it easy to migrate later if the user base grows or based on development requirements.
+      3. **Logic Layer**: The logic layer interacts with both the data layer and application layer, responsible for implementing specific individual tasks, such as accessing user data, generating cards, etc. Each logic component is not coupled with others and is only invoked through explicit interfaces.
+      4. **Application Layer**: The application layer receives standardized input from the interface layer and calls the logic layer to indirectly perform database operations and execute logic (e.g., generating cards), then returns results to the interface layer. Currently, the application layer only supports structured data input. In the future, if support for multi-language or cross-process interface interaction is needed, universal data formats like JSON can be further introduced.
+      5. **Interface Layer**: Receives frontend information and performs basic validation (such as data types, formats, and required fields). Upon validation, it calls the application layer for processing and returns the result to the caller.
 
 ---
 
