@@ -1,4 +1,4 @@
-# Girls Band Game
+# Tomin - Girls Band Game
 
 This plugin is a **built-in plugin for AstrBot**, designed as a casual idol girls band game.  
 It includes features such as card gacha and performances.  
@@ -54,7 +54,7 @@ Additional systems (such as a roguelike mini-game and event system) will be deve
 
 ### Introduction
 
-Girls Band Game is a built-in plugin for AstrBot.  
+Tomin - Girls Band Game is a built-in plugin for AstrBot.  
 Players can collect cards and form their own bands to participate in performances.
 
 ### Current Status
@@ -79,7 +79,7 @@ python >= 3.12.0
 1. Search for **Girls Band Game** in the AstrBot plugin marketplace and install it.
 2. Clone directly via:
 ```bash
-git clone https://github.com/Llyjus/girlsBandGame
+git clone https://github.com/Llyjus/astrbot_plugin_Tomin
 ```
 Place it into AstrBot’s `data/plugins/` directory, then restart AstrBot.
 3. Download the ZIP file and extract it into AstrBot’s `data/plugins/` directory, then restart AstrBot.
@@ -192,6 +192,7 @@ After completing the basic version, a **roguelike system** and **event system** 
 ### Project Structure
 
 ```plaintext
+.
 ├── app
 │   ├── application
 │   │   └── __init__.py

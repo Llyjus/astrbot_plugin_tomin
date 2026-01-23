@@ -1,6 +1,6 @@
-# 少女乐队游戏
+# Tomin - 少女乐队游戏
 
-该插件是一个**AstrBot**的内置插件，是一个少女偶像乐队休闲游戏插件，包含抽卡、演出等功能，其它功能（比如肉鸽小游戏，活动系统）会在后续的开发中继续跟进，敬请期待。
+Tomin是一个**AstrBot**的内置插件，是一个少女偶像乐队休闲游戏插件，包含抽卡、演出等功能，其它功能（比如肉鸽小游戏，活动系统）会在后续的开发中继续跟进，敬请期待。
 
 🌐 **Languages / 语言**:  
 [中文](README.md) | [English](README_en.md)
@@ -47,7 +47,7 @@
 
 - 介绍
 
-少女乐队游戏是 AstrBot的一个内置插件，玩家可以收集卡牌，组建自己的乐队进行演出。
+Tomin - 少女乐队游戏是 AstrBot的一个内置插件，玩家可以收集卡牌，组建自己的乐队进行演出。
 
 - 项目状态
 
@@ -68,7 +68,7 @@ python >= 3.12.0
 搜索少女乐队游戏并安装。
 2. 直接通过
 ```bash
-git clone https://github.com/Llyjus/girlsBandGame
+git clone https://github.com/Llyjus/astrbot_plugin_Tomin
 ```
 安装到AstrBot的```data/plugins/```目录。
 重启astrbot。
@@ -158,8 +158,7 @@ export OPENBLAS=$(brew --prefix openblas)
 ## 开发者文档
    - 项目架构
 ```plaintext
-
-girls_band_game/
+.
 ├── app
 │   ├── application
 │   │   └── __init__.py
