@@ -23,16 +23,16 @@ Additional systems (such as a roguelike mini-game and event system) will be deve
 
 2. [Installation](#installation)
    - Version Requirements  
-   - Installation Methods  
+   - Installation Methods(Linux/MacOS User Must Read!!!)
 
 3. [Game Modules (In Development)](#game-modules)
    - Currently Developing:
       - Card System
          - Overview
-         - ~~Commands~~
+         - Commands
       - Performance System
          - Overview
-         - ~~Commands~~
+         - Commands
       - Others
    - Future Plans
 
@@ -84,6 +84,21 @@ git clone https://github.com/Llyjus/girlsBandGame
 Place it into AstrBot’s `data/plugins/` directory, then restart AstrBot.
 3. Download the ZIP file and extract it into AstrBot’s `data/plugins/` directory, then restart AstrBot.
 
+- Tips
+If your system is Linux, you may be missing system-level dependencies required by numpy. For proper plugin functionality:
+
+Linux users, please enter in terminal (copy directly):
+```bash
+sudo apt-get update
+sudo apt-get install -y python3-dev build-essential
+sudo apt-get install -y libblas-dev liblapack-dev gfortran
+```
+If you are a macOS user, please enter:
+```bash
+brew install openblas
+export OPENBLAS=$(brew --prefix openblas)
+```
+
 ---
 
 ## Game Modules
@@ -92,7 +107,7 @@ Place it into AstrBot’s `data/plugins/` directory, then restart AstrBot.
 
 #### Overview
 
-The card system is planned to consist of two parts:
+The card system consists of two parts:
 
 - **Gacha System**
 - Three free draws per day.
@@ -179,15 +194,18 @@ After completing the basic version, a **roguelike system** and **event system** 
 ```plaintext
 ├── app
 │   ├── application
-│   │   └── init.py
+│   │   └── __init__.py
 │   ├── assets
 │   │   └── images
 │   │       ├── backgrounds
 │   │       └── cards
 │   ├── card_system
+│   │   ├── cards.py
 │   │   └── __init__.py
 │   ├── data_management
+│   │   ├── config.py
 │   │   ├── __init__.py
+│   │   ├── init.py
 │   │   ├── ports.py
 │   │   └── services
 │   │       ├── connection.py
@@ -195,22 +213,25 @@ After completing the basic version, a **roguelike system** and **event system** 
 │   │       └── sql.py
 │   ├── gacha
 │   │   └── __init__.py
+│   ├── __init__.py
 │   ├── live
 │   │   └── __init__.py
-│   ├── skills
-│   │   └── __init__.py
-│   └── ulti
-│       ├── __init__.py
-│       └── multi_arg_dec.py
+│   └── skills
+│       └── __init__.py
+├── LICENSE
 ├── main.py
 ├── metadata.yaml
 ├── README_en.md
 ├── README.md
+├── requirements.txt
 └── tests
-    └── database
-        ├── conftest.py
-        ├── __init__.py
-        └── test_database.py
+    ├── __init__.py
+    ├── test_intergration
+    │   ├── conftest.py
+    │   └── test_database.py
+    └── test_unit
+
+
 
 
 ```

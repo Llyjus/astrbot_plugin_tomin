@@ -16,16 +16,16 @@
       
 2. [安装](#安装)
    - 版本需求
-   - 安装方法
+   - 安装方法(Linux/MacOS用户必读！！！)
 
 3. [功能模块（开发中）](#功能模块)
    - 正在开发：
       - 卡牌系统
          - 概要
-         - ~~指令~~
+         - 指令
       - 演出系统
          - 概要
-         - ~~指令~~
+         - 指令
       - 其它
    - 后续开发规划
 
@@ -75,13 +75,28 @@ git clone https://github.com/Llyjus/girlsBandGame
 3. 下载zip压缩包到AstrBot的```data/plugins/```目录。
 重启astrbot。
 
+- Tips
+如果您的系统是linux系统可能缺少numpy相关系统级依赖，为了正常使用该插件:
+Linux用户请在终端输入（直接复制）：
+```bash
+sudo apt-get update
+sudo apt-get install -y python3-dev build-essential
+sudo apt-get install -y libblas-dev liblapack-dev gfortran
+```
+如果是MacOS用户请输入：
+```bash
+brew install openblas
+export OPENBLAS=$(brew --prefix openblas)
+```
+
+
 ## 功能模块
 
 ### 卡牌系统
 
 - 概要
 
-    本游戏卡牌系统预计分为两个部分：
+    本游戏卡牌系统分为两个部分：
 
    - 抽卡
       - 一个为免费的每日3次抽卡机会，还有一个为使用资源抽卡；
@@ -147,15 +162,18 @@ git clone https://github.com/Llyjus/girlsBandGame
 girls_band_game/
 ├── app
 │   ├── application
-│   │   └── init.py
+│   │   └── __init__.py
 │   ├── assets
 │   │   └── images
 │   │       ├── backgrounds
 │   │       └── cards
 │   ├── card_system
+│   │   ├── cards.py
 │   │   └── __init__.py
 │   ├── data_management
+│   │   ├── config.py
 │   │   ├── __init__.py
+│   │   ├── init.py
 │   │   ├── ports.py
 │   │   └── services
 │   │       ├── connection.py
@@ -163,22 +181,24 @@ girls_band_game/
 │   │       └── sql.py
 │   ├── gacha
 │   │   └── __init__.py
+│   ├── __init__.py
 │   ├── live
 │   │   └── __init__.py
-│   ├── skills
-│   │   └── __init__.py
-│   └── ulti
-│       ├── __init__.py
-│       └── multi_arg_dec.py
+│   └── skills
+│       └── __init__.py
+├── LICENSE
 ├── main.py
 ├── metadata.yaml
 ├── README_en.md
 ├── README.md
+├── requirements.txt
 └── tests
-    └── database
-        ├── conftest.py
-        ├── __init__.py
-        └── test_database.py
+    ├── __init__.py
+    ├── test_intergration
+    │   ├── conftest.py
+    │   └── test_database.py
+    └── test_unit
+
 
 
 ```

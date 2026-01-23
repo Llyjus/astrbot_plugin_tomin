@@ -1,13 +1,19 @@
 name: astrbot_plugin_girls_band_game
 display_name: 少女乐队游戏
-desc: 一个简单的少女乐队游戏插件，实现抽卡、演出等功能。 
-version: v0.0.1 
+desc: 一个少女乐队游戏插件，实现抽卡、演出等功能。 
+version: v0.1.0 
 author: Llyjus 
 repo: https://github.com/Llyjus/girls_band_game
 license: MIT
 
+
+  
 requires:
   - astrbot >=4.10.3
 
 
 python_requires: ">=3.12.0"
+
+dependencies:
+  - numpy
+  - pydantic

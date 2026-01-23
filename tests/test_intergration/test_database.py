@@ -1,8 +1,7 @@
-from random import randint
 import sys
 import os
 from pytest import raises
-import sqlite3
+
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 
@@ -74,18 +73,22 @@ def test_cards_table(memory_db_connection):
     assert result1['user_id'] == uid1
 
 
-
     repo.add_card(card_id=cid+1, user_id=uid1, character='ksm',
                   o_band='ppp', pos='voice',
                   rarity=3, power=100,
                   speed=100, resistance=20, skill_1=None, skill_2=None, skill_3=None)
 
 
+    result2 = repo.search_card_last('test')
 
-    result2 = repo.search_cards(uid1)
+    assert result2['card_id'] == 2
 
-    for r in result2:
+
+    result3 = repo.search_cards(uid1)
+
+    for r in result3:
         assert r['card_id'] == 1 or r['card_id'] == 2
+
 
 
 
@@ -96,9 +99,9 @@ def test_cards_table(memory_db_connection):
 
     repo.set_card_user(cid+1, uid2, cid+1, uid1)
 
-    result3 = repo.search_card(cid+1, uid2)
+    result4 = repo.search_card(cid+1, uid2)
 
-    assert result3['user_id'] == 't' and result3['card_id'] == 2
+    assert result4['user_id'] == 't' and result4['card_id'] == 2
 
 
 
