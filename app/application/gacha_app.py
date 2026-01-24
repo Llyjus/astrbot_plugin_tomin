@@ -1,9 +1,9 @@
 from dataclasses import asdict
 
 
-from app.gacha.service.gacha import Gacha
-from app.data_management.services.repository import Repository
-from app.data_management.services.connection import connection
+from app.gacha.gacha import Gacha
+from app.data_management import Repository
+from app.data_management import connection
 
 
 def normal_gacha(user_id, fund_spent=10, gacha_cls = Gacha, conn = connection()):

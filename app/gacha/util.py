@@ -1,9 +1,9 @@
 
 from math import floor
-from app.gacha.characters import Character
 from random import randint
 
 
+from app.gacha.characters import Character
 
 
 

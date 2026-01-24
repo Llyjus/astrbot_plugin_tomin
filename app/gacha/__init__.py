@@ -1,4 +1,4 @@
-from app.gacha.service.gacha import Gacha
+from app.gacha.gacha import Gacha
 from app.gacha.characters import random_character, CHARACTERS, Character
 from app.gacha.util import stats_roll, rarity_roll
 

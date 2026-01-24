@@ -3,8 +3,8 @@ from pytest import raises
 
 from app.application import normal_gacha
 from app.gacha import Gacha, Character
-from app.card_system.cards import Card
-from app.data_management.services.repository import Repository
+from app.card_system import Card
+from app.data_management import Repository
 
 def test_gacha_process(memory_db_connection):
     class Fake_gacha():

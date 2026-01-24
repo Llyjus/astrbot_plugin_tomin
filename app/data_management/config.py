@@ -1,1 +1,1 @@
-DB_PATH = '../plugin_data/girls_band_game'
+DB_PATH = '../plugin_data/girls_band_game/data.db'

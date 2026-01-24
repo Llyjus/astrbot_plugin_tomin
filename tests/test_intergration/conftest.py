@@ -8,7 +8,7 @@ import pytest
 abs_location = sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 
 
-from app.data_management.services.repository import Repository
+from app.data_management import Repository
 
 
 

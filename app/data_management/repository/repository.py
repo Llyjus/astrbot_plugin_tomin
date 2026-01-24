@@ -1,4 +1,4 @@
-from app.data_management.services.sql import *
+from app.data_management.repository.sql import *
 
 from app.data_management.ports import function_ports
 

@@ -1,11 +1,30 @@
-from os import makedirs
 from pathlib import Path
 import sqlite3
+import os
 
-def db_init(path):
-    db_path = Path(path)
+
+from app.data_management.config import DB_PATH
+from app.data_management.repository.repository import Repository
+
+def db_init(path=DB_PATH):
+
+    db_path = Path(os.path.dirname(path)) / 'data.db'
+
 
     if not db_path.exists():
-        db_path.mkdir(parents=True, exist_ok=True)
 
-    
+
+
+        db_path.parent.mkdir(parents=True, exist_ok=True)
+
+
+        try:
+            conn = sqlite3.connect(str(db_path))
+            repo = Repository(conn)
+            repo.create_table()
+
+            conn.commit()
+            conn.close()
+
+        except Exception as e:
+            raise RuntimeError('数据库初始化失败') from e
