@@ -139,16 +139,20 @@ Planned rarity tiers (6 levels) with default probabilities:
 
 #### Commands
 
-- Commands
-    
-    1. Use ```招募``` or ```zm``` to spend the default 10 funds to recruit characters; ```招募 x``` (where x is the amount of funds) allows spending up to 100 funds per recruitment. For every 10 funds spent, the appearance rate of characters with rarity 2 or higher increases by 1%. For example, spending 100 funds for a single recruitment results in the following probabilities:
+
+
+   1.    
+      - `recruit` or `zm` to spend the default 10 funds to recruit characters; 
+      - `recruit x` (x is the fund amount) can use up to 100 funds for one recruitment, every fund increases the fixed proportion of characters with rarity above 2 appearing; 
+      - `recruit x n` (n is the number of times) allows multiple draws in one command. If spending 100 funds for one recruitment, the probability is:
+
       | Rarity | Probability |
       |--------|-------------|
       | 1      | 0%          |
-      | 2      | 28%         |
-      | 3      | 28%         |
-      | 4      | 19%         |
-      | 5      | 15%         |
+      | 2      | 2%          |
+      | 3      | 37%         |
+      | 4      | 28%         |
+      | 5      | 24%         |
       | 6      | 10%         |
 
 ---

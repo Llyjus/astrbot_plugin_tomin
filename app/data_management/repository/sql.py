@@ -1,5 +1,5 @@
 def table_create_sql():
-    return [USERS_TABLE_SQL, CARDS_TABLE_SQL, BANDS_TABLE_SQL]
+    return [USERS_TABLE_SQL, CARDS_TABLE_SQL, BANDS_TABLE_SQL, SLOTS_TABLE_SQL]
 
 def user_interact_sql():
     return [USER_INSERT_SQL, USER_CHECK_SQL, FUND_GIVEN_SQL]
@@ -65,6 +65,16 @@ CREATE TABLE IF NOT EXISTS bands (
     FOREIGN KEY (card5_uid) REFERENCES cards(card_uid) ON DELETE SET NULL
 );
             """
+
+SLOTS_TABLE_SQL = """
+CREATE TABLE IF NOT EXISTS slots(
+    user_id INTERGER NOT NULL,
+    slot INTERGER NOT NULL,
+
+    PRIMARY KEY (user_id, slot)
+);
+
+"""
 
 
 USER_INSERT_SQL = '''

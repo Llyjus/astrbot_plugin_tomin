@@ -11,13 +11,13 @@ def rarity_roll(bonus:int):
     roll = randint(1, 100)
     if roll >= 100 - bonus * 0.1:
         return 6
-    elif roll >= 94 - bonus * 0.2:
+    elif roll >= 94 - bonus * 0.3:
         return 5
-    elif roll >= 84 - bonus * 0.3:
+    elif roll >= 84 - bonus * 0.5:
         return 4
-    elif roll >= 65 - bonus * 0.4:
+    elif roll >= 65 - bonus * 0.7:
         return 3
-    elif roll >= 30 - bonus * 0.5:
+    elif roll >= 30 - bonus * 1.0:
         return 2
     else:
         return 1
