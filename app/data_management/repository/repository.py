@@ -43,8 +43,11 @@ class Repository(function_ports):
             cursor.execute(sql, (user_id, ))
 
         except sqlite3.IntegrityError as e:
+
             raise ValueError('用户已经存在') from e
+        
         except Exception as e:
+
             raise RuntimeError('创建用户失败，数据库连接错误，请稍候再试') from e
 
 
@@ -63,9 +66,7 @@ class Repository(function_ports):
             
             raise RuntimeError('查询失败，数据库连接错误，请稍候再试') from e
         
-        else:
-            
-            return result
+        return result
 
     def add_fund(self, user_id, fund):
 
@@ -82,9 +83,7 @@ class Repository(function_ports):
         
         if cursor.rowcount == 0:
                 raise ValueError('余额不足或用户不存在')
-        else:
-            
-            return result
+
         
     
 
@@ -121,8 +120,7 @@ class Repository(function_ports):
         except Exception as e:
             raise RuntimeError('查询失败，数据库连接错误，请稍候再试') from e
         
-        else:
-            return result
+        return result
         
     def search_card_last(self, user_id):
         cursor = self.conn.cursor()
@@ -134,8 +132,7 @@ class Repository(function_ports):
         except Exception as e:
             raise RuntimeError('数据库连接错误，请稍候再试') from e
         
-        else:
-            return result
+        return result
         
     def search_cards(self, user_id):
         cursor = self.conn.cursor()
@@ -197,3 +194,33 @@ class Repository(function_ports):
     #     except 
 
     #     if cursor.rowcount == 0:
+
+    def search_slots(self, user_id):
+        cursor = self.conn.cursor()
+
+        sql = slot_interact_sql()[0]
+
+        try:
+            result = cursor.execute(sql, (user_id, )).fetchall()
+            
+            return result
+        
+        except Exception as e:
+            raise RuntimeError('操作失败，数据库连接错误，请稍候再试') from e
+
+
+    def delete_slot(self, user_id, slot):
+        cursor = self.conn.cursor()
+
+        sql = slot_interact_sql()[1]
+
+        try:
+            cursor.execute(sql, (user_id, slot))
+            
+        except Exception as e:
+            
+            raise RuntimeError('查询失败，数据库连接错误，请稍候再试') from e
+        
+        if cursor.rowcount == 0:
+                raise RuntimeError('数据库连接错误，请稍候再试')
+        

@@ -81,6 +81,8 @@ def test_cards_table(memory_db_connection):
 
     repo.add_cards(cards)
 
+    # uid1: card 1, 2
+    # uid2: card 1
 
     result2 = repo.search_card_last('test')
 
@@ -100,11 +102,28 @@ def test_cards_table(memory_db_connection):
     #Should check the available card id in real circumstance 
     # but now may not
 
-    repo.set_card_user(cid+1, uid2, cid+1, uid1)
+    repo.set_card_user(cid+1, uid2, cid, uid1)
+    # uid1: 2
+    # uid2: 1, 2
 
-    result4 = repo.search_card(cid+1, uid2)
+    #Check slot
+    result4 = repo.search_slots(uid1)
+    # slot: 1
 
-    assert result4['user_id'] == 't' and result4['card_id'] == 2
+    for r in result4:
+        assert r['slot'] == 1
+
+    # Delete slot
+    repo.delete_slot(uid1, 1)
+
+    result5 = repo.search_slots(uid1)
+
+    assert result5 == []
+    
+
+    result6 = repo.search_card(cid+1, uid2)
+
+    assert result6['user_id'] == 't' and result6['card_id'] == 2
 
 
 
@@ -114,7 +133,7 @@ def test_cards_table(memory_db_connection):
 
     # Card already exist
     with raises(Exception, match='卡牌id已经存在') as error1:
-        cards = [(cid, uid1, 'ksm',
+        cards = [(cid+1, uid1, 'ksm',
                   'ppp', 'voice',
                   3, 100,
                   100, 20, None, None, None)]
