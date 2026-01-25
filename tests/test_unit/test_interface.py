@@ -1,5 +1,5 @@
 import pytest
-
+from unittest.mock import AsyncMock
 from main import Tomin
 
 @pytest.mark.asyncio
@@ -19,8 +19,7 @@ async def test_draw_card_success(mocker):
     # Patch the file Tomin imported
     mocker.patch(
         "main.normal_gacha",
-        return_value={"character": "ksm", 'user_id': 'test'}
-    )
+        new=AsyncMock(return_value="character: ksm"))
 
     card = test.draw_card(fake_event, fund_spent=10)
     result = [msg async for msg in card]

@@ -9,4 +9,5 @@ __all__ = ['Repository' ,
            'connection',
            
            'db_init',
-           'DB_PATH']
+           'DB_PATH',
+           ]

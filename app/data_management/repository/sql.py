@@ -1,5 +1,5 @@
 def table_create_sql():
-    return [USERS_TABLE_SQL, CARDS_TABLE_SQL, BANDS_TABLE_SQL]
+    return [USERS_TABLE_SQL, CARDS_TABLE_SQL, BANDS_TABLE_SQL, SLOTS_TABLE_SQL]
 
 def user_interact_sql():
     return [USER_INSERT_SQL, USER_CHECK_SQL, FUND_GIVEN_SQL]
@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 CARDS_TABLE_SQL = """
 CREATE TABLE IF NOT EXISTS cards (
+    card_uid INTEGER PRIMARY KEY AUTOINCREMENT,
     card_id INTEGER NOT NULL,
     user_id INTEGER NOT NULL, 
     character VARCHAR(100) NOT NULL,
@@ -36,30 +37,32 @@ CREATE TABLE IF NOT EXISTS cards (
     skill_2 TEXT,
     skill_3 TEXT,
 
-    PRIMARY KEY (card_id, user_id)
+
 
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
-
+    UNIQUE(user_id, card_id)
 );
             """
+
+
 
 BANDS_TABLE_SQL = """
 CREATE TABLE IF NOT EXISTS bands (
     band_id INTEGER NOT NULL,
     user_id VARCHAR(50) NOT NULL,
-    card1_id INTEGER,
-    card2_id INTEGER,
-    card3_id INTEGER,
-    card4_id INTEGER,
-    card5_id INTEGER,
+    card1_uid INTEGER,
+    card2_uid INTEGER,
+    card3_uid INTEGER,
+    card4_uid INTEGER,
+    card5_uid INTEGER,
 
-    PRIMARY KEY (band_id, user_id)
+    PRIMARY KEY (band_id, user_id),
 
-    FOREIGN KEY (card1_id, user_id) REFERENCES cards(card_id, user_id) ON DELETE SET NULL,
-    FOREIGN KEY (card2_id, user_id) REFERENCES cards(card_id, user_id) ON DELETE SET NULL,
-    FOREIGN KEY (card3_id, user_id) REFERENCES cards(card_id, user_id) ON DELETE SET NULL,
-    FOREIGN KEY (card4_id, user_id) REFERENCES cards(card_id, user_id) ON DELETE SET NULL,
-    FOREIGN KEY (card5_id, user_id) REFERENCES cards(card_id, user_id) ON DELETE SET NULL
+    FOREIGN KEY (card1_uid) REFERENCES cards(card_uid) ON DELETE SET NULL,
+    FOREIGN KEY (card2_uid) REFERENCES cards(card_uid) ON DELETE SET NULL,
+    FOREIGN KEY (card3_uid) REFERENCES cards(card_uid) ON DELETE SET NULL,
+    FOREIGN KEY (card4_uid) REFERENCES cards(card_uid) ON DELETE SET NULL,
+    FOREIGN KEY (card5_uid) REFERENCES cards(card_uid) ON DELETE SET NULL
 );
             """
 

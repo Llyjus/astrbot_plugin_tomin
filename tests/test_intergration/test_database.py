@@ -54,17 +54,18 @@ def test_cards_table(memory_db_connection):
     repo.add_user(uid1)
     repo.add_user(uid2)
 
+    cards = [(cid, uid1, 'ksm',
+                  'ppp', 'voice',
+                  3, 100,
+                  100, 20, None, None, None),
+            (cid, uid2, 'ksm',
+                  'ppp', 'voice',
+                  3, 100,
+                  100, 20, None, None, None)]
+
 
     # Test adding&searching card
-    repo.add_card(card_id=cid, user_id=uid1, character='ksm',
-                  o_band='ppp', pos='voice',
-                  rarity=3, power=100,
-                  speed=100, resistance=20, skill_1=None, skill_2=None, skill_3=None)
-    repo.add_card(card_id=cid, user_id=uid2, character='ksm',
-                  o_band='ppp', pos='voice',
-                  rarity=3, power=100,
-                  speed=100, resistance=20, skill_1=None, skill_2=None, skill_3=None)
-
+    repo.add_cards(cards)
 
 
     result1 = repo.search_card(cid, uid1)
@@ -73,10 +74,12 @@ def test_cards_table(memory_db_connection):
     assert result1['user_id'] == uid1
 
 
-    repo.add_card(card_id=cid+1, user_id=uid1, character='ksm',
-                  o_band='ppp', pos='voice',
-                  rarity=3, power=100,
-                  speed=100, resistance=20, skill_1=None, skill_2=None, skill_3=None)
+    cards = [(cid+1, uid1, 'ksm',
+                  'ppp', 'voice',
+                  3, 100,
+                  100, 20, None, None, None)]
+
+    repo.add_cards(cards)
 
 
     result2 = repo.search_card_last('test')
@@ -111,10 +114,11 @@ def test_cards_table(memory_db_connection):
 
     # Card already exist
     with raises(Exception, match='卡牌id已经存在') as error1:
-        repo.add_card(card_id=cid, user_id=uid1, character='ksm',
-                  o_band='ppp', pos='voice',
-                  rarity=3, power=100,
-                  speed=100, resistance=20, skill_1=None, skill_2=None, skill_3=None)
+        cards = [(cid, uid1, 'ksm',
+                  'ppp', 'voice',
+                  3, 100,
+                  100, 20, None, None, None)]
+        repo.add_cards(cards)
 
 
     # Card doesn't exist

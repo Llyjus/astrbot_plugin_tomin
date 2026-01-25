@@ -16,7 +16,7 @@ class Tomin(Star):
         super().__init__(context)
 
     async def initialize(self):
-        """子线程"""
+        """sub thread"""
         try:
             loop = get_running_loop()
             await loop.run_in_executor(None, numpy_system_dependencies_check)
@@ -27,10 +27,10 @@ class Tomin(Star):
             raise RuntimeError('Tomin初始化失败。') from e
 
 
-
+  
 
     @filter.command("招募", alias={'zm'})
-    async def draw_card(self, event: AstrMessageEvent, fund_spent=10) ->AsyncGenerator[str, None]:
+    async def draw_card(self, event: AstrMessageEvent, fund_spent=10, times=1) ->AsyncGenerator[str, None]:
         """招募指令"""
         try:
             user_id = event.get_sender_id()
@@ -38,17 +38,22 @@ class Tomin(Star):
             user_id = str(user_id)
             result = ''
 
-            #validate
-            check = Gacha_input(user_id=user_id, fund_spent=fund_spent)
+            # validate
+            check = Gacha_input(user_id=user_id, fund_spent=fund_spent, times=times)
 
 
-            # Gacha
-            card = normal_gacha(user_id)
+
+            # gacha
+            cards = await normal_gacha(user_id, fund_spent, times)
+
+
 
             result = "成功抽取卡牌:\n"
-            for key, item in card.items():
-                result += str(key) + ': ' + str(item) + '\n'
-            
+
+
+            result += cards
+
+
         except ValidationError as e:
             
             result = error_message(e)

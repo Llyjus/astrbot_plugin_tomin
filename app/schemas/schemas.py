@@ -5,7 +5,9 @@ class Gacha_input(BaseModel):
     fund_spent: int = Field(ge=10, 
                        le=100, 
                        description="招募资金必须在10到100之间！")
-
+    
+    times: int = Field(ge=1, le=100,
+                       description="招募次数必须在1到100之间！")
     # @field_validator('bonus')
     # @classmethod
     # def validate_bonus(cls, v):

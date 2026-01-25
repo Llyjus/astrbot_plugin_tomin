@@ -27,7 +27,6 @@ class Repository(function_ports):
                 cursor.execute(sql)
             except Exception as e:
 
-                self.conn.rollback()
                 raise RuntimeError('创建table失败，数据库连接错误，请稍候再试') from e
 
 
@@ -92,13 +91,13 @@ class Repository(function_ports):
 
     #card
 
-    def add_card(self, card_id, user_id, character, o_band, pos, rarity, power, speed, resistance, skill_1, skill_2, skill_3):
+    def add_cards(self, cards:list):
         cursor = self.conn.cursor()
 
         sql = card_interact_sql()[0]
 
         try:
-            cursor.execute(sql, (card_id, user_id, character, o_band, pos, rarity, power, speed, resistance, skill_1, skill_2, skill_3))
+            cursor.executemany(sql, cards)
         
         except sqlite3.IntegrityError:
 
