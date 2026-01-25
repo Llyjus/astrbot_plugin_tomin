@@ -1,5 +1,5 @@
 def table_create_sql():
-    return [USERS_TABLE_SQL, CARDS_TABLE_SQL, BANDS_TABLE_SQL, SLOTS_TABLE_SQL]
+    return [USERS_TABLE_SQL, CARDS_TABLE_SQL, BANDS_TABLE_SQL]
 
 def user_interact_sql():
     return [USER_INSERT_SQL, USER_CHECK_SQL, FUND_GIVEN_SQL]
