@@ -21,7 +21,7 @@ def slot_interact_sql():
 USERS_TABLE_SQL = """
 CREATE TABLE IF NOT EXISTS users (
     user_id VARCHAR(50) PRIMARY KEY,  
-    fund INTEGER DEFAULT 0                 
+    fund INTEGER NOT NULL CHECK (fund >= 0)                
 );
             """
 

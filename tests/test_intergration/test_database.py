@@ -2,8 +2,7 @@ import sys
 import os
 from pytest import raises
 
-from app.services import Card_service
-
+from app.services import Card_service, Fund_service
 
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
@@ -42,7 +41,7 @@ def test_users_table(memory_db_connection):
 
 
     # Illegal value
-    with raises(ValueError, match='余额不足或用户不存在') as error2:
+    with raises(ValueError, match='余额不足') as error2:
         repo.add_fund('test', -100)
 
 
@@ -204,8 +203,21 @@ def test_cards_table(memory_db_connection):
     for r in result8:
 
         assert result8['slot'] == 1 
-    # card_ser.fill_slots(uid1, card_dict['slots'])
-    # # result7 = 
+
+
+    
+    #fund check
+
+    repo.add_fund(uid1, 50)
+
+    fund_ser = Fund_service(repo)
+
+    result9 = fund_ser.fund_check(uid1, 50)
+
+    assert result9 == True
+
+    with raises(ValueError) as error4:
+        fund_ser.fund_check(uid1, 100)
 
 
     

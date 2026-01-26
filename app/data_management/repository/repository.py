@@ -82,7 +82,7 @@ class Repository(function_ports):
             raise RuntimeError('查询失败，数据库连接错误，请稍候再试') from e
         
         if cursor.rowcount == 0:
-                raise ValueError('余额不足或用户不存在')
+                raise ValueError('余额不足')
 
         
     
