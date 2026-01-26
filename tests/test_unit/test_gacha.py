@@ -14,7 +14,7 @@ def test_gacha():
 
         return char
     
-    result = Gacha(fake_char, fake_rarity, fake_stats).initial(user_id='test', card_id=1, bonus=0)
+    result = Gacha(fake_char, fake_rarity, fake_stats).initial(user_id='test', card_id=1, fund_spent=0)
 
     assert result.character == 'ksm'
     assert result.rarity == 6

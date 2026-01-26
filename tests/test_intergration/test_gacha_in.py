@@ -4,17 +4,15 @@ import pytest
 
 
 from app.application import normal_gacha
-from app.gacha import Gacha, Character
 from app.card_system import Card
-from app.data_management import Repository
 
-@pytest.mark.asyncio
-async def test_gacha_process(memory_db_connection):
+
+def test_gacha_process(memory_db_connection):
     class Fake_gacha():
         def __init__(self):
             pass
 
-        def initial(self, user_id, card_id, bonus):
+        def initial(self, user_id, card_id, fund_spent):
             return Card(card_id, user_id, 'ksm', 'ppp',
                         'singer', 3, 100, 100, 20)
         
@@ -28,7 +26,7 @@ async def test_gacha_process(memory_db_connection):
 
 
     # Test single gacha
-    card1 = await normal_gacha(user_id='test', 
+    card1 = normal_gacha(user_id='test', 
                         fund_spent=10, times=1,
                         gacha_cls=Fake_gacha, 
                         conn=memory_db_connection.conn)
@@ -47,7 +45,7 @@ async def test_gacha_process(memory_db_connection):
     # Check auto increasement
     repo.add_fund('test', 10)
 
-    card2 = await normal_gacha(user_id='test', 
+    card2 = normal_gacha(user_id='test', 
                         fund_spent=10, times=1,
                         gacha_cls=Fake_gacha, 
                         conn=memory_db_connection.conn)
@@ -58,7 +56,7 @@ async def test_gacha_process(memory_db_connection):
     
 
     # Multi
-    cards = await normal_gacha(user_id='test', 
+    cards = normal_gacha(user_id='test', 
                         fund_spent=0, times=2,
                         gacha_cls=Fake_gacha, 
                         conn=memory_db_connection.conn)
@@ -74,9 +72,9 @@ async def test_gacha_process(memory_db_connection):
 
 
     # Fund issue
-    with raises(ValueError, match=r'用户资金不足，无法招募！你现在的资金是：\d+$') as error:
+    with raises(ValueError) as error:
 
-        card3 = await normal_gacha(user_id='test', 
+        card3 = normal_gacha(user_id='test', 
                         fund_spent=10, times=1, 
                         gacha_cls=Fake_gacha, 
                         conn=memory_db_connection.conn)

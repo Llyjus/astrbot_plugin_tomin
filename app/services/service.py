@@ -1,16 +1,21 @@
-from app.data_management.repository.repository import Repository
-from app.data_management.repository.connection import connection
+from app.data_management import Repository
 
-class Card_service():
-
-    def __init__(self, repo:Repository):
+class Service():
+    def __init__(self, repo: Repository):
         self.repo = repo
-
 
     def user_exists(self, user_id):
         user = self.repo.search_user(user_id)
         if user == None:
             self.repo.add_user(user_id)
+
+
+
+class Card_service(Service):
+
+    def __init__(self, repo:Repository):
+        super().__init__(repo)
+
 
 
 
@@ -38,7 +43,7 @@ class Card_service():
             result['cards_id'].append(i['slot'])
             number -= 1
             if number <= 0:
-                return result
+                break
             
         # Still has number
 
@@ -48,6 +53,7 @@ class Card_service():
 
             result['cards_id'].append(result_c['card_id']+i)
 
+        
         return result
         
 
@@ -112,3 +118,18 @@ class Card_service():
         # insert
         self.repo.add_slots(user_id, card_id)
     
+
+class Fund_service(Service):
+
+    def __init__(self, repo:Repository):
+        super().__init__(repo)
+
+
+
+    def fund_check(self, user_id, fund_spent):
+        result = self.repo.search_user(user_id)
+
+        if result['fund'] < fund_spent:
+            raise ValueError(f'你没有足够的资金！你目前的资金是：{result['fund']}')
+        
+        return True

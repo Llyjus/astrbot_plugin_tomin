@@ -1,5 +1,4 @@
-from app.services.card_service import Card_service
-from app.services.fund_service import Fund_service
+from app.services.service import Card_service, Fund_service
 
 
 
