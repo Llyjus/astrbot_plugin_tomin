@@ -1,5 +1,5 @@
 def table_create_sql():
-    return [USERS_TABLE_SQL, CARDS_TABLE_SQL, BANDS_TABLE_SQL, SLOTS_TABLE_SQL]
+    return [USERS_TABLE_SQL, CARDS_TABLE_SQL, BANDS_TABLE_SQL, SLOTS_TABLE_SQL, EVENT_TABLE_SQL, SIGN_UP_SQL]
 
 def user_interact_sql():
     return [USER_INSERT_SQL, USER_CHECK_SQL, FUND_GIVEN_SQL]
@@ -15,7 +15,8 @@ def band_interact_sql():
 def slot_interact_sql():
     return [SLOT_INSERT_SQL, SLOTS_SELECT_SQL, SLOT_DELETE_SQL]
 
-
+def event_interact_sql():
+    return [EVENT_INSERT_SQL, EVENT_SEARCH_SQL, EVENT_SET_SQL, EVENT_DELETE_SQL]
 
 
 USERS_TABLE_SQL = """
@@ -81,7 +82,27 @@ CREATE TABLE IF NOT EXISTS slots(
 
 """
 
+EVENT_TABLE_SQL = '''
+CREATE TABLE IF NOT EXISTS events(
+    event_id PRIMARY KEY,
+    status INT,
+    timestamp INT 
 
+);
+
+'''
+
+
+SIGN_UP_SQL = '''
+CREATE TABLE IF NOT EXISTS sign_up(
+    user_id VARCHAR(50) PRIMARY KEY,
+    day TEXT,
+    count INT,
+    timestamp INT
+
+);
+
+'''
 
 
 
@@ -187,3 +208,28 @@ SLOT_DELETE_SQL = '''
                 WHERE user_id = ? AND slot = ?;
 '''
     
+EVENT_INSERT_SQL = '''
+                INSERT INTO events(event_id, status, timestamp)
+                VALUES(?, ?, ?);
+
+'''
+
+EVENT_SEARCH_SQL = '''
+                SELECT *
+                FROM events
+                WHERE event_id = ?;
+
+'''
+
+
+EVENT_SET_SQL = '''
+                UPDATE events
+                SET status = 1
+                WHERE event_id = ?;
+'''
+
+EVENT_DELETE_SQL = '''
+                DELETE
+                FROM events
+                timestamp <= ?;
+'''

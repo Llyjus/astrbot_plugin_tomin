@@ -5,6 +5,7 @@ import pytest
 
 from app.application import normal_gacha
 from app.card_system import Card
+from app.schemas.errors import Not_enough_fund
 
 
 def test_gacha_process(memory_db_connection):
@@ -72,7 +73,7 @@ def test_gacha_process(memory_db_connection):
 
 
     # Fund issue
-    with raises(ValueError) as error:
+    with raises(Not_enough_fund) as error:
 
         card3 = normal_gacha(user_id='test', 
                         fund_spent=10, times=1, 

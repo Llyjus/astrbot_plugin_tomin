@@ -7,7 +7,7 @@ from app.data_management.config import DB_PATH
 
 @contextmanager
 def connection(path=DB_PATH):
-    conn = sqlite3.connect(path)
+    conn = sqlite3.connect(path, timeout=10)
     conn.row_factory = sqlite3.Row
 
     try:

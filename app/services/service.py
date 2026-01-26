@@ -1,5 +1,7 @@
 from app.data_management import Repository
 
+from app.schemas.errors import Not_enough_fund
+
 class Service():
     def __init__(self, repo: Repository):
         self.repo = repo
@@ -130,6 +132,6 @@ class Fund_service(Service):
         result = self.repo.search_user(user_id)
 
         if result['fund'] < fund_spent:
-            raise ValueError(f'你没有足够的资金！你目前的资金是：{result['fund']}')
+            raise Not_enough_fund(f'你没有足够的资金！你目前的资金是：{result['fund']}')
         
         return True

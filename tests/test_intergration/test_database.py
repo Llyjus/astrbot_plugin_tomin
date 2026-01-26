@@ -3,6 +3,7 @@ import os
 from pytest import raises
 
 from app.services import Card_service, Fund_service
+from app.schemas import *
 
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
@@ -35,13 +36,13 @@ def test_users_table(memory_db_connection):
 
 
     # Same user
-    with raises(ValueError, match='用户已经存在') as error1:
+    with raises(User_already_exists, match='用户已经存在') as error1:
         repo.add_user('test')
 
 
 
     # Illegal value
-    with raises(ValueError, match='余额不足') as error2:
+    with raises(Not_enough_fund, match='余额不足') as error2:
         repo.add_fund('test', -100)
 
 
@@ -147,7 +148,7 @@ def test_cards_table(memory_db_connection):
     #error check
 
     # Card already exist
-    with raises(Exception, match='卡牌id已经存在') as error1:
+    with raises(Card_already_exists, match='卡牌id已经存在') as error1:
         cards = [(cid+1, uid1, 'ksm',
                   'ppp', 'voice',
                   3, 100,
@@ -156,17 +157,17 @@ def test_cards_table(memory_db_connection):
 
 
     # Card doesn't exist
-    with raises(ValueError, match='用户没有该卡牌') as error2:
+    with raises(Card_not_found, match='用户没有该卡牌') as error2:
         repo.set_card_user(cid+2, uid2, cid+2, uid1)
 
 
     # User doesn't exist
-    with raises(ValueError, match='用户没有该卡牌') as error3:
+    with raises(Card_not_found, match='用户没有该卡牌') as error3:
         repo.set_card_user(cid+2, uid2, cid, 'tt')
 
 
     # New user
-    with raises(ValueError, match='转让用户不存在！请先让该用户至少操作一次来创建帐号') as error4:
+    with raises(User_not_found, match='转让用户不存在！请先让该用户至少操作一次来创建帐号') as error4:
         repo.set_card_user(cid, 'tt', cid+1, uid2)
 
 
@@ -216,7 +217,7 @@ def test_cards_table(memory_db_connection):
 
     assert result9 == True
 
-    with raises(ValueError) as error4:
+    with raises(Not_enough_fund) as error4:
         fund_ser.fund_check(uid1, 100)
 
 

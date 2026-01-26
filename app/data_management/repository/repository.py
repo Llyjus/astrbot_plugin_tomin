@@ -2,6 +2,8 @@ from app.data_management.repository.sql import *
 
 from app.data_management.ports import function_ports
 
+from app.schemas.errors import *
+
 import sqlite3
 
 
@@ -25,9 +27,9 @@ class Repository(function_ports):
         for sql in sqls:
             try:
                 cursor.execute(sql)
-            except Exception as e:
+            except sqlite3.Error as e:
 
-                raise RuntimeError('创建table失败，数据库连接错误，请稍候再试') from e
+                raise Database_error('创建table失败，数据库连接错误，请稍候再试') from e
 
 
 
@@ -44,12 +46,11 @@ class Repository(function_ports):
 
         except sqlite3.IntegrityError as e:
 
-            raise ValueError('用户已经存在') from e
+            raise User_already_exists('用户已经存在') from e
         
-        except Exception as e:
+        except sqlite3.Error as e:
 
-            raise RuntimeError('创建用户失败，数据库连接错误，请稍候再试') from e
-
+            raise Database_error('创建用户失败，数据库连接错误，请稍候再试') from e
 
 
 
@@ -62,9 +63,9 @@ class Repository(function_ports):
 
         try:
             result = cursor.execute(sql, (user_id, )).fetchone()
-        except Exception as e:
+        except sqlite3.Error as e:
             
-            raise RuntimeError('查询失败，数据库连接错误，请稍候再试') from e
+            raise Database_error('查询失败，数据库连接错误，请稍候再试') from e
         
         return result
 
@@ -77,12 +78,12 @@ class Repository(function_ports):
         try:
             result = cursor.execute(sql, (fund, user_id, fund))
             
-        except Exception as e:
+        except sqlite3.Error as e:
             
-            raise RuntimeError('查询失败，数据库连接错误，请稍候再试') from e
+            raise Database_error('查询失败，数据库连接错误，请稍候再试') from e
         
         if cursor.rowcount == 0:
-                raise ValueError('余额不足')
+                raise Not_enough_fund('余额不足')
 
         
     
@@ -100,11 +101,11 @@ class Repository(function_ports):
         
         except sqlite3.IntegrityError:
 
-            raise ValueError('卡牌id已经存在')
+            raise Card_already_exists('卡牌id已经存在')
         
-        except Exception as e:
+        except sqlite3.Error as e:
             
-            raise RuntimeError('操作失败，数据库连接错误，请稍候再试') from e
+            raise Database_error('操作失败，数据库连接错误，请稍候再试') from e
         
 
 
@@ -117,8 +118,8 @@ class Repository(function_ports):
         try:
             result = cursor.execute(sql, (card_id, user_id)).fetchone()
 
-        except Exception as e:
-            raise RuntimeError('查询失败，数据库连接错误，请稍候再试') from e
+        except sqlite3.Error as e:
+            raise Database_error('查询失败，数据库连接错误，请稍候再试') from e
         
         return result
         
@@ -129,8 +130,8 @@ class Repository(function_ports):
 
         try:
             result = cursor.execute(sql,(user_id, )).fetchone()
-        except Exception as e:
-            raise RuntimeError('数据库连接错误，请稍候再试') from e
+        except sqlite3.Error as e:
+            raise Database_error('数据库连接错误，请稍候再试') from e
         
         return result
         
@@ -142,8 +143,8 @@ class Repository(function_ports):
         try:
             result = cursor.execute(sql, (user_id, )).fetchall()
 
-        except Exception as e:
-            raise RuntimeError('查询失败，数据库连接错误，请稍候再试') from e
+        except sqlite3.Error as e:
+            raise Database_error('查询失败，数据库连接错误，请稍候再试') from e
         
         return result
     
@@ -157,14 +158,13 @@ class Repository(function_ports):
 
         except sqlite3.IntegrityError:
 
-            raise ValueError('转让用户不存在！请先让该用户至少操作一次来创建帐号')
+            raise User_not_found('转让用户不存在！请先让该用户至少操作一次来创建帐号')
         
 
-        except Exception as e:
-            raise RuntimeError('操作失败，数据库连接错误，请稍候再试')
-        
+        except sqlite3.Error as e:
+            raise Database_error('操作失败，数据库连接错误，请稍候再试')
         if cursor.rowcount == 0:
-            raise ValueError('用户没有该卡牌')
+            raise Card_not_found('用户没有该卡牌')
         
     def delete_cards(self, cards:list):
         cursor = self.conn.cursor()
@@ -174,8 +174,8 @@ class Repository(function_ports):
         try:
             cursor.executemany(sql, cards)
 
-        except Exception as e:
-            raise RuntimeError('操作失败，数据库连接错误，请稍候再试') from e
+        except sqlite3.Error as e:
+            raise Database_error('操作失败，数据库连接错误，请稍候再试') from e
     
     
     # #band
@@ -204,9 +204,9 @@ class Repository(function_ports):
         try:
             cursor.executemany(sql, slots)
             
-        except Exception as e:
+        except sqlite3.Error as e:
             
-            raise RuntimeError('查询失败，数据库连接错误，请稍候再试') from e
+            raise Database_error('查询失败，数据库连接错误，请稍候再试') from e
         
 
         
@@ -223,7 +223,7 @@ class Repository(function_ports):
             return result
         
         except Exception as e:
-            raise RuntimeError('操作失败，数据库连接错误，请稍候再试') from e
+            raise Database_error('操作失败，数据库连接错误，请稍候再试') from e
 
 
     def delete_slots(self, slots:list):
@@ -237,8 +237,69 @@ class Repository(function_ports):
         try:
             cursor.executemany(sql, slots)
             
-        except Exception as e:
+        except sqlite3.Error as e:
             
-            raise RuntimeError('查询失败，数据库连接错误，请稍候再试') from e
+            raise Database_error('查询失败，数据库连接错误，请稍候再试') from e
         
         
+
+
+    def add_event(self, event_id, status, timestamp):
+        cursor = self.conn.cursor()
+
+        sql = event_interact_sql()[0]
+
+        try:
+            cursor.execute(sql, (event_id, status, timestamp))
+
+        except sqlite3.IntegrityError as e:
+            raise Request_repeat('重复执行')  
+            
+        except sqlite3.Error as e:
+            
+            raise Database_error('查询失败，数据库连接错误，请稍候再试') from e
+        
+        
+        
+
+
+    def search_event(self, event_id):
+        cursor = self.conn.cursor()
+
+        sql = event_interact_sql()[1]
+
+        try:
+            result = cursor.execute(sql, (event_id, )).fetchone()
+            
+            return result
+        
+        except sqlite3.Error as e:
+            raise Database_error('操作失败，数据库连接错误，请稍候再试') from e
+
+
+    def set_event(self, event_id):
+        cursor = self.conn.cursor()
+
+        sql = event_interact_sql()[2]
+
+        try:
+            cursor.execute(sql, (event_id, ))
+
+        except sqlite3.Error as e :
+            raise Database_error('操作失败，数据库连接错误，请稍候再试') from e
+        
+
+
+
+    def delete_events(self, timestamp):
+        cursor = self.conn.cursor()
+
+        sql = event_interact_sql()[3]
+
+        
+        try:
+            cursor.execute(sql, (timestamp, ))
+            
+        except sqlite3.Error as e:  
+            
+            raise Database_error('查询失败，数据库连接错误，请稍候再试') from e
