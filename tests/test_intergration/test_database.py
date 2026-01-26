@@ -2,6 +2,9 @@ import sys
 import os
 from pytest import raises
 
+from app.services import Card_service
+
+
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 
@@ -106,24 +109,37 @@ def test_cards_table(memory_db_connection):
     # uid1: 2
     # uid2: 1, 2
 
+
+    repo.add_slots([(uid1, 1)])
+
     #Check slot
     result4 = repo.search_slots(uid1)
     # slot: 1
 
     for r in result4:
-        assert r['slot'] == 1
+        assert r['slot'] == 1 and r['user_id'] == uid1
+
 
     # Delete slot
-    repo.delete_slot(uid1, 1)
+    repo.delete_slots([(uid1, 1)])
+
+
+    # slot: []
 
     result5 = repo.search_slots(uid1)
 
     assert result5 == []
+
+    repo.add_slots([(uid1, 1)])
+
+
     
 
     result6 = repo.search_card(cid+1, uid2)
 
     assert result6['user_id'] == 't' and result6['card_id'] == 2
+
+
 
 
 
@@ -141,12 +157,12 @@ def test_cards_table(memory_db_connection):
 
 
     # Card doesn't exist
-    with raises(ValueError, match='原用户不存在或用户没有该卡牌') as error2:
+    with raises(ValueError, match='用户没有该卡牌') as error2:
         repo.set_card_user(cid+2, uid2, cid+2, uid1)
 
 
     # User doesn't exist
-    with raises(ValueError, match='原用户不存在或用户没有该卡牌') as error3:
+    with raises(ValueError, match='用户没有该卡牌') as error3:
         repo.set_card_user(cid+2, uid2, cid, 'tt')
 
 
@@ -156,6 +172,40 @@ def test_cards_table(memory_db_connection):
 
 
 
+    #service test
+    card_ser = Card_service(repo)
+
+    card_ser.user_exists('tes')
+
+    result7 = repo.search_user('tes')
+    assert result7['user_id'] == 'tes'
+
+    card_dict = card_ser.get_avail_cards_id(uid1, 2)
+
+    assert card_dict['cards_id'] == [1, 3] and card_dict['slots'] == [1]
+    
+    card_dict = card_ser.get_avail_cards_id(uid1, 1)
+    
+    assert card_dict['cards_id'] == [1] and card_dict['slots'] == [1]
+
+
+    #repo.delete_slots([(uid1, 1)])
+
+    card_ser.fill_slots(uid1, [1])
+
+    card_dict = card_ser.get_avail_cards_id(uid1, 2)
+
+    assert card_dict['cards_id'] == [3, 4] and card_dict['slots'] == []
+
+    card_ser.set_slots(uid1, [1, 3, 4])
+    
+    result8 = repo.search_slots(uid1)
+
+    for r in result8:
+
+        assert result8['slot'] == 1 
+    # card_ser.fill_slots(uid1, card_dict['slots'])
+    # # result7 = 
 
 
     

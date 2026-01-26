@@ -1,5 +1,5 @@
 def table_create_sql():
-    return [USERS_TABLE_SQL, CARDS_TABLE_SQL, BANDS_TABLE_SQL, SLOTS_TABLE_SQL, CARD_DELETE_TRIGGER_SQL, CARD_UPDATE_TRIGGER_SQL]
+    return [USERS_TABLE_SQL, CARDS_TABLE_SQL, BANDS_TABLE_SQL, SLOTS_TABLE_SQL]
 
 def user_interact_sql():
     return [USER_INSERT_SQL, USER_CHECK_SQL, FUND_GIVEN_SQL]
@@ -13,7 +13,7 @@ def band_interact_sql():
     return sql1 + sql2
 
 def slot_interact_sql():
-    return [SLOTS_SELECT_SQL, SLOT_DELETE_SQL]
+    return [SLOT_INSERT_SQL, SLOTS_SELECT_SQL, SLOT_DELETE_SQL]
 
 
 
@@ -70,9 +70,10 @@ CREATE TABLE IF NOT EXISTS bands (
 );
             """
 
+
 SLOTS_TABLE_SQL = """
 CREATE TABLE IF NOT EXISTS slots(
-    user_id INTEGER NOT NULL,
+    user_id VARCHAR(50) NOT NULL,
     slot INTEGER NOT NULL,
 
     PRIMARY KEY (user_id, slot)
@@ -80,41 +81,9 @@ CREATE TABLE IF NOT EXISTS slots(
 
 """
 
-CARD_DELETE_TRIGGER_SQL = '''
-
-CREATE TRIGGER card_delete_trigger
-AFTER DELETE ON cards
-FOR EACH ROW
-WHEN EXISTS (
-        SELECT 1
-        FROM cards
-        WHERE card_id > OLD.card_id
-)
-BEGIN
-    INSERT INTO slots (user_id, slot)
-    VALUES (OLD.user_id, OLD.card_id);
 
 
-END;
 
-'''
-
-CARD_UPDATE_TRIGGER_SQL = '''
-
-CREATE TRIGGER card_update_trigger
-BEFORE UPDATE ON cards
-FOR EACH ROW
-WHEN EXISTS (
-        SELECT 1
-        FROM cards
-        WHERE card_id > OLD.card_id
-    )
-BEGIN
-    INSERT INTO slots (user_id, slot)
-    VALUES (OLD.user_id, OLD.card_id);
-END;
-
-'''
 
 
 USER_INSERT_SQL = '''
@@ -197,10 +166,19 @@ def band_add_card_sql(loc):
             WHERE user_id = ? AND band_id = ? 
 '''
     
+SLOT_INSERT_SQL = '''
+
+
+        INSERT INTO slots (user_id, slot)
+        VALUES (?, ?);
+
+'''
+    
 SLOTS_SELECT_SQL = '''
                 SELECT *
                 FROM slots
-                WHERE user_id = ?;
+                WHERE user_id = ?
+                ORDER BY slot ASC;
 '''
 
 SLOT_DELETE_SQL = '''

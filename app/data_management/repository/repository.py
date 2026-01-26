@@ -164,15 +164,15 @@ class Repository(function_ports):
             raise RuntimeError('操作失败，数据库连接错误，请稍候再试')
         
         if cursor.rowcount == 0:
-            raise ValueError('原用户不存在或用户没有该卡牌')
+            raise ValueError('用户没有该卡牌')
         
-    def delete_card(self, user_id, card_id):
+    def delete_cards(self, cards:list):
         cursor = self.conn.cursor()
 
         sql = card_interact_sql()[5]
 
         try:
-            cursor.execute(sql, (user_id, card_id))
+            cursor.executemany(sql, cards)
 
         except Exception as e:
             raise RuntimeError('操作失败，数据库连接错误，请稍候再试') from e
@@ -195,10 +195,27 @@ class Repository(function_ports):
 
     #     if cursor.rowcount == 0:
 
-    def search_slots(self, user_id):
+
+    def add_slots(self, slots:list):
         cursor = self.conn.cursor()
 
         sql = slot_interact_sql()[0]
+
+        try:
+            cursor.executemany(sql, slots)
+            
+        except Exception as e:
+            
+            raise RuntimeError('查询失败，数据库连接错误，请稍候再试') from e
+        
+
+        
+
+
+    def search_slots(self, user_id):
+        cursor = self.conn.cursor()
+
+        sql = slot_interact_sql()[1]
 
         try:
             result = cursor.execute(sql, (user_id, )).fetchall()
@@ -209,18 +226,19 @@ class Repository(function_ports):
             raise RuntimeError('操作失败，数据库连接错误，请稍候再试') from e
 
 
-    def delete_slot(self, user_id, slot):
+    def delete_slots(self, slots:list):
         cursor = self.conn.cursor()
 
-        sql = slot_interact_sql()[1]
+        sql = slot_interact_sql()[2]
+
+
+
 
         try:
-            cursor.execute(sql, (user_id, slot))
+            cursor.executemany(sql, slots)
             
         except Exception as e:
             
             raise RuntimeError('查询失败，数据库连接错误，请稍候再试') from e
         
-        if cursor.rowcount == 0:
-                raise RuntimeError('数据库连接错误，请稍候再试')
         
