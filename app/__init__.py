@@ -1,4 +1,4 @@
-from app.application import normal_gacha, numpy_system_dependencies_check
+from app.application import *
 from app.schemas import *
 from app.data_management.init import db_init
 from app.maintenance import Cleaner

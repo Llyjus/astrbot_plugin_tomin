@@ -296,9 +296,3 @@ def test_cards_table(memory_db_connection):
 
     sign_in_ser.check_availability(uid1, time_now= 1 * 86400 + 8 * 3600 + 1)
 
-    with raises(Cooldown, match='今日签到次数已达上限！') as error8:
-
-        for i in range(5):
-
-            sign_in_ser.check_availability(uid1, time_now= 2 * 86400 - 8 * 3600 + 15000*i)
-

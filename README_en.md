@@ -110,7 +110,7 @@ export OPENBLAS=$(brew --prefix openblas)
 The card system consists of two parts:
 
 - **Gacha System**
-- Three free draws per day.
+- 5 free draws per day.
 - Resource-based draws.
 - Resource-based draws allow increased consumption to raise the probability of obtaining high-rarity characters.
 

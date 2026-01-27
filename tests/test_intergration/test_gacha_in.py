@@ -3,7 +3,7 @@ from pytest import raises
 import pytest
 
 
-from app.application import normal_gacha
+from app.application import *
 from app.card_system import Card
 from app.schemas.errors import Not_enough_fund
 
@@ -26,7 +26,7 @@ def test_gacha_process(memory_db_connection):
     r = repo.search_user('test')
 
 
-    # Test single gacha
+    # Test normal gacha
     card1 = normal_gacha(user_id='test', 
                         fund_spent=10, times=1,
                         gacha_cls=Fake_gacha, 
@@ -69,9 +69,6 @@ def test_gacha_process(memory_db_connection):
 
 
     
-
-
-
     # Fund issue
     with raises(Not_enough_fund) as error:
 
@@ -80,3 +77,16 @@ def test_gacha_process(memory_db_connection):
                         gacha_cls=Fake_gacha, 
                         conn=memory_db_connection.conn)
 
+
+
+
+    # Test free gacha
+    result5 = free_gacha(user_id='test', 
+                        gacha_cls=Fake_gacha, 
+                        conn=memory_db_connection.conn) 
+    
+    assert '今日首次打卡成功！+10资金' in result5
+
+    result6 = repo.search_user('test')
+
+    assert result6['fund'] == 10

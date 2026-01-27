@@ -155,13 +155,16 @@ class Sign_in_service(Service):
         if result == None:
  
             self.repo.add_sign_in(user_id, date, time_now)
-        
-            return
+
+            self.repo.add_fund(user_id, 10)
+            return '今日首次打卡成功！+10资金\n'
         
         # check date
         if result['date'] == date and result['count'] < 5:
             
                 self.repo.update_sign_in_count(user_id, time_now)
+
+                return '打卡成功！今日已打卡次数：' + str(result['count'] + 1)
 
         elif result['date'] != date:
             # new date
@@ -170,6 +173,10 @@ class Sign_in_service(Service):
 
             self.repo.update_sign_in_date(user_id, date, past_date, time_now)
         
+            self.repo.add_fund(user_id, 10)
+            return '今日首次打卡成功！+10资金\n'
+        
+
         elif result['count'] >= 5:
             raise Cooldown('今日签到次数已达上限！')
         
@@ -177,5 +184,5 @@ class Sign_in_service(Service):
             seconds = result["time_now"] + 4*3600 - time_now
             minutes = seconds // 60
             hours = minutes // 60 + 1
-            raise Cooldown(f'还未到冷却时间！{hours}小时{minutes % 60}分钟后试吧！')
+            raise Cooldown(f'还未到冷却时间！{hours}小时{minutes % 60}分钟后再试吧！')
               

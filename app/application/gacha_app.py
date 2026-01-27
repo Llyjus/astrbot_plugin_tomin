@@ -74,6 +74,7 @@ def normal_gacha(user_id, fund_spent, times, message_id=None, gacha_cls = Gacha,
     return cards
 
 
+
 def free_gacha(user_id, message_id=None, gacha_cls = Gacha, conn = None):
 
     if conn is None:
@@ -81,10 +82,12 @@ def free_gacha(user_id, message_id=None, gacha_cls = Gacha, conn = None):
 
     with conn as c:
         avail = Sign_in_service(Repository(c))
-        avail.check_availability(user_id)
+        result = avail.check_availability(user_id)
 
-    return normal_gacha(user_id, 0, 1, message_id, gacha_cls, conn=conn)
-
+    result += '成功抽取卡牌:\n'
+    result += normal_gacha(user_id, 0, 1, message_id, gacha_cls, conn=conn)
+    
+    return result
 
 
 

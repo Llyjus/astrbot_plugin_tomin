@@ -1,4 +1,6 @@
+import re
 from typing import AsyncGenerator
+from unittest import result
 from pydantic import ValidationError
 from asyncio import get_running_loop
 
@@ -32,9 +34,68 @@ class Tomin(Star):
 
 
 
+    @filter.command("帮助", alias={'help'})
+    async def help(self, event: AstrMessageEvent) ->AsyncGenerator[str, None]:
+        """帮助指令"""
+        text = event.get_message_text()
+        text = text.strip()
+
+        if text == '打卡' or text == 'dk':
+            help = """
+    '打卡'或'dk'来进行每日免费招募。
+    冷却时间为4小时，每日最多5次，隔天重置冷却时间。
+""" 
+
+        elif text == ('招募') or text == ('zm'):
+            help = """
+        '招募' [资金] [次数] 或 'zm' [资金][x或空格][次数] ：
+        进行招募，默认最低资金10，次数1。例如：   
+            招募 表示默认花费10资金的一次招募，
+            zm 20 3/zm20x3 表示每次花费20资金进行3次招募。
+"""
+
+        else:
+            help = """
+Tomin指令列表：
+
+    '打卡'/'dk'
+    '招募'/'zm'
+
+    本机器人支持不使用空格分隔指令和参数；
+    输入‘帮助 [指令名称]’可查看对应指令的使用说明。例如：
+        帮助 zm
+    
+"""
+        yield event.plain_result(help)
+
+
+
     @filter.command("招募", alias={'zm'})
-    async def draw_card(self, event: AstrMessageEvent, fund_spent=10, times=1) ->AsyncGenerator[str, None]:
+    async def draw_card(self, event: AstrMessageEvent) ->AsyncGenerator[str, None]:
         """招募指令"""
+
+
+
+        message_text = event.get_message_text()
+
+        if message_text.strip() == '':
+            fund_spent = 10
+            times = 1
+
+        else:
+            st = r'(?:\s*(\d+))?(?:[ xX](\d+))?$'
+            match = re.match(st, message_text.strip())
+
+            if match:
+                if match.group(1):
+                    fund_spent = int(match.group(1))
+                if match.group(2):
+                    times = int(match.group(2))
+            else:
+                yield event.plain_result('''命令格式错误。示例：
+                                         zm 20 3/zm20x3 表示每次花费20资金进行3次招募。''')
+                return
+
         try:
 
             self.cleaner.cleaning_check()
@@ -73,9 +134,11 @@ class Tomin(Star):
 
         yield event.plain_result(result)
 
-    @filter.command("打卡", alias={'dk'})
-    async def draw_card(self, event: AstrMessageEvent) ->AsyncGenerator[str, None]:
-        """招募指令"""
+
+
+    @filter.command("打卡", alias={'dk', '签到', 'qd'})
+    async def sign_in(self, event: AstrMessageEvent) ->AsyncGenerator[str, None]:
+        """打卡指令"""
         try:
 
             self.cleaner.cleaning_check()
@@ -96,10 +159,7 @@ class Tomin(Star):
 
 
 
-            result = "成功抽取卡牌:\n"
-
-
-            result += cards
+            result = cards
 
 
         except ValidationError as e:
