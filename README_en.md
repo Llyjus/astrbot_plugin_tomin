@@ -141,10 +141,13 @@ Planned rarity tiers (6 levels) with default probabilities:
 
 
 
-   1.    
-      - `recruit` or `zm` to spend the default 10 funds to recruit characters; 
-      - `recruit x` (x is the fund amount) can use up to 100 funds for one recruitment, every fund increases the fixed proportion of characters with rarity above 2 appearing; 
-      - `recruit x n` (n is the number of times) allows multiple draws in one command. If spending 100 funds for one recruitment, the probability is:
+
+1. Use ````help```` or ````help```` to view the command system.
+2. Use ````check-in````, ````dk````, ````sign-in```` or ````qd```` for daily free recruitment. Cooldown time is 4 hours, maximum 5 times per day, cooldown resets the next day.
+3. 
+   - Use ````recruit```` or ````zm```` to recruit characters with the default minimum of 10 funds;
+   - Use ````recruit x```` (where x is the fund amount) to recruit with up to 100 funds at once. Each additional fund increases the fixed probability of characters with rarity over 2 appearing;
+   - Use ````recruit x n```` (where n is the number of times) to perform multiple recruitments in a single command. For example, spending 100 funds for one recruitment, the probabilities are:
 
       | Rarity | Probability |
       |--------|-------------|
@@ -214,41 +217,48 @@ After completing the basic version, a **roguelike system** and **event system** 
 ```plaintext
 .
 ├── app
-│   ├── application
-│   │   ├── gacha_app.py
-│   │   ├── __init__.py
-│   │   └── init.py
-│   ├── assets
-│   │   └── images
-│   │       ├── backgrounds
-│   │       └── cards
-│   ├── card_system
-│   │   ├── cards.py
-│   │   └── __init__.py
-│   ├── data_management
-│   │   ├── config.py
-│   │   ├── __init__.py
-│   │   ├── init.py
-│   │   ├── ports.py
-│   │   └── services
-│   │       ├── connection.py
-│   │       ├── repository.py
-│   │       └── sql.py
-│   ├── gacha
-│   │   ├── characters.py
-│   │   ├── __init__.py
-│   │   ├── service
-│   │   │   └── gacha.py
-│   │   └── util.py
-│   ├── __init__.py
-│   ├── live
-│   │   └── __init__.py
-│   ├── schemas
-│   │   ├── errors.py
-│   │   ├── __init__.py
-│   │   └── schemas.py
-│   └── skills
-│       └── __init__.py
+│   ├── application
+│   │   ├── cards_app.py
+│   │   ├── gacha_app.py
+│   │   ├── __init__.py
+│   │   └── init.py
+│   ├── assets
+│   │   └── images
+│   │       ├── backgrounds
+│   │       └── cards
+│   ├── card_system
+│   │   ├── cards.py
+│   │   └── __init__.py
+│   ├── data_management
+│   │   ├── config.py
+│   │   ├── __init__.py
+│   │   ├── init.py
+│   │   ├── ports.py
+│   │   └── repository
+│   │       ├── connection.py
+│   │       ├── repository.py
+│   │       └── sql.py
+│   ├── gacha
+│   │   ├── characters.py
+│   │   ├── gacha.py
+│   │   ├── __init__.py
+│   │   └── util.py
+│   ├── __init__.py
+│   ├── live
+│   │   └── __init__.py
+│   ├── maintenance
+│   │   ├── cleaner.py
+│   │   ├── event.py
+│   │   └── __init__.py
+│   ├── schemas
+│   │   ├── errors.py
+│   │   ├── __init__.py
+│   │   └── schemas.py
+│   ├── services
+│   │   ├── __init__.py
+│   │   └── service.py
+│   └── skills
+│       └── __init__.py
 ├── LICENSE
 ├── main.py
 ├── metadata.yaml
@@ -259,10 +269,12 @@ After completing the basic version, a **roguelike system** and **event system** 
 └── tests
     ├── __init__.py
     ├── test_intergration
-    │   ├── conftest.py
-    │   ├── test_database.py
-    │   └── test_gacha_in.py
+    │   ├── conftest.py
+    │   ├── test_database.py
+    │   └── test_gacha_in.py
     └── test_unit
+        ├── test_cleaner.py
+        ├── test_db_init.py
         ├── test_gacha.py
         └── test_interface.py
 

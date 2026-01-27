@@ -181,41 +181,48 @@ export OPENBLAS=$(brew --prefix openblas)
 ```plaintext
 .
 ├── app
-│   ├── application
-│   │   ├── gacha_app.py
-│   │   ├── __init__.py
-│   │   └── init.py
-│   ├── assets
-│   │   └── images
-│   │       ├── backgrounds
-│   │       └── cards
-│   ├── card_system
-│   │   ├── cards.py
-│   │   └── __init__.py
-│   ├── data_management
-│   │   ├── config.py
-│   │   ├── __init__.py
-│   │   ├── init.py
-│   │   ├── ports.py
-│   │   └── services
-│   │       ├── connection.py
-│   │       ├── repository.py
-│   │       └── sql.py
-│   ├── gacha
-│   │   ├── characters.py
-│   │   ├── __init__.py
-│   │   ├── service
-│   │   │   └── gacha.py
-│   │   └── util.py
-│   ├── __init__.py
-│   ├── live
-│   │   └── __init__.py
-│   ├── schemas
-│   │   ├── errors.py
-│   │   ├── __init__.py
-│   │   └── schemas.py
-│   └── skills
-│       └── __init__.py
+│   ├── application
+│   │   ├── cards_app.py
+│   │   ├── gacha_app.py
+│   │   ├── __init__.py
+│   │   └── init.py
+│   ├── assets
+│   │   └── images
+│   │       ├── backgrounds
+│   │       └── cards
+│   ├── card_system
+│   │   ├── cards.py
+│   │   └── __init__.py
+│   ├── data_management
+│   │   ├── config.py
+│   │   ├── __init__.py
+│   │   ├── init.py
+│   │   ├── ports.py
+│   │   └── repository
+│   │       ├── connection.py
+│   │       ├── repository.py
+│   │       └── sql.py
+│   ├── gacha
+│   │   ├── characters.py
+│   │   ├── gacha.py
+│   │   ├── __init__.py
+│   │   └── util.py
+│   ├── __init__.py
+│   ├── live
+│   │   └── __init__.py
+│   ├── maintenance
+│   │   ├── cleaner.py
+│   │   ├── event.py
+│   │   └── __init__.py
+│   ├── schemas
+│   │   ├── errors.py
+│   │   ├── __init__.py
+│   │   └── schemas.py
+│   ├── services
+│   │   ├── __init__.py
+│   │   └── service.py
+│   └── skills
+│       └── __init__.py
 ├── LICENSE
 ├── main.py
 ├── metadata.yaml
@@ -226,12 +233,15 @@ export OPENBLAS=$(brew --prefix openblas)
 └── tests
     ├── __init__.py
     ├── test_intergration
-    │   ├── conftest.py
-    │   ├── test_database.py
-    │   └── test_gacha_in.py
+    │   ├── conftest.py
+    │   ├── test_database.py
+    │   └── test_gacha_in.py
     └── test_unit
+        ├── test_cleaner.py
+        ├── test_db_init.py
         ├── test_gacha.py
         └── test_interface.py
+
 
 
 

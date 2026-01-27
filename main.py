@@ -78,19 +78,30 @@ Tomin指令列表：
 
         message_text = event.get_message_text()
 
-        if message_text.strip() == '':
+
+        # raise Exception(message_text)
+
+        if message_text.strip() == '招募' or message_text.strip() == 'zm':
             fund_spent = 10
             times = 1
 
         else:
-            st = r'(?:\s*(\d+))?(?:[ xX](\d+))?$'
+            st = r'^(招募|zm)(?:\s*(\d+))?(?:[ xX](\d+))?$'
             match = re.match(st, message_text.strip())
 
             if match:
-                if match.group(1):
-                    fund_spent = int(match.group(1))
+
                 if match.group(2):
-                    times = int(match.group(2))
+                    fund_spent = int(match.group(2))
+                else: 
+                    fund_spent = 10
+
+                if match.group(3):
+                    times = int(match.group(3))
+                else: 
+                    times = 1
+                    
+
             else:
                 yield event.plain_result('''命令格式错误。示例：
                                          zm 20 3/zm20x3 表示每次花费20资金进行3次招募。''')
@@ -105,6 +116,8 @@ Tomin指令列表：
 
             user_id = str(user_id)
             result = ''
+
+            # raise Exception(fund_spent)
 
             # validate
             check = Gacha_input(user_id=user_id, fund_spent=fund_spent, times=times)
