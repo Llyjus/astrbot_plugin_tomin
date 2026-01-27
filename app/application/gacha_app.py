@@ -3,7 +3,7 @@ from time import time
 
 from app.gacha import Gacha
 from app.data_management import Repository, connection
-from app.services import Card_service, Fund_service
+from app.services import *
 from app.maintenance import event_creater
 
 
@@ -72,3 +72,26 @@ def normal_gacha(user_id, fund_spent, times, message_id=None, gacha_cls = Gacha,
             raise RuntimeError('抽卡成功，连接数据库失败，请稍后再试') from e
         
     return cards
+
+
+def free_gacha(user_id, message_id=None, gacha_cls = Gacha, conn = None):
+
+    if conn is None:
+        conn = connection()
+
+    with conn as c:
+        avail = Sign_in_service(Repository(c))
+        avail.check_availability(user_id)
+
+    return normal_gacha(user_id, 0, 1, message_id, gacha_cls, conn=conn)
+
+
+
+
+
+
+
+
+
+
+

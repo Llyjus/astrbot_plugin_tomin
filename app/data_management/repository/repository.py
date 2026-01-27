@@ -318,11 +318,12 @@ class Repository(function_ports):
             
             return result
         
+        
         except sqlite3.Error as e:
             raise Database_error(f'操作失败，数据库连接错误，请稍候再试:{e}') from e
-        
 
-    def update_sign_in_date(self, user_id, date, past_date, timestamp,):
+
+    def update_sign_in_date(self, user_id, date, past_date, timestamp):
         
         cursor = self.conn.cursor()
 
@@ -335,6 +336,9 @@ class Repository(function_ports):
             raise Database_error(f'操作失败，数据库连接错误，请稍候再试:{e}') from e
 
 
+        if cursor.rowcount == 0:
+            raise Cooldown('正在冷却中，请勿重复操作！')
+
     def update_sign_in_count(self, user_id, timestamp):
         cursor = self.conn.cursor()
 
@@ -345,3 +349,6 @@ class Repository(function_ports):
             
         except sqlite3.Error as e:
             raise Database_error(f'操作失败，数据库连接错误，请稍候再试:{e}') from e
+
+        if cursor.rowcount == 0:
+            raise Cooldown('正在冷却中，请勿重复操作！')

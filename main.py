@@ -32,8 +32,6 @@ class Tomin(Star):
 
 
 
-  
-
     @filter.command("招募", alias={'zm'})
     async def draw_card(self, event: AstrMessageEvent, fund_spent=10, times=1) ->AsyncGenerator[str, None]:
         """招募指令"""
@@ -75,6 +73,46 @@ class Tomin(Star):
 
         yield event.plain_result(result)
 
+    @filter.command("打卡", alias={'dk'})
+    async def draw_card(self, event: AstrMessageEvent) ->AsyncGenerator[str, None]:
+        """招募指令"""
+        try:
+
+            self.cleaner.cleaning_check()
+
+            message_id = event.message_obj.message_id
+            user_id = event.get_sender_id()
+
+            user_id = str(user_id)
+            result = ''
+
+            # validate
+            check = Gacha_input(user_id=user_id, fund_spent=10, times=1)
+
+
+
+            # gacha
+            cards = free_gacha(user_id, 1, message_id=message_id)
+
+
+
+            result = "成功抽取卡牌:\n"
+
+
+            result += cards
+
+
+        except ValidationError as e:
+            
+            result = error_message(e)
+
+        except App_error as e:
+            result += str(e)
+        except Infra_error as e:
+            result += str(e)
+            logger.error(f"Infra_error: {e}")
+
+        yield event.plain_result(result)
 
 
     async def terminate(self):

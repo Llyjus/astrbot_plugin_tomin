@@ -100,7 +100,7 @@ CREATE TABLE IF NOT EXISTS events(
 SIGN_IN_SQL = '''
 CREATE TABLE IF NOT EXISTS sign_in(
     user_id VARCHAR(50) PRIMARY KEY,
-    date TEXT,
+    date INT,
     count INT,
     `timestamp` INT
 

@@ -46,6 +46,9 @@ class User_not_found(App_error):
 class Illegal_data(App_error):
      pass
 
+class Cooldown(App_error):
+     pass
+
 
 class Infra_error(Exception):
      pass

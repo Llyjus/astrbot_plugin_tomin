@@ -1,7 +1,7 @@
 from time import time
 from app.data_management import Repository
 
-from app.schemas.errors import Not_enough_fund
+from app.schemas import *
 
 class Service():
     def __init__(self, repo: Repository):
@@ -137,3 +137,45 @@ class Fund_service(Service):
         
         return True
     
+class Sign_in_service(Service):
+
+    def __init__(self, repo:Repository):
+        super().__init__(repo)
+
+    def check_availability(self, user_id, time_now = None):
+
+        result = self.repo.search_sign_in(user_id)
+
+        if time_now is None:
+            time_now = int(time())
+
+        date = (time_now + 8 * 3600) // 86400
+
+        # register
+        if result == None:
+ 
+            self.repo.add_sign_in(user_id, date, time_now)
+        
+            return
+        
+        # check date
+        if result['date'] == date and result['count'] < 5:
+            
+                self.repo.update_sign_in_count(user_id, time_now)
+
+        elif result['date'] != date:
+            # new date
+
+            past_date = result['date']
+
+            self.repo.update_sign_in_date(user_id, date, past_date, time_now)
+        
+        elif result['count'] >= 5:
+            raise Cooldown('今日签到次数已达上限！')
+        
+        else:
+            seconds = result["time_now"] + 4*3600 - time_now
+            minutes = seconds // 60
+            hours = minutes // 60 + 1
+            raise Cooldown(f'还未到冷却时间！{hours}小时{minutes % 60}分钟后试吧！')
+              

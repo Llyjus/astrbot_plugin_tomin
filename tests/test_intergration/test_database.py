@@ -1,8 +1,9 @@
 import sys
 import os
 from pytest import raises
+from time import sleep
 
-from app.services import Card_service, Fund_service
+from app.services import *
 from app.schemas import *
 from app.maintenance import Cleaner
 
@@ -246,17 +247,20 @@ def test_cards_table(memory_db_connection):
 
     # sign_in table
 
-    repo.add_sign_in(uid1, '2024-01-27', 100)
+    repo.add_sign_in(uid1, date=99, timestamp=100)
 
     result13 = repo.search_sign_in(uid1)
 
     assert result13['user_id'] == uid1
 
-    repo.update_sign_in_date(uid1, '2024-01-28', '2024-01-27', 200)
+    repo.update_sign_in_date(uid1, 
+                             date=100, 
+                             past_date=99, 
+                             timestamp=101)
 
     result14 = repo.search_sign_in(uid1)
 
-    assert result14['date'] == '2024-01-28'
+    assert result14['date'] == 100
 
     repo.update_sign_in_count(uid1, 1000000)
 
@@ -264,14 +268,37 @@ def test_cards_table(memory_db_connection):
 
     assert result15['count'] == 2
 
+    #sign_in error check
 
+    with raises(Cooldown, match='正在冷却中，请勿重复操作！') as error5:
+        
+        repo.update_sign_in_date(uid1, 100, 99, 200)
+
+    with raises(Cooldown, match='正在冷却中，请勿重复操作！') as error6:
+        repo.update_sign_in_count(uid1, 1000001)
+
+    with raises(Cooldown, match='正在冷却中，请勿重复操作！') as error7:
+        for i in range(4):
+            repo.update_sign_in_count('tt', 1000000 + 20000*i)
     
-    
+    # sign_in service
+    sign_in_ser = Sign_in_service(repo)
 
+    sign_in_ser.user_exists('tttt')
 
-    
+    sign_in_ser.check_availability('tttt', time_now= 8 * 3600)
 
+    result16 = repo.search_sign_in('tttt')
 
+    assert result16['user_id'] == 'tttt'
 
-    
-   
+    sign_in_ser.check_availability(uid1, time_now= 12 * 3600 + 1)
+
+    sign_in_ser.check_availability(uid1, time_now= 1 * 86400 + 8 * 3600 + 1)
+
+    with raises(Cooldown, match='今日签到次数已达上限！') as error8:
+
+        for i in range(5):
+
+            sign_in_ser.check_availability(uid1, time_now= 2 * 86400 - 8 * 3600 + 15000*i)
+
