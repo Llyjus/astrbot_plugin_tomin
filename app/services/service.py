@@ -1,3 +1,4 @@
+from time import time
 from app.data_management import Repository
 
 from app.schemas.errors import Not_enough_fund
@@ -135,3 +136,4 @@ class Fund_service(Service):
             raise Not_enough_fund(f'你没有足够的资金！你目前的资金是：{result['fund']}')
         
         return True
+    

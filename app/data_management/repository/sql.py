@@ -1,5 +1,5 @@
 def table_create_sql():
-    return [USERS_TABLE_SQL, CARDS_TABLE_SQL, BANDS_TABLE_SQL, SLOTS_TABLE_SQL, EVENT_TABLE_SQL, SIGN_UP_SQL]
+    return [USERS_TABLE_SQL, CARDS_TABLE_SQL, BANDS_TABLE_SQL, SLOTS_TABLE_SQL, EVENT_TABLE_SQL, SIGN_IN_SQL]
 
 def user_interact_sql():
     return [USER_INSERT_SQL, USER_CHECK_SQL, FUND_GIVEN_SQL]
@@ -16,7 +16,12 @@ def slot_interact_sql():
     return [SLOT_INSERT_SQL, SLOTS_SELECT_SQL, SLOT_DELETE_SQL]
 
 def event_interact_sql():
-    return [EVENT_INSERT_SQL, EVENT_SEARCH_SQL, EVENT_SET_SQL, EVENT_DELETE_SQL]
+    return [EVENT_INSERT_SQL, EVENT_SEARCH_SQL, EVENT_DELETE_SQL]
+
+def sign_in_interact_sql():
+    return [SIGN_IN_INSERT_SQL, SIGN_IN_SEARCH_SQL, SIGN_IN_DATE_UPDATE_SQL, SIGN_IN_COUNT_UPDATE_SQL]
+
+
 
 
 USERS_TABLE_SQL = """
@@ -84,21 +89,20 @@ CREATE TABLE IF NOT EXISTS slots(
 
 EVENT_TABLE_SQL = '''
 CREATE TABLE IF NOT EXISTS events(
-    event_id PRIMARY KEY,
-    status INT,
-    timestamp INT 
+    event_id TEXT PRIMARY KEY,
+    `timestamp` INT 
 
 );
 
 '''
 
 
-SIGN_UP_SQL = '''
-CREATE TABLE IF NOT EXISTS sign_up(
+SIGN_IN_SQL = '''
+CREATE TABLE IF NOT EXISTS sign_in(
     user_id VARCHAR(50) PRIMARY KEY,
-    day TEXT,
+    date TEXT,
     count INT,
-    timestamp INT
+    `timestamp` INT
 
 );
 
@@ -209,8 +213,8 @@ SLOT_DELETE_SQL = '''
 '''
     
 EVENT_INSERT_SQL = '''
-                INSERT INTO events(event_id, status, timestamp)
-                VALUES(?, ?, ?);
+                INSERT INTO events(event_id, `timestamp`)
+                VALUES(?, ?);
 
 '''
 
@@ -221,15 +225,37 @@ EVENT_SEARCH_SQL = '''
 
 '''
 
-
-EVENT_SET_SQL = '''
-                UPDATE events
-                SET status = 1
-                WHERE event_id = ?;
-'''
-
 EVENT_DELETE_SQL = '''
                 DELETE
                 FROM events
-                timestamp <= ?;
+                WHERE `timestamp` <= ?;
 '''
+
+
+SIGN_IN_INSERT_SQL = '''
+        INSERT INTO sign_in (user_id, date, count, `timestamp`)
+        VALUES (?, ?, 1, ?);
+
+'''
+
+SIGN_IN_SEARCH_SQL = '''
+        SELECT *
+        FROM sign_in
+        WHERE user_id = ?;  
+'''
+
+SIGN_IN_DATE_UPDATE_SQL = '''
+        UPDATE sign_in
+        SET date = ?, count = 1, `timestamp` = ?
+        WHERE user_id = ? AND date = ?;
+'''
+
+SIGN_IN_COUNT_UPDATE_SQL = '''
+        UPDATE sign_in
+        SET count = count + 1
+            , `timestamp` = ?
+        WHERE user_id = ? 
+            AND count < 5
+            AND ? - `timestamp` >= 3600*4;
+''' 
+

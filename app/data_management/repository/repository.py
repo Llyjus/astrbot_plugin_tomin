@@ -244,13 +244,13 @@ class Repository(function_ports):
         
 
 
-    def add_event(self, event_id, status, timestamp):
+    def add_event(self, event_id, timestamp):
         cursor = self.conn.cursor()
 
         sql = event_interact_sql()[0]
 
         try:
-            cursor.execute(sql, (event_id, status, timestamp))
+            cursor.execute(sql, (event_id, timestamp))
 
         except sqlite3.IntegrityError as e:
             raise Request_repeat('重复执行')  
@@ -274,27 +274,14 @@ class Repository(function_ports):
             return result
         
         except sqlite3.Error as e:
-            raise Database_error('操作失败，数据库连接错误，请稍候再试') from e
-
-
-    def set_event(self, event_id):
-        cursor = self.conn.cursor()
-
-        sql = event_interact_sql()[2]
-
-        try:
-            cursor.execute(sql, (event_id, ))
-
-        except sqlite3.Error as e :
-            raise Database_error('操作失败，数据库连接错误，请稍候再试') from e
-        
+            raise Database_error(f'操作失败，数据库连接错误，请稍候再试:{e}') from e
 
 
 
     def delete_events(self, timestamp):
         cursor = self.conn.cursor()
 
-        sql = event_interact_sql()[3]
+        sql = event_interact_sql()[2]
 
         
         try:
@@ -303,3 +290,58 @@ class Repository(function_ports):
         except sqlite3.Error as e:  
             
             raise Database_error('查询失败，数据库连接错误，请稍候再试') from e
+
+
+    def add_sign_in(self, user_id, date, timestamp):
+        cursor = self.conn.cursor()
+
+        sql = sign_in_interact_sql()[0]
+
+        try:
+            cursor.execute(sql, (user_id, date, timestamp))
+
+        except sqlite3.IntegrityError as e:
+            raise Request_repeat('重复执行')  
+            
+        except sqlite3.Error as e:
+            
+            raise Database_error('查询失败，数据库连接错误，请稍候再试') from e
+        
+
+    def search_sign_in(self, user_id):
+        cursor = self.conn.cursor()
+
+        sql = sign_in_interact_sql()[1]
+
+        try:
+            result = cursor.execute(sql, (user_id, )).fetchone()
+            
+            return result
+        
+        except sqlite3.Error as e:
+            raise Database_error(f'操作失败，数据库连接错误，请稍候再试:{e}') from e
+        
+
+    def update_sign_in_date(self, user_id, date, past_date, timestamp,):
+        
+        cursor = self.conn.cursor()
+
+        sql = sign_in_interact_sql()[2]
+
+        try:
+            cursor.execute(sql, (date, timestamp, user_id, past_date))
+            
+        except sqlite3.Error as e:
+            raise Database_error(f'操作失败，数据库连接错误，请稍候再试:{e}') from e
+
+
+    def update_sign_in_count(self, user_id, timestamp):
+        cursor = self.conn.cursor()
+
+        sql = sign_in_interact_sql()[3]
+
+        try:
+            cursor.execute(sql, (timestamp, user_id, timestamp))
+            
+        except sqlite3.Error as e:
+            raise Database_error(f'操作失败，数据库连接错误，请稍候再试:{e}') from e

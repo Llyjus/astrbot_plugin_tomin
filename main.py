@@ -14,17 +14,22 @@ from app import *
 class Tomin(Star):
     def __init__(self, context: Context):
         super().__init__(context)
+        self.cleaner = Cleaner()
 
     async def initialize(self):
         """sub thread"""
         try:
+
+            db_init()
+
             loop = get_running_loop()
             await loop.run_in_executor(None, numpy_system_dependencies_check)
-            await loop.run_in_executor(None, db_init)
+
 
         except Exception as e:
             self.terminate()
             raise RuntimeError('Tomin初始化失败。') from e
+
 
 
   
@@ -33,6 +38,10 @@ class Tomin(Star):
     async def draw_card(self, event: AstrMessageEvent, fund_spent=10, times=1) ->AsyncGenerator[str, None]:
         """招募指令"""
         try:
+
+            self.cleaner.cleaning_check()
+
+            message_id = event.message_obj.message_id
             user_id = event.get_sender_id()
 
             user_id = str(user_id)
@@ -44,7 +53,7 @@ class Tomin(Star):
 
 
             # gacha
-            cards = await normal_gacha(user_id, fund_spent, times)
+            cards = normal_gacha(user_id, fund_spent, times, message_id)
 
 
 
@@ -58,8 +67,11 @@ class Tomin(Star):
             
             result = error_message(e)
 
-        except Exception as e:
+        except App_error as e:
             result += str(e)
+        except Infra_error as e:
+            result += str(e)
+            logger.error(f"Infra_error: {e}")
 
         yield event.plain_result(result)
 
@@ -67,6 +79,7 @@ class Tomin(Star):
 
     async def terminate(self):
         """可选择实现异步的插件销毁方法，当插件被卸载/停用时会调用。"""
+
         logger.info('girls_band_game插件已停用。')
 
 

@@ -4,6 +4,7 @@ from pytest import raises
 
 from app.services import Card_service, Fund_service
 from app.schemas import *
+from app.maintenance import Cleaner
 
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
@@ -140,10 +141,19 @@ def test_cards_table(memory_db_connection):
     assert result6['user_id'] == 't' and result6['card_id'] == 2
 
 
+    # Test methods of events table
 
+    repo.add_event('test', 1)
 
+    result7 = repo.search_event('test')
 
+    assert result7['event_id'] == 'test'
 
+    repo.delete_events(100)
+
+    result8 = repo.search_event('test')
+
+    assert result8 is None
 
     #error check
 
@@ -177,8 +187,8 @@ def test_cards_table(memory_db_connection):
 
     card_ser.user_exists('tes')
 
-    result7 = repo.search_user('tes')
-    assert result7['user_id'] == 'tes'
+    result9 = repo.search_user('tes')
+    assert result9['user_id'] == 'tes'
 
     card_dict = card_ser.get_avail_cards_id(uid1, 2)
 
@@ -199,12 +209,11 @@ def test_cards_table(memory_db_connection):
 
     card_ser.set_slots(uid1, [1, 3, 4])
     
-    result8 = repo.search_slots(uid1)
+    result10 = repo.search_slots(uid1)
 
-    for r in result8:
+    for r in result10:
 
-        assert result8['slot'] == 1 
-
+        assert r['slot'] == 1
 
     
     #fund check
@@ -213,15 +222,48 @@ def test_cards_table(memory_db_connection):
 
     fund_ser = Fund_service(repo)
 
-    result9 = fund_ser.fund_check(uid1, 50)
+    result11 = fund_ser.fund_check(uid1, 50)
 
-    assert result9 == True
+    assert result11 == True
 
     with raises(Not_enough_fund) as error4:
         fund_ser.fund_check(uid1, 100)
 
 
-    
+    # Cleaner
+
+    repo.add_event('test', 1)
+
+    cleaner = Cleaner(time_record=1)
+
+    cleaner.cleaning_check(repo.conn)
+
+    result12 = repo.search_event('test')
+
+    assert result12 is None
+
+
+
+    # sign_in table
+
+    repo.add_sign_in(uid1, '2024-01-27', 100)
+
+    result13 = repo.search_sign_in(uid1)
+
+    assert result13['user_id'] == uid1
+
+    repo.update_sign_in_date(uid1, '2024-01-28', '2024-01-27', 200)
+
+    result14 = repo.search_sign_in(uid1)
+
+    assert result14['date'] == '2024-01-28'
+
+    repo.update_sign_in_count(uid1, 1000000)
+
+    result15 = repo.search_sign_in(uid1)
+
+    assert result15['count'] == 2
+
 
     
     

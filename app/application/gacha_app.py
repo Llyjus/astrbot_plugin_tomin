@@ -1,19 +1,27 @@
 from dataclasses import asdict, astuple
-from asyncio import get_running_loop
+from time import time
 
 from app.gacha import Gacha
 from app.data_management import Repository, connection
 from app.services import Card_service, Fund_service
+from app.maintenance import event_creater
 
 
-def normal_gacha(user_id, fund_spent, times, gacha_cls = Gacha, conn = None):
+
+def normal_gacha(user_id, fund_spent, times, message_id=None, gacha_cls = Gacha, conn = None):
     # Use async function for the window of the future 
-
+    
     if conn is None:
         conn = connection()
 
+    # Create event
+    with conn:
+        event_creater(message_id, conn)
+
+
     # Find the available card_id and insert into database
     with conn:
+
         repo = Repository(conn)
 
         fund_ser = Fund_service(repo)
