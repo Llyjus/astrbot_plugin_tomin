@@ -7,10 +7,10 @@ def user_interact_sql():
 def card_interact_sql():
     return [CARD_INSERT_SQL, CARD_SEARCH_SQL, CARD_SEARCH_LAST_SQL, CARDS_SEARCH_SQL, CARD_SET_USER_SQL, CARD_DELETE_SQL]
 
-def band_interact_sql():
-    sql1 = [BAND_CREATE_SQL, BAND_SEARCH_SQL, BANDS_SEARCH_SQL]
-    sql2 = [band_add_card_sql(x) for x in range(1, 6)]
-    return sql1 + sql2
+# def band_interact_sql():
+#     sql1 = [BAND_CREATE_SQL, BAND_SEARCH_SQL, BANDS_SEARCH_SQL]
+#     sql2 = [band_add_card_sql(x) for x in range(1, 6)]
+#     return sql1 + sql2
 
 def slot_interact_sql():
     return [SLOT_INSERT_SQL, SLOTS_SELECT_SQL, SLOT_DELETE_SQL]

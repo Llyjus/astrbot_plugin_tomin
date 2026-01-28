@@ -2,10 +2,13 @@ import pytest
 
 from app.maintenance import Cleaner
 
-def fake_cleaning(time_now, conn):
-    pass
+
 
 def test_cleaner(mocker):
+
+    def fake_cleaning(time_now, conn):
+        pass
+
     fake_connection = mocker.Mock()
     
     fake_cleaning = mocker.patch.object(Cleaner, '_do_cleaning')
