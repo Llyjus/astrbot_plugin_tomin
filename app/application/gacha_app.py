@@ -8,25 +8,23 @@ from app.maintenance import event_creater
 
 
 
-def normal_gacha(user_id, fund_spent, times, message_id=None, gacha_cls = Gacha, conn = None):
+def normal_gacha(user_id, fund_spent, times, message_id=None, gacha_cls = Gacha, connect = None):
     # Use async function for the window of the future 
     
-    if conn is None:
-        conn = connection()
-
-    # Create event
-    with conn:
-        event_creater(message_id, conn)
-
+    # transaction atomic
+        # Create event
+    event_creater(message_id, connect)
 
     # Find the available card_id and insert into database
-    with conn:
+    if connect == None:
+        connect = connection()
+    with connect as conn:
 
         repo = Repository(conn)
 
         fund_ser = Fund_service(repo)
 
-        fund_ser.user_exists(user_id)
+        fund_ser.ensure_user_exists(user_id)
 
         fund_ser.fund_check(user_id, fund_spent * times)
 
@@ -75,17 +73,19 @@ def normal_gacha(user_id, fund_spent, times, message_id=None, gacha_cls = Gacha,
 
 
 
-def free_gacha(user_id, message_id=None, gacha_cls = Gacha, conn = None):
+def free_gacha(user_id, message_id=None, gacha_cls = Gacha, connect = None):
 
-    if conn is None:
-        conn = connection()
+    if connect is None:
+        with connection() as conn:
+            avail = Sign_in_service(Repository(conn))
 
-    with conn as c:
-        avail = Sign_in_service(Repository(c))
+    else:
+        with connect as conn:
+            avail = Sign_in_service(Repository(conn))
+
         result = avail.check_availability(user_id)
-
-    result += '成功抽取卡牌:\n'
-    result += normal_gacha(user_id, 0, 1, message_id, gacha_cls, conn=conn)
+        result += '成功抽取卡牌:\n'
+        result += normal_gacha(user_id, 0, 1, message_id, gacha_cls, connect=connect)
     
     return result
 

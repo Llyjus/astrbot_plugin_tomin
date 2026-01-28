@@ -7,15 +7,16 @@ ERROR_MESSAGES = {
 }
 
 def error_message(e):
-        result = ''
-        errors = e.errors()
-        for error in errors:
-            loc = error['loc']
-            type = error['type']
-            if type in ERROR_MESSAGES:
-                result += str(loc) + '：' + ERROR_MESSAGES[type] + '；'
-            else:
-                result += error['msg']
+     result = ''
+     errors = e.errors()
+     for error in errors:
+          loc = error['loc']
+          type = error['type']
+          if type in ERROR_MESSAGES:
+               result += str(loc) + '：' + ERROR_MESSAGES[type] + '；'
+          else:
+               result += error['msg']
+     return result
 
 
 class App_error(Exception):
@@ -23,7 +24,8 @@ class App_error(Exception):
     #error caused in app
     pass
 
-
+class Invalid_input(App_error):
+     pass
 
 class Not_enough_fund(App_error):
      pass

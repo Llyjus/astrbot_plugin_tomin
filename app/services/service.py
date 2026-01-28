@@ -7,7 +7,7 @@ class Service():
     def __init__(self, repo: Repository):
         self.repo = repo
 
-    def user_exists(self, user_id):
+    def ensure_user_exists(self, user_id):
         user = self.repo.search_user(user_id)
         if user == None:
             self.repo.add_user(user_id)
@@ -65,7 +65,7 @@ class Card_service(Service):
 
 
 
-    def fill_slots(self, user_id, slot_list:list):
+    def delete_slots(self, user_id, slot_list:list):
 
         slots = []
 
@@ -85,6 +85,9 @@ class Card_service(Service):
         # larger than the last card_id in cards
 
         last_card = self.repo.search_card_last(user_id)
+
+        if last_card == None:
+            return
 
         value_id = last_card['card_id']
 
@@ -119,7 +122,7 @@ class Card_service(Service):
 
 
         # insert
-        self.repo.add_slots(user_id, card_id)
+        self.repo.add_slots(slots)
     
 
 class Fund_service(Service):
@@ -133,7 +136,7 @@ class Fund_service(Service):
         result = self.repo.search_user(user_id)
 
         if result['fund'] < fund_spent:
-            raise Not_enough_fund(f'你没有足够的资金！你目前的资金是：{result['fund']}')
+            raise Not_enough_fund(f"你没有足够的资金！你目前的资金是：{result['fund']}")
         
         return True
     
@@ -181,7 +184,7 @@ class Sign_in_service(Service):
             raise Cooldown('今日签到次数已达上限！')
         
         else:
-            seconds = result["time_now"] + 4*3600 - time_now
+            seconds = result["timestamp"] + 4*3600 - time_now
             minutes = seconds // 60
             hours = minutes // 60 + 1
             raise Cooldown(f'还未到冷却时间！{hours}小时{minutes % 60}分钟后再试吧！')

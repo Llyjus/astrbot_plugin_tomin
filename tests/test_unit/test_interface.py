@@ -1,5 +1,6 @@
 import pytest 
 from pytest import raises
+from pydantic import ValidationError
 
 from main import Tomin
 
@@ -39,19 +40,29 @@ async def test_draw_card_success(mocker):
 
         args, kwargs = mock_gacha.call_args
 
-
         calls = mock_gacha.call_args_list
 
-        assert calls[0].args[1] == 20 and calls[0].args[2] == 2
+    assert calls[0].args[1] == 20 and calls[0].args[2] == 2
 
             
-        assert 'character: ksm' in result[0]
+    assert 'character: ksm' in result[0]
 
 
-        fake_event.get_message_text.return_value = 'szmd'
+    fake_event.get_message_text.return_value = 'szmd'
 
-        card = test.draw_card(fake_event)
+    card = test.draw_card(fake_event)
 
-        result = [msg async for msg in card]
+    result = [msg async for msg in card]
 
-        assert '命令格式错误' in result[0]
+    assert '命令格式错误' in result[0]
+
+    fake_event.get_message_text.return_value = 'zm101x100'
+    card = test.draw_card(fake_event)
+    result = [msg async for msg in card]
+
+
+    fake_event.get_message_text.return_value = 'zm110 2'
+    card = test.draw_card(fake_event)
+    result = [msg async for msg in card]
+
+    assert '招募资金不能大于100或小于10！' in result[0]

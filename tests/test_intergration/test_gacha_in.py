@@ -30,7 +30,7 @@ def test_gacha_process(memory_db_connection):
     card1 = normal_gacha(user_id='test', 
                         fund_spent=10, times=1,
                         gacha_cls=Fake_gacha, 
-                        conn=memory_db_connection.conn)
+                        connect=memory_db_connection.conn)
     
     # Check the user's fund
     result1 = repo.search_user('test')
@@ -49,7 +49,7 @@ def test_gacha_process(memory_db_connection):
     card2 = normal_gacha(user_id='test', 
                         fund_spent=10, times=1,
                         gacha_cls=Fake_gacha, 
-                        conn=memory_db_connection.conn)
+                        connect=memory_db_connection.conn)
     
     result3 = repo.search_card(2, 'test')
 
@@ -60,7 +60,7 @@ def test_gacha_process(memory_db_connection):
     cards = normal_gacha(user_id='test', 
                         fund_spent=0, times=2,
                         gacha_cls=Fake_gacha, 
-                        conn=memory_db_connection.conn)
+                        connect=memory_db_connection.conn)
     
     result4 = repo.search_card(4, 'test')
 
@@ -75,7 +75,7 @@ def test_gacha_process(memory_db_connection):
         card3 = normal_gacha(user_id='test', 
                         fund_spent=10, times=1, 
                         gacha_cls=Fake_gacha, 
-                        conn=memory_db_connection.conn)
+                        connect=memory_db_connection.conn)
 
 
 
@@ -83,7 +83,7 @@ def test_gacha_process(memory_db_connection):
     # Test free gacha
     result5 = free_gacha(user_id='test', 
                         gacha_cls=Fake_gacha, 
-                        conn=memory_db_connection.conn) 
+                        connect=memory_db_connection.conn) 
     
     assert '今日首次打卡成功！+10资金' in result5
 

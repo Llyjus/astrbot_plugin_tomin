@@ -2,8 +2,11 @@
 from app.data_management import Repository, connection
 from time import time
 
-def event_creater(message_id, conn = None):
+def event_creater(message_id, conn):
 
+    if message_id == None:
+        return
+    
     if conn is None:
         conn = connection()
     with conn as c:

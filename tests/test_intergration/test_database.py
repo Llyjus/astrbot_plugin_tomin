@@ -186,7 +186,7 @@ def test_cards_table(memory_db_connection):
     #service test
     card_ser = Card_service(repo)
 
-    card_ser.user_exists('tes')
+    card_ser.ensure_user_exists('tes')
 
     result9 = repo.search_user('tes')
     assert result9['user_id'] == 'tes'
@@ -202,7 +202,7 @@ def test_cards_table(memory_db_connection):
 
     #repo.delete_slots([(uid1, 1)])
 
-    card_ser.fill_slots(uid1, [1])
+    card_ser.delete_slots(uid1, [1])
 
     card_dict = card_ser.get_avail_cards_id(uid1, 2)
 
@@ -282,9 +282,10 @@ def test_cards_table(memory_db_connection):
             repo.update_sign_in_count('tt', 1000000 + 20000*i)
     
     # sign_in service
+
     sign_in_ser = Sign_in_service(repo)
 
-    sign_in_ser.user_exists('tttt')
+    sign_in_ser.ensure_user_exists('tttt')
 
     sign_in_ser.check_availability('tttt', time_now= 8 * 3600)
 
@@ -295,4 +296,6 @@ def test_cards_table(memory_db_connection):
     sign_in_ser.check_availability(uid1, time_now= 12 * 3600 + 1)
 
     sign_in_ser.check_availability(uid1, time_now= 1 * 86400 + 8 * 3600 + 1)
+
+
 

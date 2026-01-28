@@ -19,14 +19,10 @@ class Tomin(Star):
         self.cleaner = Cleaner()
 
     async def initialize(self):
-        """sub thread"""
+
         try:
 
             db_init()
-
-            loop = get_running_loop()
-            await loop.run_in_executor(None, numpy_system_dependencies_check)
-
 
         except Exception as e:
             self.terminate()
@@ -140,9 +136,9 @@ Tomin指令列表：
             result = error_message(e)
 
         except App_error as e:
-            result += str(e)
+            result = str(e)
         except Infra_error as e:
-            result += str(e)
+            result = str(e)
             logger.error(f"Infra_error: {e}")
 
         yield event.plain_result(result)
@@ -168,7 +164,7 @@ Tomin指令列表：
 
 
             # gacha
-            cards = free_gacha(user_id, 1, message_id=message_id)
+            cards = free_gacha(user_id, message_id=message_id)
 
 
 

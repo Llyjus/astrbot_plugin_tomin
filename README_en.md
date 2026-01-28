@@ -139,24 +139,33 @@ Planned rarity tiers (6 levels) with default probabilities:
 
 #### Commands
 
-
-
-
-1. Use ````help```` or ````help```` to view the command system.
-2. Use ````check-in````, ````dk````, ````sign-in```` or ````qd```` for daily free recruitment. Cooldown time is 4 hours, maximum 5 times per day, cooldown resets the next day.
+1. Use ```help``` to view the command system.
+2. Use ```check-in```, ```dk```, ```sign in```, or ```qd``` to perform daily free recruitment. Cooldown: 4 hours, maximum 5 times per day, resets daily.
 3. 
-   - Use ````recruit```` or ````zm```` to recruit characters with the default minimum of 10 funds;
-   - Use ````recruit x```` (where x is the fund amount) to recruit with up to 100 funds at once. Each additional fund increases the fixed probability of characters with rarity over 2 appearing;
-   - Use ````recruit x n```` (where n is the number of times) to perform multiple recruitments in a single command. For example, spending 100 funds for one recruitment, the probabilities are:
+   - Use ```recruit``` or ```zm``` to spend a minimum of 10 funds for recruitment.
+   - ```recruit x``` (where x is the amount of funds) allows spending up to 100 funds per recruitment. Each additional fund increases the appearance rate of characters with rarity ≥2 by a fixed percentage, as shown below:
 
-      | Rarity | Probability |
-      |--------|-------------|
-      | 1      | 0%          |
-      | 2      | 2%          |
-      | 3      | 37%         |
-      | 4      | 28%         |
-      | 5      | 24%         |
-      | 6      | 10%         |
+   | Rarity | Probability Increase per 10 Funds |
+   |--------|----------------------------------|
+   | 1      | 0%                               |
+   | 2      | 3%                               |
+   | 3      | 3%                               |
+   | 4      | 2%                               |
+   | 5      | 2%                               |
+   | 6      | 1%                               |
+
+   For example, spending 100 funds on one recruitment gives the following probabilities:
+
+   | Rarity | Probability |
+   |--------|-------------|
+   | 1      | 0%          |
+   | 2      | 2%          |
+   | 3      | 37%         |
+   | 4      | 28%         |
+   | 5      | 24%         |
+   | 6      | 10%         |
+
+   - ```recruit x n``` (where n is the number of attempts) allows multiple recruitments in one command.
 
 ---
 
@@ -285,15 +294,161 @@ After completing the basic version, a **roguelike system** and **event system** 
 ```
 
 
-- Detailed Overview
 
-      1. **Architecture**: This project adopts a layered architecture design. Except for the interface layer, it does not depend on astrbot, achieving a migratable system with good portability and reusability. The overall architecture consists of 4 layers: Interface Layer, Application Layer, Logic Layer, and Data Layer.
-      2. **Data Layer**: The data layer uses SQLite3 for local lightweight data storage. The database is encapsulated through a unified interface, making it easy to migrate later if the user base grows or based on development requirements.
-      3. **Logic Layer**: The logic layer interacts with both the data layer and application layer, responsible for implementing specific individual tasks, such as accessing user data, generating cards, etc. Each logic component is not coupled with others and is only invoked through explicit interfaces.
-      4. **Application Layer**: The application layer receives standardized input from the interface layer and calls the logic layer to indirectly perform database operations and execute logic (e.g., generating cards), then returns results to the interface layer. Currently, the application layer only supports structured data input. In the future, if support for multi-language or cross-process interface interaction is needed, universal data formats like JSON can be further introduced.
-      5. **Interface Layer**: Receives frontend information and performs basic validation (such as data types, formats, and required fields). Upon validation, it calls the application layer for processing and returns the result to the caller.
+## Developer Documentation
+
+### 1. Overall Architecture Design
+
+This project adopts a layered architecture with strict dependency direction control. The core goal is to:
+In the form of an AstrBot plugin, implement a backend system that is migratable, testable, and evolvable.
+
+The architecture is divided into four layers:
+
+```
+
+Interface Layer (Interface)
+↓
+Application Layer (Application / Use Case)
+↓
+Logic Layer (Domain / Service)
+↓
+Data Layer (Repository / Storage)
+
+```
+
+#### 1. Interface Layer
+
+Located in `main.py`.
+
+Responsibilities only include:
+- Command parsing (regular expressions / command routing)
+- Input validation (Pydantic)
+- Exception handling and user feedback
+
+Contains no business rules and does not directly access the database.
+
+The interface layer can be viewed as an Adapter, with AstrBot being just one of many possible access methods.
 
 ---
+
+#### 2. Application Layer
+
+Located in `app/application`.
+
+Each function corresponds to a complete use case:
+- `normal_gacha`: Paid gacha
+- `free_gacha`: Check-in + free gacha
+
+Responsibilities:
+- Orchestrating business processes
+- Controlling transaction boundaries
+- Coordinating multiple Services and Repositories
+
+The application layer is the sole entry point for system behavior; the interface layer cannot bypass it to directly call Services or Repositories.
+
+---
+
+#### 3. Logic Layer (Domain / Service Layer)
+
+Located in `app/services`.
+
+Includes:
+- `Fund_service`: Fund validation and deduction rules
+- `Card_service`: Card numbering and slot reuse rules
+- `Sign_in_service`: Check-in count / cooldown logic
+
+Characteristics:
+- Unaware of interface forms
+- Does not manage transactions
+- Only expresses business rules
+
+This layer can be reused for Web APIs, scheduled tasks, or other game interfaces.
+
+---
+
+#### 4. Data Layer (Repository Layer)
+
+Located in `app/data_management`.
+
+Implemented using SQLite, but decoupled via Repository + Protocol (ports).
+
+Characteristics:
+- Repository only handles data access, no business semantics
+- Transactions are uniformly controlled by the outer `connection()`
+- All database exceptions are converted to domain / infrastructure exceptions
+
+Can be migrated to PostgreSQL / MySQL non-intrusively in the future.
+
+---
+
+### 2. Key Mechanism Explanations
+
+#### 1. Idempotence Design (No Retry on Failure)
+
+The system adopts a **strong idempotence strategy with event-first persistence**:
+- Each user message uses `message_id` as the idempotency key
+- Before any business processing, the event is written to the `events` table first
+- `event_id` is the primary key; duplicate requests directly trigger unique key conflicts
+
+Design trade-off explanation:
+- Current strategy: **No retry allowed even on failure**
+- Suitable for chatbot scenarios to avoid duplicate deductions and rewards
+- If "retry on failure" is needed in the future, event submission can be delayed or transactions can be split
+
+---
+
+#### 2. Transaction Boundary Design
+
+- Uses `contextmanager` to encapsulate database connections
+- Each use case explicitly controls transaction scope at the application layer
+- Any exception triggers rollback to avoid partial success states
+
+---
+
+#### 3. Decoupling Gacha and Numerical Systems
+
+- Gacha logic is located in `app/gacha`
+- Numerical calculations and probability distributions are centralized in `util`
+
+The gacha module has the following characteristics:
+- No database dependency
+- No AstrBot dependency
+- Can be tested, reused, or replaced independently
+
+---
+
+### 3. Testability Design
+
+This project is designed with testability in mind from the start:
+
+- Uses `pytest` as the testing framework
+- Repository layer uses in-memory SQLite for isolated testing
+- Gacha module achieves deterministic testing via dependency injection (fake gacha / fake rarity)
+
+Test coverage includes:
+- Database CRUD
+- Idempotence logic
+- Transaction rollback
+- Fund boundary conditions
+- Cooldown and count limits
+
+---
+
+### 4. Known Limitations and Future Evolution
+
+- SQLite has limited concurrency, suitable for small group scenarios
+- Cleaner is an in-process periodic cleanup, not a distributed task
+- Gacha probability uses a threshold model, not a weight table
+- `numpy` is a numerical dependency, which can be replaced with a lightweight implementation in the future
+
+---
+
+### (Structural Change Notes)
+
+- Merged the original "Project Architecture / Detailed Outline" into a unified "Developer Documentation"
+- Added new sections: "Key Mechanisms", "Testability", "Limitations and Evolution"
+- No impact on player-facing content, only for developers
+
 
 ## Contributing
 

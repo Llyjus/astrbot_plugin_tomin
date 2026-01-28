@@ -1,6 +1,6 @@
 
-from math import floor
-from random import randint
+from math import floor, sqrt, log, cos, pi
+from random import randint, random
 
 
 from app.gacha.characters import Character
@@ -27,10 +27,18 @@ def rarity_roll(bonus:int):
 
 def stats_roll(base:Character, rarity):
 
-    base.power = floor(random_value(base.power) * (1 + (rarity - 1) * 0.1))
-    base.resistance = floor(random_value(base.resistance) * (1 + max(rarity - 2, 0) * 0.1))
+    char = Character(
+        base.character,
+        base.o_band,
+        base.pos,
+        floor(random_value(base.power) * (1 + (rarity - 1) * 0.1)),
+        base.speed,
+        floor(random_value(base.resistance) * (1 + max(rarity - 2, 0) * 0.1))
 
-    return base
+
+
+    )
+    return char
 
 
 
@@ -39,9 +47,17 @@ def stats_roll(base:Character, rarity):
 
 
 def random_value(value):
-    import numpy
 
-    result_li = numpy.random.normal(value, 0.05*value, 1)
+    # normal distribution
+    def norm_random(mean=0.0, std=1.0):
+
+        u1 = random.random()
+        u2 = random.random()
+        z = sqrt(-2.0 * log(u1)) * cos(2.0 * pi * u2)
+        return mean + z * std
+
+
+    result_li = norm_random(value, 0.05*value)
     result = float(result_li[0])
 
     return result
