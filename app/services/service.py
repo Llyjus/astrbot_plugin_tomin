@@ -3,6 +3,7 @@ from app.data_management import Repository
 
 from app.schemas import *
 
+
 class Service():
     def __init__(self, repo: Repository):
         self.repo = repo
@@ -58,6 +59,8 @@ class Card_service(Service):
 
         
         return result
+    
+    
         
 
 
@@ -140,6 +143,12 @@ class Fund_service(Service):
         
         return True
     
+    def fund_search(self, user_id):
+
+        result = self.repo.search_user(user_id)
+
+        return result['fund']
+        
 class Sign_in_service(Service):
 
     def __init__(self, repo:Repository):
@@ -163,10 +172,22 @@ class Sign_in_service(Service):
             return '今日首次打卡成功！+10资金\n'
         
         # check date
-        if result['date'] == date and result['count'] < 5:
+        elif result['date'] == date and result['count'] < 5:
+                
+                try:
             
-                self.repo.update_sign_in_count(user_id, time_now)
+                    self.repo.update_sign_in_count(user_id, time_now)
+                except Exception as e:
 
+                    seconds = result["timestamp"] + 4*3600 - time_now + 1
+
+                    if seconds < 0:
+                        raise e
+                    
+                    minutes = seconds // 60
+                    hours = minutes // 60
+                    
+                    raise Cooldown(f'还未到冷却时间！{hours}小时{minutes % 60}分钟后再试吧！')
                 return '打卡成功！今日已打卡次数：' + str(result['count'] + 1)
 
         elif result['date'] != date:
@@ -188,4 +209,152 @@ class Sign_in_service(Service):
             minutes = seconds // 60
             hours = minutes // 60 + 1
             raise Cooldown(f'还未到冷却时间！{hours}小时{minutes % 60}分钟后再试吧！')
-              
+
+
+
+
+class Card_storage_service(Service):
+
+    def __init__(self, repo):
+        super().__init__(repo)
+
+
+
+    def card_search_by_id(self, user_id, card_id):
+
+        result:dict = self.repo.search_card(card_id=card_id, user_id=user_id)
+        
+        if result is None:
+            raise Card_not_found('没有找到该卡牌！猪...')
+        
+
+
+        return result
+
+
+
+
+    def cards_search_by_user(self, user_id):
+
+        result = self.repo.search_cards(user_id=user_id)
+
+        if result == []:
+            raise Card_not_found('还没有卡牌呢！猪...')
+        
+
+        return result
+    
+
+
+
+    def card_send_to_user(self, old_card, old_user, new_user ):
+        
+        # make sure it exist
+        _card = self.card_search_by_id(old_card, old_user)
+        
+        car_ser = Card_service(self.repo).get_avail_cards_id(old_user, 1)
+        self.repo.set_card_user(car_ser[0], new_user, old_card, old_user)
+        
+        return
+
+
+
+
+    def cards_search_by_rarity(self, user_id, rarity):
+        result:list = self.repo.search_cards_by_rarity(user_id=user_id, rarity=rarity)
+        if result == []:
+            raise Card_not_found('没有该稀有度的卡牌呢！猪...')
+        
+
+        return result
+    
+
+
+    
+    def cards_search_by_band(self, user_id, o_band):
+        result:list = self.repo.search_cards_by_band(user_id=user_id, o_band=o_band)
+        if result == []:
+            raise Card_not_found('没有该乐队的角色呢！猪...')
+
+        return result
+    
+
+
+    def cards_search_by_band_rarity(self, user_id, o_band, rarity):
+        result:list = self.repo.search_cards_by_band_rariry(user_id=user_id, 
+                                                            o_band=o_band, 
+                                                            rarity=rarity)
+        if result == []:
+            raise Card_not_found('没有匹配的角色呢！猪...')
+
+        return result
+
+
+
+
+
+    def sell_card(self, user_id, card_id):
+        
+        # make sure it exist
+        _card = self.card_search_by_id(user_id=user_id, 
+                                       card_id=card_id)
+
+        rarity = _card['rarity']
+        
+        fund_map = {
+            1:3,
+            2:5,
+            3:15,
+            4:40,
+            5:80,
+            6:200
+        }
+
+        fund_gained = fund_map[rarity]
+
+        self.repo.delete_cards([(card_id, user_id)])
+
+        self.repo.add_fund(user_id, fund_gained)
+
+        return fund_gained
+    
+    
+    def sell_cards_by_rarity(self, user_id, rarity):
+
+        fund_gained = 0
+
+        fund_map = {
+            1:3,
+            2:5,
+            3:15,
+            4:40,
+            5:80,
+            6:200
+        }
+
+        #Search cards below the rarity
+        cards_id = []
+        cards_list_length = 0
+
+        for i in range(1, rarity+1): 
+        
+            result = self.repo.search_cards_by_rarity(user_id=user_id, rarity=i)
+            for card in result:
+                cards_id.append((card['card_id'], user_id))
+
+                # Calculate fund gained
+                cards_appended = len(cards_id) - cards_list_length
+
+                fund_gained += fund_map[i] * cards_appended
+
+                cards_list_length = len(cards_id)
+
+
+        if cards_id == []:
+            raise Card_not_found('没有该稀有度以下的卡牌呢！猪...')
+        
+        # Delete cards and add fund
+        self.repo.delete_cards(cards_id)
+        self.repo.add_fund(user_id, fund_gained)
+
+        return {'cards_sold':cards_list_length, 'fund_gain': fund_gained}

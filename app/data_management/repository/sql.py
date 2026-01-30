@@ -2,10 +2,14 @@ def table_create_sql():
     return [USERS_TABLE_SQL, CARDS_TABLE_SQL, BANDS_TABLE_SQL, SLOTS_TABLE_SQL, EVENT_TABLE_SQL, SIGN_IN_SQL]
 
 def user_interact_sql():
-    return [USER_INSERT_SQL, USER_CHECK_SQL, FUND_GIVEN_SQL]
+    return [USER_INSERT_SQL, USER_CHECK_SQL, FUND_GIVEN_SQL, FUND_GIVEN_ALL_USER_SQL]
 
 def card_interact_sql():
-    return [CARD_INSERT_SQL, CARD_SEARCH_SQL, CARD_SEARCH_LAST_SQL, CARDS_SEARCH_SQL, CARD_SET_USER_SQL, CARD_DELETE_SQL]
+    return [CARD_INSERT_SQL, CARD_SEARCH_SQL, 
+            CARD_SEARCH_LAST_SQL, CARDS_SEARCH_SQL, 
+            CARDS_SEARCH_BY_RARITY_SQL, CARDS_SEARCH_BY_BAND_SQL, 
+            CARDS_SEARCH_BY_BAND_RARITY_SQL, 
+            CARD_SET_USER_SQL, CARDS_DELETE_SQL]
 
 # def band_interact_sql():
 #     sql1 = [BAND_CREATE_SQL, BAND_SEARCH_SQL, BANDS_SEARCH_SQL]
@@ -129,6 +133,11 @@ FUND_GIVEN_SQL = '''
         AND fund + ? >= 0;
             '''
 
+FUND_GIVEN_ALL_USER_SQL = '''
+    UPDATE users
+    SET fund = fund + ?;
+'''
+
 CARD_INSERT_SQL = """
             INSERT INTO cards (card_id, user_id, `character`, o_band, pos, rarity, power, speed, resistance, skill_1, skill_2, skill_3)
             VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -154,18 +163,38 @@ CARDS_SEARCH_SQL = """
             WHERE user_id = ?;
         """
 
+CARDS_SEARCH_BY_RARITY_SQL = """
+            SELECT *
+            FROM cards
+            WHERE user_id = ? AND rarity = ?;
+        """
+
+CARDS_SEARCH_BY_BAND_SQL = """
+            SELECT *
+            FROM cards
+            WHERE user_id = ? AND o_band = ?;
+        """
+
+CARDS_SEARCH_BY_BAND_RARITY_SQL = '''
+            SELECT *
+            FROM cards
+            WHERE user_id = ? AND o_band = ? AND rarity = ?;
+
+'''
+
 CARD_SET_USER_SQL = """
             UPDATE cards
             SET card_id = ?, user_id = ?
             WHERE card_id = ? AND user_id = ?;
         """
 
-CARD_DELETE_SQL = '''
+CARDS_DELETE_SQL = '''
             DELETE 
             FROM cards
-            WHERE user_id = ? AND card_id = ?
+            WHERE card_id = ? AND user_id = ?;
 
 '''
+
 
 # BAND_CREATE_SQL = '''
 #             INSERT INTO bands (band_id, user_id)

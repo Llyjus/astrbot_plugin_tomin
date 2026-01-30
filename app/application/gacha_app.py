@@ -50,9 +50,20 @@ def normal_gacha(user_id, fund_spent, times, message_id=None, gacha_cls = Gacha,
             # Convert and save
             card_di = asdict(card)
             card_tu = astuple(card)
-
-            for key, value in card_di.items():
-                cards += f"{key}：{value}\n"
+            cards += f'''\n
+卡牌id：{card_di['card_id']}\n
+用户id：{card_di['user_id']}\n
+角色：{card_di['character']}\n
+乐队：{card_di['o_band']}\n
+位置：{card_di['pos']}\n
+稀有度：{card_di['rarity']}\n
+综合力：{card_di['power']}\n
+速度：{card_di['speed']}\n
+抗性：{card_di['resistance']}\n
+技能1：{card_di['skill_1']}\n
+技能2：{card_di['skill_2']}\n
+技能3：{card_di['skill_3']}\n
+'''
             cards_tu.append(card_tu)
 
         try:
@@ -78,14 +89,19 @@ def free_gacha(user_id, message_id=None, gacha_cls = Gacha, connect = None):
     if connect is None:
         with connection() as conn:
             avail = Sign_in_service(Repository(conn))
+            avail.ensure_user_exists(user_id)
+            result = avail.check_availability(user_id)
+            result += '成功抽取卡牌:\n'
 
+        result += normal_gacha(user_id, 0, 1, message_id, gacha_cls)
+        
     else:
         with connect as conn:
             avail = Sign_in_service(Repository(conn))
-
-        result = avail.check_availability(user_id)
-        result += '成功抽取卡牌:\n'
-        result += normal_gacha(user_id, 0, 1, message_id, gacha_cls, connect=connect)
+            avail.ensure_user_exists(user_id)
+            result = avail.check_availability(user_id)
+            result += '成功抽取卡牌:\n'
+            result += normal_gacha(user_id, 0, 1, message_id, gacha_cls, connect=connect)
     
     return result
 

@@ -1,8 +1,11 @@
 ERROR_MESSAGES = {
       
     'int_type': '请输入一个整数；',
+    'int_parsing': '请输入一个整数；',
     'string_type': '请输入文本；',
-    'float_type': '请输入一个浮点数；'
+    'string_parsing': '请输入文本；',
+    'float_type': '请输入一个浮点数；',
+    'float_parsing': '请输入一个浮点数；'
 
 }
 

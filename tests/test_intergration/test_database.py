@@ -297,5 +297,15 @@ def test_cards_table(memory_db_connection):
 
     sign_in_ser.check_availability(uid1, time_now= 1 * 86400 + 8 * 3600 + 1)
 
+    car_str_ser = Card_storage_service(repo)
+
+    car_str_ser.sell_cards_by_rarity(uid2, 6)
+
+    result17 = repo.search_user(uid2)
+
+    assert result17['fund'] == 40
+
+    with raises(Card_not_found) as error5:
+        car_str_ser.sell_cards_by_rarity(uid2, 3)
 
 

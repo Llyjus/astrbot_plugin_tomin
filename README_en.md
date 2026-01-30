@@ -145,7 +145,7 @@ Planned rarity tiers (6 levels) with default probabilities:
    - Use ```recruit``` or ```zm``` to spend a minimum of 10 funds for recruitment.
    - ```recruit x``` (where x is the amount of funds) allows spending up to 100 funds per recruitment. Each additional fund increases the appearance rate of characters with rarity ≥2 by a fixed percentage, as shown below:
 
-   | Rarity | Probability Increase per 10 Funds |
+   | Rarity | Probability Increase per 5 Funds |
    |--------|----------------------------------|
    | 1      | 0%                               |
    | 2      | 3%                               |
@@ -154,7 +154,7 @@ Planned rarity tiers (6 levels) with default probabilities:
    | 5      | 2%                               |
    | 6      | 1%                               |
 
-   For example, spending 100 funds on one recruitment gives the following probabilities:
+   For example, spending 50 funds on one recruitment gives the following probabilities:
 
    | Rarity | Probability |
    |--------|-------------|
@@ -166,6 +166,21 @@ Planned rarity tiers (6 levels) with default probabilities:
    | 6      | 10%         |
 
    - ```recruit x n``` (where n is the number of attempts) allows multiple recruitments in one command.
+   4. 
+      - Use `查卡牌` or `ckp` to search for all owned cards;
+      - Use `查卡牌 [band] [rarity]` to filter cards by specific rarity and band. Spaces can be omitted and either field can be left blank.
+
+   5. 
+      - Use `出售 [card_id]` or `cs [card_id]` to sell a card.
+      - Use `稀有度出售` / `x出售` / `xcs [rarity]` to batch sell all cards of the specified rarity and lower rarities. The selling prices for each rarity are:
+            | Rarity | Price |
+            |--------|-------|
+            | 1      | 3     |
+            | 2      | 5     |
+            | 3      | 15    |
+            | 4      | 40    |
+            | 5      | 80    |
+            | 6      | 200   |
 
 ---
 

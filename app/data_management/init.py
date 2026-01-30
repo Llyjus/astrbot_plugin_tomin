@@ -10,7 +10,6 @@ def db_init(path=DB_PATH):
 
     db_path = Path(os.path.dirname(path)) / 'data.db'
 
-
     if not db_path.exists():
 
 
@@ -19,12 +18,18 @@ def db_init(path=DB_PATH):
 
 
         try:
-            conn = sqlite3.connect(str(db_path))
-            repo = Repository(conn)
-            repo.create_table()
+            conn = sqlite3.connect(db_path)
 
-            conn.commit()
-            conn.close()
-
+            try:
+                repo = Repository(conn)
+                repo.create_table()
+                conn.commit()
+            finally:
+                conn.close()
+            
+    
+                
         except Exception as e:
             raise RuntimeError('数据库初始化失败') from e
+        
+    return db_path

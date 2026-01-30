@@ -85,7 +85,20 @@ class Repository(function_ports):
         if cursor.rowcount == 0:
                 raise Not_enough_fund('余额不足')
 
-        
+
+    def all_user_add_fund(self, fund):
+
+        cursor = self.conn.cursor()
+
+        sql = user_interact_sql()[3]
+
+        try:
+            result = cursor.execute(sql, (fund, ))
+            
+        except sqlite3.Error as e:
+            
+            raise Database_error('查询失败，数据库连接错误，请稍候再试') from e
+
     
 
 
@@ -148,10 +161,53 @@ class Repository(function_ports):
         
         return result
     
-    def set_card_user(self, new_card_id, new_user_id, card_id, user_id):
+    
+    def search_cards_by_rarity(self, user_id, rarity):
         cursor = self.conn.cursor()
 
         sql = card_interact_sql()[4]
+
+        try:
+            result = cursor.execute(sql, (user_id, rarity)).fetchall()
+
+        except sqlite3.Error as e:
+            raise Database_error('查询失败，数据库连接错误，请稍候再试') from e
+        
+        return result
+    
+    def search_cards_by_band(self, user_id, o_band):
+        cursor = self.conn.cursor()
+
+        sql = card_interact_sql()[5]
+
+        try:
+            result = cursor.execute(sql, (user_id, o_band)).fetchall()
+
+        except sqlite3.Error as e:
+            raise Database_error('查询失败，数据库连接错误，请稍候再试') from e
+        
+        return result
+    
+
+    def search_cards_by_band_rariry(self, user_id, o_band, rarity):
+        cursor = self.conn.cursor()
+
+        sql = card_interact_sql()[6]
+
+        try:
+            result = cursor.execute(sql, (user_id, o_band, rarity)).fetchall()
+
+        except sqlite3.Error as e:
+            raise Database_error('查询失败，数据库连接错误，请稍候再试') from e
+        
+        return result
+
+
+    
+    def set_card_user(self, new_card_id, new_user_id, card_id, user_id):
+        cursor = self.conn.cursor()
+
+        sql = card_interact_sql()[7]
 
         try:
             cursor.execute(sql, (new_card_id, new_user_id, card_id, user_id))
@@ -169,7 +225,7 @@ class Repository(function_ports):
     def delete_cards(self, cards:list):
         cursor = self.conn.cursor()
 
-        sql = card_interact_sql()[5]
+        sql = card_interact_sql()[8]
 
         try:
             cursor.executemany(sql, cards)

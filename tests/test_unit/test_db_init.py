@@ -4,14 +4,18 @@ from app.data_management import db_init
 
 
 
-def test_db_init():
-    path = Path.cwd() / 'data.db'
+def test_db_init(mocker):
+    path = Path.cwd()
 
-    db_init(path)
+    path = db_init(path)
+
+
+    path = path
+
 
     assert path.exists()
     
-
+    
 
 
     path.unlink()

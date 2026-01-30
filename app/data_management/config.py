@@ -1,1 +1,2 @@
-DB_PATH = '../plugin_data/girls_band_game/data.db'
+DB_PATH = '/AstrBot/data/plugin_data/astrbot_plugin_tomin/data.db'
+
