@@ -6,6 +6,7 @@ from asyncio import get_running_loop
 
 from astrbot.api.event import filter, AstrMessageEvent, MessageEventResult
 from astrbot.api.star import Context, Star, register, StarTools
+from astrbot.api.message_components import At, Plain
 from astrbot.api import logger
 
 import os, sys
@@ -33,7 +34,7 @@ class TominPlugin(Star):
 
 
         try:
-
+            logger.error('已执行')
             db_init(self.data_path)
 
 
@@ -51,7 +52,7 @@ class TominPlugin(Star):
         
         
         text = event.message_obj.message_str
-        text = re.sub(r'^(help|帮助)\s*', '', text).strip()
+        text = re.sub(r'^(帮助|help|hp|bz)\s*', '', text).strip()
 
 
         if text in help_dict:
@@ -179,10 +180,7 @@ class TominPlugin(Star):
         yield event.plain_result(result)
 
 
-
-
-
-    @filter.regex(r'^(查卡牌|ckp)\s*([^\d\s]+)?\s*(\d+)?\s*$')
+    @filter.regex(r'^(查卡牌|ckp)\s*(\d+)?\s*$')
     async def search_card(self, event: AstrMessageEvent) ->AsyncGenerator[str, None]:
         """查卡指令"""
         try:
@@ -193,7 +191,44 @@ class TominPlugin(Star):
             user_id = event.get_sender_id()
             user_id = str(user_id)
 
-            text = re.sub(r'^(查卡牌|ckp)\s*', '', message).strip()
+            text = re.match(r'^(查卡牌|ckp)\s*(\d+)\s*$', message)
+            if text:
+                if text.group(2):
+                    card_id = int(text.group(2))
+                    result = search_card_app(user_id=user_id, card_id=card_id)
+                else:
+                    result = '输入格式错误！请查询helpckp来找到命令。'
+            else:
+                result = '请输入参数！若要查找全部卡牌请输入ckpj。'
+
+
+        except ValidationError as e:
+            result = error_message(e)
+        except App_error as e:
+            result = str(e)
+        except Infra_error as e:
+            result = str(e)
+            logger.error(f"Infra_error: {e}")
+
+
+
+        yield event.plain_result(result)
+
+
+
+
+    @filter.regex(r'^(查卡牌集|ckpj)\s*([^\d\s]+)?\s*(\d+)?\s*$')
+    async def search_cards(self, event: AstrMessageEvent) ->AsyncGenerator[str, None]:
+        """查卡指令"""
+        try:
+            self.cleaner.cleaning_check()
+
+            message_id = event.message_obj.message_id
+            message = event.message_obj.message_str
+            user_id = event.get_sender_id()
+            user_id = str(user_id)
+
+            text = re.sub(r'^(查卡牌集|ckpj)\s*', '', message).strip()
             
             if text == '':
                 result = search_cards_app(user_id=user_id)
@@ -227,7 +262,7 @@ class TominPlugin(Star):
                         result = search_cards_rarity_app(user_id, rarity)
                 
                 else:
-                    result = '参数错误！请查阅help获取帮助。'
+                    result = '参数错误！请查阅helpckpj获取帮助。'
 
         except ValidationError as e:
             result = error_message(e)
@@ -243,6 +278,35 @@ class TominPlugin(Star):
 
 
 
+    @filter.command('资金', alias={'zj'})
+    async def fund_check(self, event:AstrMessageEvent) ->AsyncGenerator[str, None]:
+        '''查资金指令'''
+        try:
+            self.cleaner.cleaning_check()
+
+            message_id = event.message_obj.message_id
+            message = event.message_obj.message_str
+
+            user_id = event.get_sender_id()
+            user_id = str(user_id)
+
+            result = fund_checker(user_id, message_id)
+        
+        except ValidationError as e:
+            result = error_message(e)
+        except App_error as e:
+            result = str(e)
+        except Infra_error as e:
+            result = str(e)
+            logger.error(f"Infra_error: {e}")
+        
+        yield event.plain_result(result)
+
+
+
+
+
+
 
     @filter.regex(r'^(出售|cs).*')
     async def sell_card(self, event: AstrMessageEvent) ->AsyncGenerator[str, None]:
@@ -251,19 +315,21 @@ class TominPlugin(Star):
             self.cleaner.cleaning_check()
 
             message_id = event.message_obj.message_id
-
             message = event.message_obj.message_str
 
             user_id = event.get_sender_id()
-
             user_id = str(user_id)
 
-            card_id = re.sub(r'^(出售|cs)\s*', '', message).strip()
+            p = r'^(?:出售|cs)\s*(\d+)$'
+            match = re.match(p, message.strip())
+            if match:
+                card_id = int(match.group(1))
 
-            _test = Card_input(card_id=card_id)
+                _test = Card_input(card_id=card_id)
 
-            result = sell_card_app(user_id, card_id=card_id, message_id=message_id)
-        
+                result = sell_card_app(user_id, card_id=card_id, message_id=message_id)
+            else:
+                raise Invalid_input('参数格式错误，请查阅hpcs。')
         except ValidationError as e:
             result = error_message(e)
         except App_error as e:
@@ -288,12 +354,18 @@ class TominPlugin(Star):
 
             user_id = str(user_id)
 
-            rarity = re.sub(r'^(稀有度出售|x出售|xcs)\s*', '', message).strip()
+            match = re.match(r'^(稀有度出售|x出售|xcs)\s*(\d+)\s*', message)
+            if match.group(2):
 
-            _test = Card_input(rarity=rarity)
+            
+                rarity = int(match.group(2))
+                _test = Card_input(rarity=rarity)
 
-            result = sell_cards_by_rarity_app(user_id, rarity=rarity, message_id=message_id)
-        
+                result = sell_cards_by_rarity_app(user_id, rarity=rarity, message_id=message_id)
+            
+            else:
+                raise Invalid_input('参数格式错误，请查阅hpxcs。')
+            
         except ValidationError as e:
             result = error_message(e)
         except App_error as e:
@@ -304,7 +376,52 @@ class TominPlugin(Star):
 
 
         yield event.plain_result(result)
+
+    @filter.regex(r'^(赠送|zs).*$')
+    async def give_card_away(self, event: AstrMessageEvent) ->AsyncGenerator[str, None]:
+        """出售指令"""
+        try:
+            self.cleaner.cleaning_check()
+
+            message_id = event.message_obj.message_id
+            message = event.message_obj.message_str
+            message_list = event.get_messages()
+            giver_id = event.get_sender_id()
+            giver_id = str(giver_id)
+
+
             
+            match = re.match(r'^(赠送|zs)\s*(\d+)[ cC](\d+)\s*$', message)
+            if match:
+                
+                accepter_id = match.group(2)
+                card_id = int(match.group(3))
+                result = give_away_cards_app(giver_id=giver_id,
+                                         card_id=card_id,
+                                         accepter_id=accepter_id,
+                                         message_id=message_id)
+                
+            elif isinstance(message_list[1], At) and isinstance(message_list[2], Plain):
+                accepter_id = str(message_list[1].qq)
+                match = re.search(r'^[ Cc]?(\d+)$', message_list[2].text)
+                if match:
+                    card_id = int(match.group(1))
+                    result = give_away_cards_app(giver_id=giver_id,
+                                         card_id=card_id,
+                                         accepter_id=accepter_id,
+                                         message_id=message_id)
+            else:
+                raise Invalid_input('参数错误！请查询hpzs获得帮助。')
+        
+        except ValidationError as e:
+            result = error_message(e)
+        except App_error as e:
+            result = str(e)
+        except Infra_error as e:
+            result = str(e)
+            logger.error(f"Infra_error: {e}")
+            
+        yield event.plain_result(result)
 
 
 
@@ -336,8 +453,8 @@ class TominPlugin(Star):
             logger.error(f"Infra_error: {e}")
 
         yield event.plain_result(result)
-        
 
+            
 
 
     async def terminate(self):

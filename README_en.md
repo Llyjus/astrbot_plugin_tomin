@@ -181,6 +181,8 @@ Planned rarity tiers (6 levels) with default probabilities:
             | 4      | 40    |
             | 5      | 80    |
             | 6      | 200   |
+   6. 
+      `资金` or `zj` to check your funds.
 
 ---
 

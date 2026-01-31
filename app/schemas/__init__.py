@@ -8,4 +8,4 @@ __all__ = ['Gacha_input', 'error_message', 'Card_input','Funds_reward_input',
            'Infra_error', 'Database_error', 'Unknown_error',
              'User_already_exists', 'App_error', 'Invalid_input',
                'Card_already_exists', 'Card_not_found', 'Cooldown',
-               'band_dict', 'help_dict']
+               'band_dict', 'help_dict', 'fund_map']

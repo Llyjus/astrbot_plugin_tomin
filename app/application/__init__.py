@@ -4,6 +4,7 @@ from app.application.cards_app import *
 
 __all__ = ['normal_gacha', 'free_gacha',
            
+           'fund_checker',
            'funds_giving',
 
            "search_card_app", "search_cards_app", 

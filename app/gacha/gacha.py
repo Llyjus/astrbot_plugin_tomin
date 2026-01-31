@@ -11,7 +11,7 @@ class Gacha():
 
     def initial(self, user_id, card_id, fund_spent):
 
-        bonus = max((fund_spent-10) * 0.1, 0)
+        bonus = max(fund_spent-10, 0)
 
         char = self.char_func()
         rarity = self.rarity_func(bonus)

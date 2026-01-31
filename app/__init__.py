@@ -6,7 +6,7 @@ from app.maintenance import Cleaner
 
 __all__=['normal_gacha', 'free_gacha', 
          'Gacha_input', 'error_message',
-         'db_init',
+         'db_init','fund_checker',
          'Infra_error', 'App_error', 'Invalid_input', 'Card_input',
          'Cleaner', 'funds_giving', 'Funds_reward_input',
          'search_card_app','search_cards_app','search_cards_rarity_app', 'search_cards_band_app', 'give_away_cards_app', 'sell_card_app', 'sell_cards_by_rarity_app',

@@ -19,8 +19,7 @@ def search_card_app(user_id, card_id, message_id=None, connect=None):
             raise Card_not_found('没有找到该卡牌！猪...')
         card = ''
 
-        card += f'''\n
-                卡牌id：{result['card_id']}
+        card += f'''卡牌id：{result['card_id']}
                 用户id：{result['user_id']}
                 角色：{result['character']}
                 乐队：{result['o_band']}
@@ -34,7 +33,7 @@ def search_card_app(user_id, card_id, message_id=None, connect=None):
                 技能3：{result['skill_3']}
 '''
         
-    return result
+    return card
 
 def search_cards_app(user_id, message_id=None, connect=None):
     if connect is None:
@@ -126,20 +125,42 @@ def give_away_cards_app(giver_id, card_id, accepter_id, message_id=None, connect
     event_creater(message_id=message_id, conn=connect)
     
     if connect is None:
-        connect = connection()
+        
+        with connection() as conn:
 
-    with connect as conn:
+            repo = Repository(conn)
+            cst_ser = Card_storage_service(repo)
+            slot_list = cst_ser.card_send_to_user(giver_id, card_id, accepter_id)
 
-        repo = Repository(conn)
+            #add slot
+            card_ser = Card_service(repo)
+            card_ser.set_slots(user_id=giver_id, slot_list=[card_id])
+            #delete slot
+            card_ser.delete_slots(user_id=accepter_id, slot_list=slot_list)
+    else:
+        with connect as conn:
 
-        cst_ser = Card_storage_service(repo)
+            repo = Repository(conn)
+            cst_ser = Card_storage_service(repo)
+            slot_list = cst_ser.card_send_to_user(giver_id, card_id, accepter_id)
+            
+            #add slot
+            card_ser = Card_service(repo)
+            card_ser.set_slots(user_id=giver_id, slot_list=[card_id])
+            #delete slot
+            card_ser.delete_slots(user_id=accepter_id, slot_list=slot_list)
 
-        cst_ser.card_send_to_user(giver_id, card_id, accepter_id)
-
-        text = '转让卡牌成功！你的宝宝就这样离你远去...\n'
+    text = '转让卡牌成功！你的宝宝就这样离你远去...\n'
 
         #return cards left
-        text += search_cards_app(giver_id)
+    try:
+        text += search_cards_app(giver_id, connect=connect)
+
+    except Card_not_found:
+        text += '你没有其它卡牌啦！'
+
+
+
 
     return text
 
@@ -152,24 +173,46 @@ def sell_card_app(user_id, card_id, message_id=None, connect=None):
     event_creater(message_id=message_id, conn=connect)
     
     if connect is None:
-        connect = connection()
+        with connection() as conn:
 
-    with connect as conn:
+            repo = Repository(conn)
 
-        repo = Repository(conn)
+            cst_ser = Card_storage_service(repo)
 
-        cst_ser = Card_storage_service(repo)
+            fund = cst_ser.sell_card(user_id, card_id)
 
-        fund = cst_ser.sell_card(user_id, card_id)
+            
+            fund_total = Fund_service(repo).fund_search(user_id)
 
 
-        result = f'出售成功！获得{fund}资金。你好残忍...\n'
-        
-        fund_total = Fund_service(repo).fund_search(user_id)
+            #add slot
+            card_ser = Card_service(repo)
+            card_ser.set_slots(user_id=user_id, slot_list=[card_id])
 
-        result += f'现在拥有{fund_total}资金!快去消费吧！\n'
+    else:
+        with connect as conn:
 
-        result += search_cards_app(user_id)
+            repo = Repository(conn)
+            cst_ser = Card_storage_service(repo)
+            fund = cst_ser.sell_card(user_id, card_id)
+
+            
+            fund_total = Fund_service(repo).fund_search(user_id)
+
+
+            #add slot
+            card_ser = Card_service(repo)
+            card_ser.set_slots(user_id=user_id, slot_list=[card_id])
+
+    result = f'出售成功！获得{fund}资金。你好残忍...\n现在拥有{fund_total}资金!快去消费吧！\n'
+    
+    # search after submiting
+    try:
+        result += search_cards_app(user_id=user_id, connect=connect)
+
+    except Card_not_found:
+        result += '你没有其它卡牌啦！'
+
 
      #return: gain_fund, total fund, total cards
     return result
@@ -182,24 +225,38 @@ def sell_cards_by_rarity_app(user_id, rarity, message_id=None, connect=None):
     event_creater(message_id=message_id, conn=connect)
     
     if connect is None:
-        connect = connection()
+        with connection() as conn:
 
-    with connect as conn:
+            repo = Repository(conn)
+            cst_ser = Card_storage_service(repo)
+            sold_detail = cst_ser.sell_cards_by_rarity(user_id, rarity)
 
-        repo = Repository(conn)
+            #add slots
+            card_ser = Card_service(repo)
+            card_ser.set_slots(user_id=user_id, slot_list=sold_detail['cards_id_list'])
+            
+            fund_total = Fund_service(repo).fund_search(user_id)
+    
+    else:
+        with connect as conn:
 
-        cst_ser = Card_storage_service(repo)
+            repo = Repository(conn)
+            cst_ser = Card_storage_service(repo)
+            sold_detail = cst_ser.sell_cards_by_rarity(user_id, rarity)
 
-        sold_detail = cst_ser.sell_cards_by_rarity(user_id, rarity)
+            #add slots
+            card_ser = Card_service(repo)
+            card_ser.set_slots(user_id=user_id, slot_list=sold_detail['cards_id_list'])
+            
+            fund_total = Fund_service(repo).fund_search(user_id)
 
-        result = f"出售成功！一共出售{sold_detail['card_sold']}张卡牌，获得{sold_detail['fund_gain']}资金。你好残忍...\n"
 
-        fund_total = Fund_service(repo).fund_search(user_id)
+    result = f"出售成功！一共出售{sold_detail['cards_sold']}张卡牌，获得{sold_detail['fund_gain']}资金。你好残忍...\n现在拥有{fund_total}资金!快去消费吧！\n"
+    try:
+        result += search_cards_app(user_id=user_id, connect=connect)
 
-        result += f'现在拥有{fund_total}资金!快去消费吧！\n'
-
-        result += search_cards_app(user_id=user_id)
-
+    except Card_not_found:
+        result += '你没有其它卡牌啦！'
+        
      #return: gain_fund, total fund, total cards
     return result
-

@@ -23,7 +23,7 @@ class Card_service(Service):
 
 
 
-    def get_avail_cards_id(self, user_id, number) -> list:
+    def get_avail_cards_id(self, user_id, number) -> dict:
         
         # Return a list of slots need to be filled
 
@@ -112,9 +112,6 @@ class Card_service(Service):
                 # The largest card has deleted
                 # so check if there is illegal slot
                 cards_id = self.repo.search_slots(user_id)
-
-                if cards_id == []:
-                    return
 
                 deletion = []
 
@@ -247,15 +244,15 @@ class Card_storage_service(Service):
 
 
 
-    def card_send_to_user(self, old_card, old_user, new_user ):
+    def card_send_to_user(self, giver_id, card_id, accepter_id ):
         
         # make sure it exist
-        _card = self.card_search_by_id(old_card, old_user)
+        _card = self.card_search_by_id(card_id=card_id, user_id=giver_id)
         
-        car_ser = Card_service(self.repo).get_avail_cards_id(old_user, 1)
-        self.repo.set_card_user(car_ser[0], new_user, old_card, old_user)
+        car_ser = Card_service(self.repo).get_avail_cards_id(accepter_id, 1)
+        self.repo.set_card_user(car_ser['cards_id'][0], accepter_id, card_id, giver_id)
         
-        return
+        return car_ser['slots']
 
 
 
@@ -301,16 +298,9 @@ class Card_storage_service(Service):
 
         rarity = _card['rarity']
         
-        fund_map = {
-            1:3,
-            2:5,
-            3:15,
-            4:40,
-            5:80,
-            6:200
-        }
+        map = fund_map
 
-        fund_gained = fund_map[rarity]
+        fund_gained = map[rarity]
 
         self.repo.delete_cards([(card_id, user_id)])
 
@@ -323,14 +313,7 @@ class Card_storage_service(Service):
 
         fund_gained = 0
 
-        fund_map = {
-            1:3,
-            2:5,
-            3:15,
-            4:40,
-            5:80,
-            6:200
-        }
+        map = fund_map
 
         #Search cards below the rarity
         cards_id = []
@@ -345,7 +328,7 @@ class Card_storage_service(Service):
                 # Calculate fund gained
                 cards_appended = len(cards_id) - cards_list_length
 
-                fund_gained += fund_map[i] * cards_appended
+                fund_gained += map[i] * cards_appended
 
                 cards_list_length = len(cards_id)
 
@@ -357,4 +340,6 @@ class Card_storage_service(Service):
         self.repo.delete_cards(cards_id)
         self.repo.add_fund(user_id, fund_gained)
 
-        return {'cards_sold':cards_list_length, 'fund_gain': fund_gained}
+        cards_id = [card_id for card_id, user_id in cards_id]
+
+        return {'cards_sold':cards_list_length, 'fund_gain': fund_gained, 'cards_id_list':cards_id}

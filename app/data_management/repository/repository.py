@@ -80,7 +80,7 @@ class Repository(function_ports):
             
         except sqlite3.Error as e:
             
-            raise Database_error('查询失败，数据库连接错误，请稍候再试') from e
+            raise Database_error('添加资金失败，数据库连接错误，请稍候再试') from e
         
         if cursor.rowcount == 0:
                 raise Not_enough_fund('余额不足')
@@ -97,7 +97,7 @@ class Repository(function_ports):
             
         except sqlite3.Error as e:
             
-            raise Database_error('查询失败，数据库连接错误，请稍候再试') from e
+            raise Database_error('全体添加资金失败，数据库连接错误，请稍候再试') from e
 
     
 
@@ -118,7 +118,7 @@ class Repository(function_ports):
         
         except sqlite3.Error as e:
             
-            raise Database_error('操作失败，数据库连接错误，请稍候再试') from e
+            raise Database_error('添加卡牌失败，数据库连接错误，请稍候再试') from e
         
 
 
@@ -132,7 +132,7 @@ class Repository(function_ports):
             result = cursor.execute(sql, (card_id, user_id)).fetchone()
 
         except sqlite3.Error as e:
-            raise Database_error('查询失败，数据库连接错误，请稍候再试') from e
+            raise Database_error('查询单张卡牌失败，数据库连接错误，请稍候再试') from e
         
         return result
         
@@ -144,7 +144,7 @@ class Repository(function_ports):
         try:
             result = cursor.execute(sql,(user_id, )).fetchone()
         except sqlite3.Error as e:
-            raise Database_error('数据库连接错误，请稍候再试') from e
+            raise Database_error('查询最后一张卡牌失败，数据库连接错误，请稍候再试') from e
         
         return result
         
@@ -157,7 +157,7 @@ class Repository(function_ports):
             result = cursor.execute(sql, (user_id, )).fetchall()
 
         except sqlite3.Error as e:
-            raise Database_error('查询失败，数据库连接错误，请稍候再试') from e
+            raise Database_error('查询多张卡牌失败，数据库连接错误，请稍候再试') from e
         
         return result
     
@@ -171,7 +171,7 @@ class Repository(function_ports):
             result = cursor.execute(sql, (user_id, rarity)).fetchall()
 
         except sqlite3.Error as e:
-            raise Database_error('查询失败，数据库连接错误，请稍候再试') from e
+            raise Database_error('查询稀有度卡牌失败，数据库连接错误，请稍候再试') from e
         
         return result
     
@@ -184,7 +184,7 @@ class Repository(function_ports):
             result = cursor.execute(sql, (user_id, o_band)).fetchall()
 
         except sqlite3.Error as e:
-            raise Database_error('查询失败，数据库连接错误，请稍候再试') from e
+            raise Database_error('查询该乐队失败，数据库连接错误，请稍候再试') from e
         
         return result
     
@@ -198,7 +198,7 @@ class Repository(function_ports):
             result = cursor.execute(sql, (user_id, o_band, rarity)).fetchall()
 
         except sqlite3.Error as e:
-            raise Database_error('查询失败，数据库连接错误，请稍候再试') from e
+            raise Database_error('查询该稀有度的特定乐队卡牌失败，数据库连接错误，请稍候再试') from e
         
         return result
 
@@ -218,7 +218,7 @@ class Repository(function_ports):
         
 
         except sqlite3.Error as e:
-            raise Database_error('操作失败，数据库连接错误，请稍候再试')
+            raise Database_error('转让操作失败，数据库连接错误，请稍候再试')
         if cursor.rowcount == 0:
             raise Card_not_found('用户没有该卡牌')
         
@@ -231,7 +231,7 @@ class Repository(function_ports):
             cursor.executemany(sql, cards)
 
         except sqlite3.Error as e:
-            raise Database_error('操作失败，数据库连接错误，请稍候再试') from e
+            raise Database_error('删除卡牌操作失败，数据库连接错误，请稍候再试')
     
     
     # #band
@@ -262,7 +262,7 @@ class Repository(function_ports):
             
         except sqlite3.Error as e:
             
-            raise Database_error('查询失败，数据库连接错误，请稍候再试') from e
+            raise Database_error('添加slots失败，数据库连接错误，请稍候再试') from e
         
 
         
@@ -279,7 +279,7 @@ class Repository(function_ports):
             return result
         
         except Exception as e:
-            raise Database_error('操作失败，数据库连接错误，请稍候再试') from e
+            raise Database_error('查找slots操作失败，数据库连接错误，请稍候再试') from e
 
 
     def delete_slots(self, slots:list):
@@ -295,7 +295,7 @@ class Repository(function_ports):
             
         except sqlite3.Error as e:
             
-            raise Database_error('查询失败，数据库连接错误，请稍候再试') from e
+            raise Database_error('删除slots失败，数据库连接错误，请稍候再试') from e
         
         
 
@@ -313,7 +313,7 @@ class Repository(function_ports):
             
         except sqlite3.Error as e:
             
-            raise Database_error('查询失败，数据库连接错误，请稍候再试') from e
+            raise Database_error('添加事件失败，数据库连接错误，请稍候再试') from e
         
         
         
@@ -330,7 +330,7 @@ class Repository(function_ports):
             return result
         
         except sqlite3.Error as e:
-            raise Database_error(f'操作失败，数据库连接错误，请稍候再试:{e}') from e
+            raise Database_error(f'查找事件失败，数据库连接错误，请稍候再试:{e}') from e
 
 
 
@@ -345,7 +345,7 @@ class Repository(function_ports):
             
         except sqlite3.Error as e:  
             
-            raise Database_error('查询失败，数据库连接错误，请稍候再试') from e
+            raise Database_error('删除事件失败，数据库连接错误，请稍候再试') from e
 
 
     def add_sign_in(self, user_id, date, timestamp):
@@ -361,7 +361,7 @@ class Repository(function_ports):
             
         except sqlite3.Error as e:
             
-            raise Database_error('查询失败，数据库连接错误，请稍候再试') from e
+            raise Database_error('添加打卡信息失败，数据库连接错误，请稍候再试') from e
         
 
     def search_sign_in(self, user_id):
@@ -376,7 +376,7 @@ class Repository(function_ports):
         
         
         except sqlite3.Error as e:
-            raise Database_error(f'操作失败，数据库连接错误，请稍候再试:{e}') from e
+            raise Database_error(f'查找打卡信息失败，数据库连接错误，请稍候再试:{e}') from e
 
 
     def update_sign_in_date(self, user_id, date, past_date, timestamp):
@@ -389,7 +389,7 @@ class Repository(function_ports):
             cursor.execute(sql, (date, timestamp, user_id, past_date))
             
         except sqlite3.Error as e:
-            raise Database_error(f'操作失败，数据库连接错误，请稍候再试:{e}') from e
+            raise Database_error(f'更新打卡日期失败，数据库连接错误，请稍候再试:{e}') from e
 
 
         if cursor.rowcount == 0:
@@ -404,7 +404,16 @@ class Repository(function_ports):
             cursor.execute(sql, (timestamp, user_id, timestamp))
             
         except sqlite3.Error as e:
-            raise Database_error(f'操作失败，数据库连接错误，请稍候再试:{e}') from e
+            raise Database_error(f'更新打卡时间失败，数据库连接错误，请稍候再试:{e}') from e
 
         if cursor.rowcount == 0:
             raise Cooldown('正在冷却中，请勿重复操作！')
+        
+
+
+
+
+
+
+
+

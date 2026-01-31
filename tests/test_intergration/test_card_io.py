@@ -8,7 +8,7 @@ from app.card_system import Card
 from app.schemas.errors import Not_enough_fund
 
 
-def test_gacha_process(memory_db_connection):
+def test_card_in_out(memory_db_connection):
     class Fake_gacha():
         def __init__(self):
             pass
@@ -90,3 +90,24 @@ def test_gacha_process(memory_db_connection):
     result6 = repo.search_user('test')
 
     assert result6['fund'] == 10
+
+    #sell card and record slot
+    result7 = sell_card_app('test', 1, connect=memory_db_connection.conn)
+ 
+    assert '出售成功！获得10资金。' in result7
+
+    result8 = repo.search_slots('test')
+
+    for r in result8:
+        assert r['slot'] == 1
+
+    repo.add_user('t')
+
+    give_away_cards_app('test', 2, 't', connect=memory_db_connection.conn)
+
+    result9 = repo.search_slots('test')
+
+    for r in result8:
+        assert r['slot'] == 1 or r['slot'] == 2
+
+    
