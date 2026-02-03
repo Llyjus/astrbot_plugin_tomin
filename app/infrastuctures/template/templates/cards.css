@@ -1,0 +1,48 @@
+header{
+    padding-top: 40px;
+    font-size: 36px;
+    color: rgb(128, 202, 0);
+    font-weight: 700;
+}
+
+h1{
+    margin: 0;
+}
+
+
+.intro{
+    text-align: left;
+    margin-left: 100px;
+    margin-top: 70px;
+    color: rgb(48, 235, 61);
+    font-weight: 700;
+}
+
+.content{
+  display: flex;
+  justify-content: center; 
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 40px;
+}
+
+
+
+.item{
+    background-color:rgba(220, 255, 176, 0.7);
+
+    border-radius: 36px;
+    flex: 0 0 auto; 
+    width: 400px;
+    height: 500px;
+    place-items: center;
+
+
+}
+
+.intro{
+  grid-column: 1 / -1; 
+  margin-bottom: 20px;
+}
+
+

@@ -1,0 +1,14 @@
+
+    {% for card in cards %}
+    <span class="content">
+        
+        <div class="item">
+            {% for i in card %}
+            <p>
+                {{ i }}
+            </p>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </span>
+
