@@ -50,12 +50,11 @@ def normal_gacha(user_id, fund_spent, times, *, gacha_cls = Gacha, connect = Non
             card_tu = astuple(card)
 
             cards_txt += f'''
-                            卡牌id：{card_di['card_id']}
-                            用户id：{card_di['user_id']}
-                            角色：{card_di['character']}
-                            乐队：{card_di['o_band']}
-                            稀有度：{card_di['rarity']}
-
+卡牌id：{card_di['card_id']}
+用户id：{card_di['user_id']}
+角色：{card_di['character']}
+乐队：{card_di['o_band']}
+稀有度：{card_di['rarity']}
 '''
             cards_li.append([f"卡牌id：{card_di['card_id']}",
                              f"用户id：{card_di['user_id']}",
@@ -133,12 +132,11 @@ def free_gacha(user_id, *, gacha_cls = Gacha, connect = None):
         card_tu = astuple(card)
 
         cards_txt += f'''
-                            卡牌id：{card_di['card_id']}
-                            用户id：{card_di['user_id']}
-                            角色：{card_di['character']}
-                            乐队：{card_di['o_band']}
-                            稀有度：{card_di['rarity']}
-
+卡牌id：{card_di['card_id']}
+用户id：{card_di['user_id']}
+角色：{card_di['character']}
+乐队：{card_di['o_band']}
+稀有度：{card_di['rarity']}
 '''
         cards_li.append([f"卡牌id：{card_di['card_id']}",
                              f"用户id：{card_di['user_id']}",

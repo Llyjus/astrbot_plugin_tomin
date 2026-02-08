@@ -29,15 +29,15 @@ def search_card_app(user_id, card_id, *, connect=None):
                 f"速度：{result['speed']}",
                 f"抗性：{result['resistance']}"]]
     card_txt = f'''这是你查询到的卡牌信息：
-                            卡牌id：{result['card_id']}
-                            用户id：{result['user_id']}
-                            角色：{result['character']}
-                            乐队：{result['o_band']}
-                            位置：{result['pos']}
-                            稀有度：{result['rarity']}
-                            综合力：{result['power']}
-                            速度：{result['speed']}
-                            抗性：{result['resistance']}'''
+卡牌id：{result['card_id']}
+用户id：{result['user_id']}
+角色：{result['character']}
+乐队：{result['o_band']}
+位置：{result['pos']}
+稀有度：{result['rarity']}
+综合力：{result['power']}
+速度：{result['speed']}
+抗性：{result['resistance']}'''
     
     result = {'return_type':'html',
               'temp_type':'cards',
@@ -263,12 +263,12 @@ def sell_card_app(user_id, card_id, *, connect=None):
         result['content']['intro'] = f'出售成功！获得{fund}资金。你好残忍...\n现在拥有{fund_total}资金!快去消费吧！'
         result['content']['title'] = '出售成功'
         text += result['txt']
-
+        result['txt'] = text
+        
     except Card_not_found:
         result = {'return_type':'str',
                     'content': text + '你没有其它卡牌啦！'}
 
-     #return: gain_fund, total fund, total cards
     return result
 
 
@@ -306,9 +306,10 @@ def sell_cards_by_rarity_app(user_id, rarity, connect=None):
         result['content']['intro'] = f"出售成功！\n一共出售{sold_detail['cards_sold']}张卡牌，获得{sold_detail['fund_gain']}资金。你好残忍...\n剩余卡牌："
         result['content']['title'] = '出售成功'
         text += result['txt']
+        result['txt'] = text
+
     except Card_not_found:
         result = {'return_type':'str',
                     'content': text + '你没有其它卡牌啦！'}
 
-     #return: gain_fund, total fund, total cards
     return result

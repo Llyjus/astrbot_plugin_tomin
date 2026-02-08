@@ -47,9 +47,6 @@ Tomin是一个**AstrBot**的内置插件，是一个少女偶像乐队休闲游�
 
 Tomin - 少女乐队游戏是 AstrBot的一个内置插件，玩家可以收集卡牌，组建自己的乐队进行演出。
 
-- 项目状态
-
-***当前版本核心游戏逻辑，接口层正在按按步骤开发中；目前暂时无法使用，仅供参考。***
 
 ## 安装
 
@@ -58,22 +55,91 @@ Tomin - 少女乐队游戏是 AstrBot的一个内置插件，玩家可以收集�
 ```plaintext
 astrbot >= 4.10.3
 python >= 3.8.0
+playwright>=1.41.0
 ```
 
-- 安装方法
 
-1. 在astrbot插件市场
-搜索少女乐队游戏并安装。
-2. 直接通过
+
+## 安装方法
+
+1. 在 AstrBot 插件市场中搜索「少女乐队游戏」并安装。
+
+2. 通过 Git 克隆安装到 AstrBot 的 `data/plugins/` 目录：
+
 ```bash
 git clone https://github.com/Llyjus/astrbot_plugin_Tomin
-```
-安装到AstrBot的```data/plugins/```目录。
-重启astrbot。
-3. 下载zip压缩包到AstrBot的```data/plugins/```目录。
-重启astrbot。
+````
 
-- tips:原版本使用重量级依赖numpy，现已移除。
+重启 AstrBot。
+
+3. 下载本项目的 zip 压缩包并解压到 AstrBot 的 `data/plugins/` 目录。
+
+重启 AstrBot。
+
+---
+
+## 依赖说明（Playwright / Chromium）
+
+本插件使用 Playwright + Chromium 进行本地渲染截图。
+
+安装 Python 依赖后，需要额外安装浏览器：
+
+```bash
+python -m playwright install chromium
+
+
+---
+
+## Docker / docker-compose 部署注意事项
+
+如果使用 Docker 部署 AstrBot，必须在镜像构建阶段安装 Chromium（直接复制）：
+
+```dockerfile
+FROM soulter/astrbot:latest
+
+RUN python -m pip install --no-cache-dir playwright
+RUN python -m playwright install --with-deps chromium
+
+```
+
+同时建议为容器开启较大的共享内存，否则 Chromium 截图容易变慢或异常：
+
+```yaml
+shm_size: 1g
+```
+
+完整版可复制的docker compose yml内容：
+```yaml
+version: "3.8"
+
+services:
+  astrbot:
+    build: .
+    image: astrbot-playwright:latest
+    shm_size: 1g
+    container_name: astrbot
+    restart: always
+    ports:
+      - "6185:6185"
+      - "6199:6199"
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./data:/AstrBot/data
+      - /etc/localtime:/etc/localtime:ro
+
+```
+
+
+---
+
+## 说明
+
+* 已移除原版本中的重量级依赖 `numpy`。
+
+
+
+
 
 ## 功能模块
 
@@ -104,50 +170,154 @@ git clone https://github.com/Llyjus/astrbot_plugin_Tomin
       -  抵抗在负面效果下按概率生效。
 
 
-    - 指令
-    
-      1.  `帮助`或`help`来查看指令系统。
-      2. `打卡`，`dk`，`签到`或`qd`来进行每日免费招募。冷却时间为4小时，每日最多5次，隔天重置冷却时间。
-      3. 
-         - `招募`或`zm`来花费默认最低10资金招募角色；
-         - `招募 x`（x为资金数量）最高可一次使用50资金招募，每增加一点资金可提升固定比例的稀有度超过2的角色出现。五星角色会在25资金以上的招募出现，在40资金时达到最大概率不再增长；6星则是在40资金以上的招募出现。具体为：
 
-         | 稀有度  | 概率提升/5资金  |
-         |--------|---------------|
-         | 1      | 0%            |
-         | 2      | 12.5%         |
-         | 3      | 10%           |
-         | 4      | 7.5%          |
-         | 5      | 5%            |
-         | 6      | 5%            |
+- 指令
 
-         如若花费50资金进行一次招募，概率为：
+  1. `帮助` / `help` / `hp` / `bz`  
+     查看指令系统。  
+     支持不使用空格分隔指令和参数。  
+     可以使用：
 
-         | 稀有度  | 概率  |
-         |--------|------|
-         | 1      | 0%   |
-         | 2      | 0%   |
-         | 3      | 35%  |
-         | 4      | 40%  |
-         | 5      | 15%  |
-         | 6      | 10%  |
+     ```
+     帮助 [指令名称]
+     ```
 
-         - `招募 x n`(n为次数)可在一次指令中进行多次抽取。
-      4. 
-         - `查卡牌`或`ckp`来查找拥有的所有卡牌；
-         - `查卡牌 [乐队] [稀有度]`来筛选特定稀有度和乐队卡牌。可以省略空格和不填写任意一项。
+     查看某条指令的详细说明，例如：
 
-      5. 
-         - `出售 [卡牌id]`或`cs [卡牌id]`来出售卡牌。
-         - `稀有度出售/x出售/xcs [稀有度]`来批量出售指定稀有度以及更低的所有卡牌。各稀有度卡牌价格为：
-         | 稀有度  | 价格  |
-         |--------|------|
-         | 1      | 1    |
-         | 2      | 3    |
-         | 3      | 8    |
-         | 4      | 40   |
-         | 5      | 100  |
-         | 6      | 150  |
+     ```
+     帮助 zm
+     ```
+
+  2. `打卡` / `dk` / `qd` / `签到`  
+     进行每日免费招募。  
+     冷却时间为 4 小时，每日最多 5 次，隔天重置冷却时间。
+
+  3. 招募指令：
+
+     - `招募` 或 `zm`  
+       进行一次默认招募（默认花费 10 资金，次数 1）。
+
+     - `招募 [资金] [次数]`  
+       或  
+       `zm[资金][x或空格][次数]`  
+
+       例如：
+
+       ```plaintext
+       招募
+       zm 20 3
+       zm20x3
+       ```
+
+       表示每次花费 20 资金，进行 3 次招募。
+
+       次数最多为 10 次。
+
+       在无加成情况下，稀有度 1～6 的基础概率为：
+
+       - 40%、30%、25%、5%、0%、0%
+
+     - `招募 x`（x 为资金数量）
+
+       单次招募最高可使用 50 资金。  
+       每增加 5 资金，可提升稀有度大于 2 的角色出现概率。
+
+       五星角色在 25 资金以上的招募中出现，  
+       并在 40 资金时达到最大概率，不再增长；  
+       六星角色在 40 资金以上的招募中出现。
+
+       每 5 资金的概率提升为：
+
+       | 稀有度 | 概率提升 / 5资金 |
+       |------|----------------|
+       | 1    | 0%             |
+       | 2    | 12.5%          |
+       | 3    | 10%            |
+       | 4    | 7.5%           |
+       | 5    | 5%             |
+       | 6    | 5%             |
+
+       当使用 50 资金进行一次招募时，稀有度 1～6 的概率为：
+
+       | 稀有度 | 概率 |
+       |------|----|
+       | 1    | 0% |
+       | 2    | 0% |
+       | 3    | 35%|
+       | 4    | 40%|
+       | 5    | 15%|
+       | 6    | 10%|
+
+  4. 卡牌查询指令：
+
+     - `查卡牌[id]` 或 `ckp[id]`  
+       查看指定 id 的卡牌。
+
+     - `查卡牌集` 或 `ckpj`  
+       查看你拥有的所有卡牌。
+
+     - 使用：
+
+       ```
+       查卡牌 乐队名称 稀有度
+       ```
+
+       可以筛选指定乐队或指定稀有度的卡牌。  
+       乐队名称和稀有度均可以省略，也可以不使用空格。
+
+       例如：
+
+       ```
+       查卡牌 roselia 4
+       查卡牌4
+       ```
+
+  5. 出售指令：
+
+     - `出售 卡牌id` 或 `cs 卡牌id`  
+       出售单张卡牌。
+
+     - `稀有度出售` / `x出售` / `xcs 稀有度`  
+       批量出售指定稀有度及更低稀有度的所有卡牌。
+
+       各稀有度出售价格如下：
+
+       | 稀有度 | 价格 |
+       |-------|-----|
+       | 1     |  1  |
+       | 2     |  3  |
+       | 3     |  8  |
+       | 4     |  40 |
+       | 5     | 100 |
+       | 6     | 150 |
+
+       例如：
+
+       ```
+       xcs 3
+       ```
+
+       将出售所有稀有度 1、2、3 的卡牌。
+
+  6. `资金` 或 `zj`  
+     查询当前拥有的资金。
+
+  7. 赠送指令：
+
+     ```
+     zs @xxx 卡牌id
+     赠送 @xxx 卡牌id
+     ```
+
+     或使用 QQ 号进行赠送：
+
+     ```
+     zs qq号 卡牌id
+     ```
+
+     如果使用 QQ 号，中间需要用空格、`c` 或 `C` 进行分隔。
+
+
 
 
 ### 演出系统(预实现)
@@ -187,58 +357,83 @@ git clone https://github.com/Llyjus/astrbot_plugin_Tomin
 
 ### 后续开发规划
 - [x] 角色拓展，演出功能实现
+- [x] 完善UI(使用图片等展示抽卡结果)
+- [ ] 打工系统
 - [ ] 技能类实现
-- [ ] 完善UI(使用图片等展示抽卡结果，演出过程等等)
 - [ ] 肉鸽系统
 - [ ] 活动系统
 
 ## 开发者文档
+
+   > 文档说明
+   > 本项目的系统架构设计、业务规则与代码实现为作者本人架构与实现， README 中的部分说明文字，基于本项目已有的系统设计与实现逻辑由作者整理项目特色与要点并在必要时借助 AI 进行语言润色与格式统一。  
+   > AI 仅参与文档表达优化与中英文一致性处理，不参与系统设计与功能实现。
+
    - 项目架构:
 ```plaintext
 .
 ├── app
-│   ├── application
-│   │   ├── cards_app.py
-│   │   ├── gacha_app.py
-│   │   ├── __init__.py
-│   │   └── init.py
-│   ├── assets
-│   │   └── images
-│   │       ├── backgrounds
-│   │       └── cards
-│   ├── card_system
-│   │   ├── cards.py
-│   │   └── __init__.py
-│   ├── data_management
-│   │   ├── config.py
-│   │   ├── __init__.py
-│   │   ├── init.py
-│   │   ├── ports.py
-│   │   └── repository
-│   │       ├── connection.py
-│   │       ├── repository.py
-│   │       └── sql.py
-│   ├── gacha
-│   │   ├── characters.py
-│   │   ├── gacha.py
-│   │   ├── __init__.py
-│   │   └── util.py
-│   ├── __init__.py
-│   ├── live
-│   │   └── __init__.py
-│   ├── maintenance
-│   │   ├── cleaner.py
-│   │   ├── event.py
-│   │   └── __init__.py
-│   ├── schemas
-│   │   ├── errors.py
-│   │   ├── __init__.py
-│   │   └── schemas.py
-│   ├── services
-│   │   ├── __init__.py
-│   │   └── service.py
-│   └── skills
-│       └── __init__.py
+│   ├── application
+│   │   ├── cards_app.py
+│   │   ├── funds_app.py
+│   │   ├── gacha_app.py
+│   │   └── __init__.py
+│   ├── card_system
+│   │   ├── cards.py
+│   │   └── __init__.py
+│   ├── data_management
+│   │   ├── config.py
+│   │   ├── __init__.py
+│   │   ├── init.py
+│   │   ├── ports.py
+│   │   └── repository
+│   │       ├── connection.py
+│   │       ├── repository.py
+│   │       └── sql.py
+│   ├── gacha
+│   │   ├── characters.py
+│   │   ├── gacha.py
+│   │   ├── __init__.py
+│   │   └── util.py
+│   ├── infrastuctures
+│   │   ├── images
+│   │   │   ├── backgrounds
+│   │   │   │   ├── background1.jpg
+│   │   │   │   ├── background2.jpg
+│   │   │   │   └── background3.jpg
+│   │   │   └── cards
+│   │   ├── __init__.py
+│   │   ├── renderer
+│   │   │   └── html_to_image.py
+│   │   └── template
+│   │       ├── templates
+│   │       │   ├── base.css
+│   │       │   ├── base.html
+│   │       │   ├── cards.css
+│   │       │   └── cards.html
+│   │       └── templates_gen.py
+│   ├── __init__.py
+│   ├── interface
+│   │   ├── app_interface.py
+│   │   └── __init__.py
+│   ├── live
+│   │   └── __init__.py
+│   ├── maintenance
+│   │   ├── cleaner.py
+│   │   ├── event.py
+│   │   └── __init__.py
+│   ├── schemas
+│   │   ├── errors.py
+│   │   ├── __init__.py
+│   │   ├── inter_util
+│   │   │   └── text_dict.py
+│   │   └── schemas.py
+│   ├── services
+│   │   ├── __init__.py
+│   │   └── service.py
+│   └── skills
+│       └── __init__.py
+├── __init__.py
 ├── LICENSE
 ├── main.py
 ├── metadata.yaml
@@ -247,16 +442,16 @@ git clone https://github.com/Llyjus/astrbot_plugin_Tomin
 ├── README.md
 ├── requirements.txt
 └── tests
-    ├── __init__.py
     ├── test_intergration
-    │   ├── conftest.py
-    │   ├── test_database.py
-    │   └── test_gacha_in.py
+    │   ├── conftest.py
+    │   ├── test_card_io.py
+    │   └── test_database.py
     └── test_unit
         ├── test_cleaner.py
         ├── test_db_init.py
         ├── test_gacha.py
         └── test_interface.py
+
 
 ```
 
@@ -322,7 +517,7 @@ git clone https://github.com/Llyjus/astrbot_plugin_Tomin
 包含：
 
 - `Fund_service`：资金校验与扣减规则
-- `Card_service`：卡牌编号、槽位复用规则
+- `Card_service`：卡牌编号、槽位复用、检索与转让卡牌规则
 - `Sign_in_service`：签到次数 / 冷却逻辑
 
 特点：
@@ -374,7 +569,7 @@ git clone https://github.com/Llyjus/astrbot_plugin_Tomin
 - 使用 `contextmanager` 封装数据库连接
 - 每个用例在应用层显式控制事务范围
 - 任一异常触发 rollback，避免部分成功状态
-
+- 操作与查询返回结果隔离，保证不因查询返回结果失败而影响数据操作本身
 ---
 
 #### 3. 抽卡与数值系统解耦
@@ -388,6 +583,41 @@ git clone https://github.com/Llyjus/astrbot_plugin_Tomin
 - 不依赖 AstrBot
 - 可单独测试、复用或替换
 
+
+#### 4. 应用层输出接口与接入层解耦
+
+应用层对外仅暴露统一的结果结构，不直接依赖 AstrBot 的消息对象或返回格式。
+
+应用层与接口层之间，统一使用字典（`dict`）作为数据交换格式，由接口层负责将结果转换为 AstrBot 所需的输出形式。
+
+设计目的：
+
+- 应用层保持纯业务语义，不感知任何平台协议
+- 接口层仅承担适配职责（格式化文本、图片、富消息等）
+- 当接入其它平台（如 Web API / 其它机器人框架）时，仅需替换接口层的结果渲染与输出格式，无需修改应用层与业务逻辑
+
+该设计保证了从应用层到接口层的稳定边界，使系统具备较好的可移植性与可扩展性。
+
+
+#### 5. 图片渲染与输出格式扩展机制
+
+系统支持在接口层对业务结果进行本地图片渲染，用于展示卡牌列表与结果界面，提升用户可读性与交互体验。
+
+设计要点：
+
+- 渲染逻辑与业务逻辑完全解耦，仅依赖应用层返回的数据结构
+- 同一业务结果可输出为：
+  - 纯文本格式
+  - 图片格式
+
+为提高系统稳定性与容错能力：
+
+- 图片渲染设有超时控制
+- 当图片渲染失败或超时时，自动降级返回文本结果
+
+该机制保证了展示层的失败不会影响核心业务流程，从而避免因渲染异常导致用户操作失败。
+
+
 ---
 
 ### 三、可测试性设计
@@ -396,7 +626,7 @@ git clone https://github.com/Llyjus/astrbot_plugin_Tomin
 
 - 使用 `pytest` 作为测试框架
 - Repository 层使用 in-memory SQLite 进行隔离测试
-- Gacha 模块通过依赖注入（fake gacha / fake rarity）实现确定性测试
+- Gacha 模块与astrbot接口层通过依赖注入（fake gacha / fake rarity）实现确定性测试
 
 覆盖内容包括：
 
@@ -406,20 +636,23 @@ git clone https://github.com/Llyjus/astrbot_plugin_Tomin
 - 资金边界条件
 - 冷却与次数限制
 
+- 图片渲染模块仅用于展示层输出，不参与业务决策与事务流程，当前未纳入自动化测试范围
+
+
 ---
 
 ### 四、已知限制与后续演进
 
 - SQLite 并发能力有限，适合当前小群场景
 - Cleaner 为进程内定期清理，非分布式任务
-- 抽卡概率采用阈值模型，非权重表
+- 内部实现取决于db_path的绝对路径，后续如有迁移需求则更改为外部接口层注入路径来优化可迁移属性
 
 ---
 
 ### （结构变更说明）
 
 - 合并开发者文档
-- 新增「关键机制」「可测试性」「限制与演进」章节
+- 新增「关键机制」「可测试性」「限制与演进」等章节
 - 不影响玩家内容，仅面向开发者
 
 

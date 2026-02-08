@@ -560,7 +560,7 @@ class TominPlugin(Star):
             _check = Funds_reward_input(fund_amount=text)
 
             result = await app_inter(
-                "funds_giving",  # TODO: 按你 registry 的真实名字改
+                "funds_giving",
                 {"fund_amount": text},
                 renderer=self.renderer,
                 message_id=message_id,
