@@ -23,9 +23,16 @@ app_dict = {
 }
 
 
-async def app_inter(function_name, args:dict, renderer:Renderer_html_to_png_bytes=None, message_id=None, connect=None):
+async def app_inter(function_name, 
+                    kwargs:dict, 
+                    renderer:Renderer_html_to_png_bytes=None, 
+                    message_id=None, 
+                    connect=None, 
+                    data_source=None):
 
-    event_creater(message_id=message_id, conn=connect)
+    event_creater(message_id=message_id, 
+                  conn=connect, 
+                  db_path = data_source)
 
 
     func = app_dict.get(function_name, )
@@ -34,7 +41,7 @@ async def app_inter(function_name, args:dict, renderer:Renderer_html_to_png_byte
     
 
     try:
-        result = func(**args)
+        result = func(**kwargs, db_path=data_source, connect=connect)
 
         #result: {'return_type':'str/html', 
         #           'temp_type': none/str,
@@ -49,15 +56,15 @@ async def app_inter(function_name, args:dict, renderer:Renderer_html_to_png_byte
 
 
 
-                try:
-                    #convert to image
-                    html = template_generator(result['temp_type'], result['content'])
+                # try:
+                #     #convert to image
+                #     html = template_generator(result['temp_type'], result['content'])
 
-                    img = await renderer.render(html=html)
+                #     img = await renderer.render(html=html)
 
-                    result = {'return_type': 'png', 
-                            'content': img}
-                except TimeoutError:
+                #     result = {'return_type': 'png', 
+                #             'content': img}
+                # except TimeoutError:
                     result = {'return_type': 'str', 
                             'content': '生成图片超时,以下是文本内容：\n' + result.get('txt', '')}
 

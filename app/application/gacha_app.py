@@ -8,13 +8,13 @@ from app.maintenance import event_creater
 
 
 
-def normal_gacha(user_id, fund_spent, times, *, gacha_cls = Gacha, connect = None):
+def normal_gacha(user_id, fund_spent, times, *, db_path=None, gacha_cls = Gacha, connect = None):
     # Use async function for the window of the future 
 
 
     # Find the available card_id and insert into database
     if connect == None:
-        connect = connection()
+        connect = connection(path=db_path)
     with connect as conn:
 
         repo = Repository(conn)
@@ -88,12 +88,12 @@ def normal_gacha(user_id, fund_spent, times, *, gacha_cls = Gacha, connect = Non
 
 
 
-def free_gacha(user_id, *, gacha_cls = Gacha, connect = None):
+def free_gacha(user_id, *, db_path=None, gacha_cls = Gacha, connect = None):
 
     context_bit = 0
 
     if connect is None:
-        connect = connection()
+        connect = connection(path=db_path)
         context_bit = 1
 
     with connect as conn:

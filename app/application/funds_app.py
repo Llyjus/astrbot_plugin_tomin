@@ -3,10 +3,10 @@ from app.data_management import connection, Repository
 from app.maintenance import event_creater
 
 
-def funds_giving(amount:int, connect=None):
+def funds_giving(amount:int, db_path=None, connect=None):
 
     if connect == None:
-        connect = connection()
+        connect = connection(path=db_path)
 
     with connect as conn:
         repo = Repository(conn)
@@ -18,9 +18,9 @@ def funds_giving(amount:int, connect=None):
     return result
 
 
-def fund_checker(user_id, connect=None):
+def fund_checker(user_id, db_path=None, connect=None):
     if connect == None:
-        connect = connection()
+        connect = connection(path=db_path)
 
     with connect as conn:
         repo = Repository(conn)

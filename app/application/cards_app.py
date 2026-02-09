@@ -3,9 +3,9 @@ from app.services import *
 from app.maintenance import event_creater
 from app.schemas import *
 
-def search_card_app(user_id, card_id, *, connect=None):
+def search_card_app(user_id, card_id, *, db_path=None, connect=None):
     if connect is None:
-        connect = connection()
+        connect = connection(path=db_path)
 
     with connect as conn:
 
@@ -43,16 +43,16 @@ def search_card_app(user_id, card_id, *, connect=None):
               'temp_type':'cards',
               'content':{'cards':cards_li,
                          'title':'卡牌信息',
-                         'intro':'这是你查询到的卡牌信息：',
-                        'txt':card_txt
-                         }}
+                         'intro':'这是你查询到的卡牌信息：'},
+              'txt':card_txt
+                         }
 
         
     return result
 
-def search_cards_app(user_id, *, connect=None):
+def search_cards_app(user_id, *, db_path=None, connect=None):
     if connect is None:
-        connect = connection()
+        connect = connection(path=db_path)
 
     with connect as conn:
 
@@ -84,9 +84,9 @@ def search_cards_app(user_id, *, connect=None):
 
 
 
-def search_cards_rarity_app(user_id, rarity, *, connect=None):
+def search_cards_rarity_app(user_id, rarity, *, db_path=None, connect=None):
     if connect is None:
-        connect = connection()
+        connect = connection(path=db_path)
 
     with connect as conn:
 
@@ -112,16 +112,16 @@ def search_cards_rarity_app(user_id, rarity, *, connect=None):
                   'content':{'cards':cards_li,
                               'title':f'稀有度{rarity}卡牌查询结果',
                               'intro':f'稀有度为{rarity}的卡牌你目前拥有：'},
-                              'txt':cards_txt}
+                  'txt':cards_txt}
 
     return result
 
 
 
 
-def search_cards_band_app(user_id, band, *, connect=None):
+def search_cards_band_app(user_id, band, *, db_path=None, connect=None):
     if connect is None:
-        connect = connection()
+        connect = connection(path=db_path)
 
     with connect as conn:
 
@@ -146,14 +146,14 @@ def search_cards_band_app(user_id, band, *, connect=None):
                   'content':{'cards':cards_li,
                               'title':f'{band}卡牌查询结果',
                               'intro':f'{band}的角色卡牌你目前拥有：'},
-                              'txt':cards_txt}
+                  'txt':cards_txt}
 
     return result
 
 
-def search_cards_both_band_rarity(user_id, band, rarity, *, connect=None):
+def search_cards_both_band_rarity(user_id, band, rarity, *, db_path=None, connect=None):
     if connect is None:
-        connect = connection()
+        connect = connection(path=db_path)
 
     with connect as conn:
 
@@ -178,18 +178,18 @@ def search_cards_both_band_rarity(user_id, band, rarity, *, connect=None):
                   'content':{'cards':cards_li,
                               'title':f'{band} {rarity}卡牌查询结果',
                               'intro':f'{band}角色卡牌你目前拥有：'},
-                              'txt':cards_txt}
+                  'txt':cards_txt}
 
     return result
 
 
 
-def give_away_cards_app(giver_id, card_id, accepter_id, *, connect=None):
+def give_away_cards_app(giver_id, card_id, accepter_id, *, db_path=None, connect=None):
     
     context_bit = 0
     
     if connect is None:
-        connect = connection()
+        connect = connection(path=db_path)
         context_bit = 1
         
     with connect as conn:
@@ -212,7 +212,7 @@ def give_away_cards_app(giver_id, card_id, accepter_id, *, connect=None):
 
             #return cards left
     try:
-        result = search_cards_app(giver_id, connect=connect)
+        result = search_cards_app(giver_id, db_path=db_path, connect=connect)
         result['content']['intro'] = '转让卡牌成功！你的宝宝就这样离你远去...剩余卡牌：'
         result['content']['title'] = '转让卡牌成功'
         text += result['txt']
@@ -226,12 +226,12 @@ def give_away_cards_app(giver_id, card_id, accepter_id, *, connect=None):
 
 
 
-def sell_card_app(user_id, card_id, *, connect=None):
+def sell_card_app(user_id, card_id, *, db_path=None, connect=None):
     
     context_bit = 0
     
     if connect is None:
-        connect = connection()
+        connect = connection(path=db_path)
         context_bit = 1
         
     with connect as conn:
@@ -259,7 +259,7 @@ def sell_card_app(user_id, card_id, *, connect=None):
         
         # search after submiting
     try:
-        result = search_cards_app(user_id=user_id, connect=connect)
+        result = search_cards_app(user_id=user_id, db_path=db_path, connect=connect)
         result['content']['intro'] = f'出售成功！获得{fund}资金。你好残忍...\n现在拥有{fund_total}资金!快去消费吧！'
         result['content']['title'] = '出售成功'
         text += result['txt']
@@ -274,12 +274,12 @@ def sell_card_app(user_id, card_id, *, connect=None):
 
 
 
-def sell_cards_by_rarity_app(user_id, rarity, connect=None):
+def sell_cards_by_rarity_app(user_id, rarity, *, db_path=None, connect=None):
     
     context_bit = 0
     
     if connect is None:
-        connect = connection()
+        connect = connection(path=db_path)
         context_bit = 1
         
     with connect as conn:
@@ -302,7 +302,7 @@ def sell_cards_by_rarity_app(user_id, rarity, connect=None):
         text = f"出售成功！一共出售{sold_detail['cards_sold']}张卡牌，获得{sold_detail['fund_gain']}资金。你好残忍...\n现在拥有{fund_total}资金!快去消费吧！\n"
     
     try:
-        result = search_cards_app(user_id=user_id, connect=connect)
+        result = search_cards_app(user_id=user_id, db_path=db_path, connect=connect)
         result['content']['intro'] = f"出售成功！\n一共出售{sold_detail['cards_sold']}张卡牌，获得{sold_detail['fund_gain']}资金。你好残忍...\n剩余卡牌："
         result['content']['title'] = '出售成功'
         text += result['txt']

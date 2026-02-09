@@ -15,5 +15,5 @@ requires:
 python_requires: ">=3.12.0"
 
 dependencies:
-  - numpy
+  - playwright
   - pydantic
