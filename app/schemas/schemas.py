@@ -22,8 +22,13 @@ class Gacha_input(BaseModel):
     @field_validator('times')
     @classmethod
     def validate_times(cls, v):
+<<<<<<< HEAD
         if v > 10 or v < 1:
             raise Invalid_input('招募次数不能大于10或小于1！')
+=======
+        if v > 100 or v < 1:
+            raise Invalid_input('招募次数不能大于100或小于1！')
+>>>>>>> origin/develop
         return v
     
 

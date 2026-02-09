@@ -5,8 +5,13 @@ from app.data_management import Repository, connection
 class Cleaner:
     def __init__(self, 
                  time_record = int(time()), 
+<<<<<<< HEAD
                  duration = 3600 * 4,
                  retention_seconds = 60):
+=======
+                 duration = 3600 * 24,
+                 retention_seconds = 3600 * 4):
+>>>>>>> origin/develop
 
         self.last_cleaning_timestamp = time_record
         self.duration = duration
@@ -22,11 +27,19 @@ class Cleaner:
 
         if time_now - self.last_cleaning_timestamp >= self.duration:
             self.last_cleaning_timestamp = time_now
+<<<<<<< HEAD
             self.do_cleaning(time_now, conn)
 
         
 
     def do_cleaning(self, time_now, conn=None):
+=======
+            self._do_cleaning(time_now, conn)
+
+        
+
+    def _do_cleaning(self, time_now, conn=None):
+>>>>>>> origin/develop
         if conn is None:
             conn = connection()
         with conn as c:

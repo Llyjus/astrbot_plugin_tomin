@@ -53,10 +53,13 @@ class Illegal_data(App_error):
 
 class Cooldown(App_error):
      pass
+<<<<<<< HEAD
 class Timeout(App_error):
      pass
 
 
+=======
+>>>>>>> origin/develop
 
 
 class Infra_error(Exception):

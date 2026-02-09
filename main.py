@@ -1,4 +1,5 @@
 import re
+<<<<<<< HEAD
 from pathlib import Path
 from typing import AsyncGenerator
 from unittest import result
@@ -7,6 +8,16 @@ from pydantic import ValidationError
 from astrbot.api.event import filter, AstrMessageEvent, MessageEventResult
 from astrbot.api.star import Context, Star, register, StarTools
 from astrbot.api.message_components import At, Plain, Node, Plain, Image
+=======
+from typing import AsyncGenerator
+from unittest import result
+from pydantic import ValidationError
+from asyncio import get_running_loop
+
+from astrbot.api.event import filter, AstrMessageEvent, MessageEventResult
+from astrbot.api.star import Context, Star, register, StarTools
+from astrbot.api.message_components import At, Plain
+>>>>>>> origin/develop
 from astrbot.api import logger
 
 import os, sys
@@ -19,20 +30,31 @@ if PLUGIN_DIR not in sys.path:
 from app import *
 
 
+<<<<<<< HEAD
 @register("Tomin - 少女乐队游戏", "Llyjus", "一个少女乐队游戏插件，实现抽卡、演出等功能。 ", "0.2.0")
+=======
+
+@register("Tomin - 少女乐队游戏", "Llyjus", "一个少女乐队游戏插件，实现抽卡、演出等功能。 ", "0.1.0")
+>>>>>>> origin/develop
 class TominPlugin(Star):
     def __init__(self, context: Context):
         super().__init__(context)
         self.cleaner = Cleaner()
         self.data_path = str(StarTools.get_data_dir() / 'data.db')
+<<<<<<< HEAD
         self.picture_path = StarTools.get_data_dir() / 'picture'
         self.renderer = Renderer_html_to_png_bytes()
+=======
+
+        # self.plugin_data_path = get_astrbot_data_path() / "plugin_data" / self.name
+>>>>>>> origin/develop
 
 
     async def initialize(self):
 
 
         try:
+<<<<<<< HEAD
             self.picture_path.mkdir(parents=True, exist_ok=True)
             db_init(self.data_path)
 
@@ -41,6 +63,11 @@ class TominPlugin(Star):
             
 
             
+=======
+            logger.error('已执行')
+            db_init(self.data_path)
+
+>>>>>>> origin/develop
 
         except Exception as e:
             self.terminate()
@@ -118,6 +145,7 @@ class TominPlugin(Star):
 
 
             # gacha
+<<<<<<< HEAD
             result = await app_inter(
                                     "normal_gacha",
                                     {"user_id": user_id, "fund_spent": fund_spent, "times": times},
@@ -142,6 +170,27 @@ class TominPlugin(Star):
 
 
 
+=======
+            cards = normal_gacha(user_id, fund_spent, times, message_id )
+
+
+
+            result = "成功抽取卡牌:\n"
+
+
+            result += cards
+
+
+        except ValidationError as e:
+            
+            result = error_message(e)
+
+        except App_error as e:
+            result = str(e)
+        except Infra_error as e:
+            result = str(e)
+            logger.error(f"Infra_error: {e}")
+>>>>>>> origin/develop
 
         yield event.plain_result(result)
 
@@ -169,6 +218,7 @@ class TominPlugin(Star):
 
 
             # gacha
+<<<<<<< HEAD
 
             result = await app_inter(
             "free_gacha",     
@@ -186,12 +236,28 @@ class TominPlugin(Star):
                 return
             else:
                 result = result['content']
+=======
+            cards = free_gacha(user_id, message_id=message_id)
+
+
+
+            result = cards
+>>>>>>> origin/develop
 
 
         except ValidationError as e:
             
             result = error_message(e)
 
+<<<<<<< HEAD
+=======
+        except App_error as e:
+            result += str(e)
+        except Infra_error as e:
+            result += str(e)
+            logger.error(f"Infra_error: {e}")
+
+>>>>>>> origin/develop
         yield event.plain_result(result)
 
 
@@ -210,6 +276,7 @@ class TominPlugin(Star):
             if text:
                 if text.group(2):
                     card_id = int(text.group(2))
+<<<<<<< HEAD
                     result = await app_inter('search_card_app', 
                                              {'user_id': user_id, 'card_id': card_id}, 
                                              renderer=self.renderer,
@@ -236,10 +303,26 @@ class TominPlugin(Star):
             else:
                 result = result['content']
 
+=======
+                    result = search_card_app(user_id=user_id, card_id=card_id)
+                else:
+                    result = '输入格式错误！请查询helpckp来找到命令。'
+            else:
+                result = '请输入参数！若要查找全部卡牌请输入ckpj。'
+>>>>>>> origin/develop
 
 
         except ValidationError as e:
             result = error_message(e)
+<<<<<<< HEAD
+=======
+        except App_error as e:
+            result = str(e)
+        except Infra_error as e:
+            result = str(e)
+            logger.error(f"Infra_error: {e}")
+
+>>>>>>> origin/develop
 
 
         yield event.plain_result(result)
@@ -261,6 +344,7 @@ class TominPlugin(Star):
             text = re.sub(r'^(查卡牌集|ckpj)\s*', '', message).strip()
             
             if text == '':
+<<<<<<< HEAD
                 result = await app_inter(
                     "search_cards_app",
                     {"user_id": user_id},
@@ -268,6 +352,9 @@ class TominPlugin(Star):
                     message_id=message_id,
                     db_path=self.data_path,
                 )
+=======
+                result = search_cards_app(user_id=user_id)
+>>>>>>> origin/develop
 
             else:
 
@@ -284,6 +371,7 @@ class TominPlugin(Star):
                             inputs = Card_input(band=text.group(1), rarity=text.group(2))
                             band, rarity = inputs.band, inputs.rarity
 
+<<<<<<< HEAD
                             result = await app_inter(
                                 "search_cards_both_band_rarity",  
                                 {"user_id": user_id, "band": band, "rarity": rarity},
@@ -306,10 +394,20 @@ class TominPlugin(Star):
                         )
 
 
+=======
+                            result = search_cards_both_band_rarity(user_id, band, rarity)
+                        
+                        else:
+                            inputs = Card_input(band=text.group(1))
+                            band = inputs.band
+                            result = search_cards_band_app(user_id, band)
+                    
+>>>>>>> origin/develop
                     elif rarity:
                         
                         inputs = Card_input(rarity=text.group(2))
                         rarity = inputs.rarity
+<<<<<<< HEAD
 
                         result = await app_inter(
                             "search_cards_rarity_app", 
@@ -337,6 +435,20 @@ class TominPlugin(Star):
 
         except ValidationError as e:
             result = error_message(e)
+=======
+                        result = search_cards_rarity_app(user_id, rarity)
+                
+                else:
+                    result = '参数错误！请查阅helpckpj获取帮助。'
+
+        except ValidationError as e:
+            result = error_message(e)
+        except App_error as e:
+            result = str(e)
+        except Infra_error as e:
+            result = str(e)
+            logger.error(f"Infra_error: {e}")
+>>>>>>> origin/develop
 
 
         yield event.plain_result(result)
@@ -356,6 +468,7 @@ class TominPlugin(Star):
             user_id = event.get_sender_id()
             user_id = str(user_id)
 
+<<<<<<< HEAD
             result = await app_inter(
                 "fund_checker", 
                 {"user_id": user_id},
@@ -378,6 +491,18 @@ class TominPlugin(Star):
             result = error_message(e)
 
 
+=======
+            result = fund_checker(user_id, message_id)
+        
+        except ValidationError as e:
+            result = error_message(e)
+        except App_error as e:
+            result = str(e)
+        except Infra_error as e:
+            result = str(e)
+            logger.error(f"Infra_error: {e}")
+        
+>>>>>>> origin/develop
         yield event.plain_result(result)
 
 
@@ -405,6 +530,7 @@ class TominPlugin(Star):
 
                 _test = Card_input(card_id=card_id)
 
+<<<<<<< HEAD
                 result = await app_inter(
                     "sell_card_app",
                     {"user_id": user_id, "card_id": card_id},
@@ -431,6 +557,19 @@ class TominPlugin(Star):
 
         except ValidationError as e:
             result = error_message(e)
+=======
+                result = sell_card_app(user_id, card_id=card_id, message_id=message_id)
+            else:
+                raise Invalid_input('参数格式错误，请查阅hpcs。')
+        except ValidationError as e:
+            result = error_message(e)
+        except App_error as e:
+            result = str(e)
+        except Infra_error as e:
+            result = str(e)
+            logger.error(f"Infra_error: {e}")
+
+>>>>>>> origin/develop
 
         yield event.plain_result(result)
             
@@ -454,6 +593,7 @@ class TominPlugin(Star):
                 rarity = int(match.group(2))
                 _test = Card_input(rarity=rarity)
 
+<<<<<<< HEAD
 
                 result = await app_inter(
                     "sell_cards_by_rarity_app",
@@ -482,6 +622,20 @@ class TominPlugin(Star):
 
         except ValidationError as e:
             result = error_message(e)
+=======
+                result = sell_cards_by_rarity_app(user_id, rarity=rarity, message_id=message_id)
+            
+            else:
+                raise Invalid_input('参数格式错误，请查阅hpxcs。')
+            
+        except ValidationError as e:
+            result = error_message(e)
+        except App_error as e:
+            result = str(e)
+        except Infra_error as e:
+            result = str(e)
+            logger.error(f"Infra_error: {e}")
+>>>>>>> origin/develop
 
 
         yield event.plain_result(result)
@@ -505,6 +659,7 @@ class TominPlugin(Star):
                 
                 accepter_id = match.group(2)
                 card_id = int(match.group(3))
+<<<<<<< HEAD
 
                 result = await app_inter(
                     "give_away_cards_app",
@@ -515,12 +670,19 @@ class TominPlugin(Star):
                 )
 
 
+=======
+                result = give_away_cards_app(giver_id=giver_id,
+                                         card_id=card_id,
+                                         accepter_id=accepter_id,
+                                         message_id=message_id)
+>>>>>>> origin/develop
                 
             elif isinstance(message_list[1], At) and isinstance(message_list[2], Plain):
                 accepter_id = str(message_list[1].qq)
                 match = re.search(r'^[ Cc]?(\d+)$', message_list[2].text)
                 if match:
                     card_id = int(match.group(1))
+<<<<<<< HEAD
 
                 result = await app_inter(
                     "give_away_cards_app",
@@ -548,6 +710,22 @@ class TominPlugin(Star):
         except ValidationError as e:
             result = error_message(e)
 
+=======
+                    result = give_away_cards_app(giver_id=giver_id,
+                                         card_id=card_id,
+                                         accepter_id=accepter_id,
+                                         message_id=message_id)
+            else:
+                raise Invalid_input('参数错误！请查询hpzs获得帮助。')
+        
+        except ValidationError as e:
+            result = error_message(e)
+        except App_error as e:
+            result = str(e)
+        except Infra_error as e:
+            result = str(e)
+            logger.error(f"Infra_error: {e}")
+>>>>>>> origin/develop
             
         yield event.plain_result(result)
 
@@ -572,6 +750,7 @@ class TominPlugin(Star):
 
             _check = Funds_reward_input(fund_amount=text)
 
+<<<<<<< HEAD
             result = await app_inter(
                 "funds_giving",
                 {"amount": text},
@@ -599,6 +778,15 @@ class TominPlugin(Star):
 
         
 
+=======
+            result = funds_giving(text, message_id=message_id)
+
+        except App_error as e:
+            result = str(e)
+        except Infra_error as e:
+            result = str(e)
+            logger.error(f"Infra_error: {e}")
+>>>>>>> origin/develop
 
         yield event.plain_result(result)
 
@@ -608,10 +796,14 @@ class TominPlugin(Star):
     async def terminate(self):
         """可选择实现异步的插件销毁方法，当插件被卸载/停用时会调用。"""
 
+<<<<<<< HEAD
 
         await self.renderer.close()
 
         logger.info('Tomin插件已停用。')
+=======
+        logger.info('girls_band_game插件已停用。')
+>>>>>>> origin/develop
 
 
 
@@ -632,6 +824,9 @@ class TominPlugin(Star):
     #     message_chain = event.get_messages() # 用户所发的消息的消息链 # from astrbot.api.message_components import *
     #     logger.info(message_chain)
     #     yield event.plain_result(f"Hello, {user_name}, 你发了 {message_str}!") # 发送一条纯文本消息
+<<<<<<< HEAD
 
 
 
+=======
+>>>>>>> origin/develop

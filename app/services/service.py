@@ -90,10 +90,16 @@ class Card_service(Service):
         last_card = self.repo.search_card_last(user_id)
 
         if last_card == None:
+<<<<<<< HEAD
             value_id = 0
 
         else:
             value_id = last_card['card_id']
+=======
+            return
+
+        value_id = last_card['card_id']
+>>>>>>> origin/develop
 
         slots = []
 

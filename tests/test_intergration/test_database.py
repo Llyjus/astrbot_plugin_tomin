@@ -303,7 +303,16 @@ def test_cards_table(memory_db_connection):
 
     result17 = repo.search_user(uid2)
 
+<<<<<<< HEAD
     assert result17['fund'] == 16
 
     with raises(Card_not_found) as error5:
         car_str_ser.sell_cards_by_rarity(uid2, 3)
+=======
+    assert result17['fund'] == 30
+
+    with raises(Card_not_found) as error5:
+        car_str_ser.sell_cards_by_rarity(uid2, 3)
+
+
+>>>>>>> origin/develop

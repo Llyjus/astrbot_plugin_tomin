@@ -85,7 +85,11 @@ def test_card_in_out(memory_db_connection):
                         gacha_cls=Fake_gacha, 
                         connect=memory_db_connection.conn) 
     
+<<<<<<< HEAD
     assert '今日首次打卡成功！+10资金' in result5['txt']
+=======
+    assert '今日首次打卡成功！+10资金' in result5
+>>>>>>> origin/develop
 
     result6 = repo.search_user('test')
 
@@ -94,7 +98,11 @@ def test_card_in_out(memory_db_connection):
     #sell card and record slot
     result7 = sell_card_app('test', 1, connect=memory_db_connection.conn)
  
+<<<<<<< HEAD
     assert '出售成功！获得3资金。' in result7['content']['intro']
+=======
+    assert '出售成功！获得10资金。' in result7
+>>>>>>> origin/develop
 
     result8 = repo.search_slots('test')
 
@@ -107,7 +115,11 @@ def test_card_in_out(memory_db_connection):
 
     result9 = repo.search_slots('test')
 
+<<<<<<< HEAD
     for r in result9:
+=======
+    for r in result8:
+>>>>>>> origin/develop
         assert r['slot'] == 1 or r['slot'] == 2
 
     
