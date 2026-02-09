@@ -126,10 +126,12 @@ class TominPlugin(Star):
                                     db_path=self.data_path,
         )
             if result['return_type'] == 'png':
-                path = self.picture_path / f"{message_id}.png"
-                path.write_bytes(result['content'])
-                yield event.image_result(str(path))
-                path.unlink()
+                try:
+                    path = self.picture_path / f"{message_id}.png"
+                    path.write_bytes(result['content'])
+                    yield event.image_result(str(path))
+                finally:
+                    path.unlink(missing_ok=True)
                 return
             else:
                 result = result['content']
@@ -179,10 +181,12 @@ class TominPlugin(Star):
             )
 
             if result['return_type'] == 'png':
-                path = self.picture_path / f"{message_id}.png"
-                path.write_bytes(result['content'])
-                yield event.image_result(str(path))
-                path.unlink()
+                try:
+                    path = self.picture_path / f"{message_id}.png"
+                    path.write_bytes(result['content'])
+                    yield event.image_result(str(path))
+                finally:
+                    path.unlink(missing_ok=True)
                 return
             else:
                 result = result['content']
@@ -228,10 +232,12 @@ class TominPlugin(Star):
             
 
             if result['return_type'] == 'png':
-                path = self.picture_path / f"{message_id}.png"
-                path.write_bytes(result['content'])
-                yield event.image_result(str(path))
-                path.unlink()
+                try:
+                    path = self.picture_path / f"{message_id}.png"
+                    path.write_bytes(result['content'])
+                    yield event.image_result(str(path))
+                finally:
+                    path.unlink()
                 return
             else:
                 result = result['content']
@@ -326,10 +332,12 @@ class TominPlugin(Star):
                     
 
             if result['return_type'] == 'png':
-                path = self.picture_path / f"{message_id}.png"
-                path.write_bytes(result['content'])
-                yield event.image_result(str(path))
-                path.unlink()
+                try:
+                    path = self.picture_path / f"{message_id}.png"
+                    path.write_bytes(result['content'])
+                    yield event.image_result(str(path))
+                finally:
+                    path.unlink(missing_ok=True)
                 return
             else:
                 result = result['content']
@@ -366,10 +374,12 @@ class TominPlugin(Star):
 
 
             if result['return_type'] == 'png':
-                path = self.picture_path / f"{message_id}.png"
-                path.write_bytes(result['content'])
-                yield event.image_result(str(path))
-                path.unlink()
+                try:
+                    path = self.picture_path / f"{message_id}.png"
+                    path.write_bytes(result['content'])
+                    yield event.image_result(str(path))
+                finally:
+                    path.unlink(missing_ok=True)
                 return
             else:
                 result = result['content']
@@ -420,10 +430,12 @@ class TominPlugin(Star):
                 
 
             if result['return_type'] == 'png':
-                path = self.picture_path / f"{message_id}.png"
-                path.write_bytes(result['content'])
-                yield event.image_result(str(path))
-                path.unlink()
+                try:
+                    path = self.picture_path / f"{message_id}.png"
+                    path.write_bytes(result['content'])
+                    yield event.image_result(str(path))
+                finally:
+                    path.unlink(missing_ok=True)
                 return
             else:
                 result = result['content']
@@ -470,10 +482,12 @@ class TominPlugin(Star):
                 
 
             if result['return_type'] == 'png':
-                path = self.picture_path / f"{message_id}.png"
-                path.write_bytes(result['content'])
-                yield event.image_result(str(path))
-                path.unlink()
+                try:
+                    path = self.picture_path / f"{message_id}.png"
+                    path.write_bytes(result['content'])
+                    yield event.image_result(str(path))
+                finally:
+                    path.unlink(missing_ok=True)
                 return
             else:
                 result = result['content']
@@ -536,10 +550,12 @@ class TominPlugin(Star):
                             'content': '参数格式错误，请查阅hpzs。'}
 
             if result['return_type'] == 'png':
-                path = self.picture_path / f"{message_id}.png"
-                path.write_bytes(result['content'])
-                yield event.image_result(str(path))
-                path.unlink()
+                try:
+                    path = self.picture_path / f"{message_id}.png"
+                    path.write_bytes(result['content'])
+                    yield event.image_result(str(path))
+                finally:
+                    path.unlink(missing_ok=True)
                 return
             else:
                 result = result['content']
@@ -583,10 +599,12 @@ class TominPlugin(Star):
 
 
             if result['return_type'] == 'png':
-                path = self.picture_path / f"{message_id}.png"
-                path.write_bytes(result['content'])
-                yield event.image_result(str(path))
-                path.unlink()
+                try:
+                    path = self.picture_path / f"{message_id}.png"
+                    path.write_bytes(result['content'])
+                    yield event.image_result(str(path))
+                finally:
+                    path.unlink(missing_ok=True)
                 return
             else:
                 result = result['content']

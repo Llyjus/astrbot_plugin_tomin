@@ -4,7 +4,7 @@ import pytest
 
 from app.interface import app_inter
 from app.schemas import Invalid_input
-from tests.utils.fake_app_inter_conf import fake_application_fixture
+from tests.utils import fake_application_fixture
 
 
 @pytest.mark.asyncio

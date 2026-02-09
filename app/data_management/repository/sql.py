@@ -2,7 +2,7 @@ def table_create_sql():
     return [USERS_TABLE_SQL, CARDS_TABLE_SQL, BANDS_TABLE_SQL, SLOTS_TABLE_SQL, EVENT_TABLE_SQL, SIGN_IN_SQL]
 
 def user_interact_sql():
-    return [USER_INSERT_SQL, USER_CHECK_SQL, FUND_GIVEN_SQL, FUND_GIVEN_ALL_USER_SQL]
+    return [USER_INSERT_SQL, USER_CHECK_SQL, USERS_CHECK_ALL_SQL, FUND_GIVEN_SQL, FUND_GIVEN_ALL_USER_SQL]
 
 def card_interact_sql():
     return [CARD_INSERT_SQL, CARD_SEARCH_SQL, 
@@ -125,6 +125,11 @@ USER_CHECK_SQL = '''
     FROM users
     WHERE user_id = ?;
             '''
+
+USERS_CHECK_ALL_SQL = '''
+    SELECT *
+    FROM users;
+'''
 
 FUND_GIVEN_SQL = '''
     UPDATE users

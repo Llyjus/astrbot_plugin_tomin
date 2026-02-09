@@ -6,6 +6,7 @@ import pytest
 from app.application import *
 from app.card_system import Card
 from app.schemas.errors import Not_enough_fund
+from tests.utils import db_checker
 
 
 def test_card_in_out(memory_db_connection):
@@ -110,4 +111,8 @@ def test_card_in_out(memory_db_connection):
     for r in result9:
         assert r['slot'] == 1 or r['slot'] == 2
 
+
+
+    final_check = db_checker(repo)
+    assert final_check == True
     

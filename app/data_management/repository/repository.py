@@ -68,12 +68,27 @@ class Repository(function_ports):
             raise Database_error('查询失败，数据库连接错误，请稍候再试') from e
         
         return result
+    
+    
+    def search_all_user(self):
+
+        cursor = self.conn.cursor()
+
+        sql = user_interact_sql()[2]
+
+        try:
+            result = cursor.execute(sql).fetchall()
+        except sqlite3.Error as e:
+            
+            raise Database_error('查询失败，数据库连接错误，请稍候再试') from e
+        
+        return result
 
     def add_fund(self, user_id, fund):
 
         cursor = self.conn.cursor()
 
-        sql = user_interact_sql()[2]
+        sql = user_interact_sql()[3]
 
         try:
             result = cursor.execute(sql, (fund, user_id, fund))
@@ -90,7 +105,7 @@ class Repository(function_ports):
 
         cursor = self.conn.cursor()
 
-        sql = user_interact_sql()[3]
+        sql = user_interact_sql()[4]
 
         try:
             result = cursor.execute(sql, (fund, ))

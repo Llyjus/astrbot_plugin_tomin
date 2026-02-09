@@ -31,18 +31,16 @@ async def app_inter(function_name,
                     connect=None, 
                     db_path=None,
                     app_dict=app_dict):
-
-    event_creater(message_id=message_id, 
-                  conn=connect, 
-                  db_path = db_path)
-
-
+    
     func = app_dict.get(function_name, )
     if func is None:
         raise Invalid_input(f'函数名称错误：{function_name}')
     
-
     try:
+        event_creater(message_id=message_id, 
+                  conn=connect, 
+                  db_path = db_path)
+    
         result = func(**kwargs, db_path=db_path, connect=connect)
 
         #result: {'return_type':'str/html', 
