@@ -137,7 +137,6 @@ Planned rarity tiers (6 levels) with default probabilities:
 
 - Higher rarity increases overall power, skills, and resistance. Overall power, speed, and resistance are randomly generated within a range and follow a normal distribution. Resistance has a probability to activate when opposing cards attempt to interfere using skills.
 
-<<<<<<< HEAD
 - Commands
 
   1. `帮助` / `help` / `hp` / `bz`  
@@ -291,56 +290,6 @@ Planned rarity tiers (6 levels) with default probabilities:
      When using a QQ number, you must separate the QQ number and the card ID
      with a space, `c`, or `C`.
 
-=======
-#### Commands
-
-1. Use ```help``` to view the command system.
-2. Use ```check-in```, ```dk```, ```sign in```, or ```qd``` to perform daily free recruitment. Cooldown: 4 hours, maximum 5 times per day, resets daily.
-3. 
-   - Use ```recruit``` or ```zm``` to spend a minimum of 10 funds for recruitment.
-   - ```recruit x``` (where x is the amount of funds) allows spending up to 100 funds per recruitment. Each additional fund increases the appearance rate of characters with rarity ≥2 by a fixed percentage, as shown below:
-
-   | Rarity | Probability Increase per 5 Funds |
-   |--------|----------------------------------|
-   | 1      | 0%                               |
-   | 2      | 3%                               |
-   | 3      | 3%                               |
-   | 4      | 2%                               |
-   | 5      | 2%                               |
-   | 6      | 1%                               |
-
-   For example, spending 50 funds on one recruitment gives the following probabilities:
-
-   | Rarity | Probability |
-   |--------|-------------|
-   | 1      | 0%          |
-   | 2      | 2%          |
-   | 3      | 37%         |
-   | 4      | 28%         |
-   | 5      | 24%         |
-   | 6      | 10%         |
-
-   - ```recruit x n``` (where n is the number of attempts) allows multiple recruitments in one command.
-   4. 
-      - Use `查卡牌` or `ckp` to search for all owned cards;
-      - Use `查卡牌 [band] [rarity]` to filter cards by specific rarity and band. Spaces can be omitted and either field can be left blank.
-
-   5. 
-      - Use `出售 [card_id]` or `cs [card_id]` to sell a card.
-      - Use `稀有度出售` / `x出售` / `xcs [rarity]` to batch sell all cards of the specified rarity and lower rarities. The selling prices for each rarity are:
-            | Rarity | Price |
-            |--------|-------|
-            | 1      | 3     |
-            | 2      | 5     |
-            | 3      | 15    |
-            | 4      | 40    |
-            | 5      | 80    |
-            | 6      | 200   |
-   6. 
-      `资金` or `zj` to check your funds.
-
----
->>>>>>> origin/develop
 
 ### Performance System
 
@@ -384,15 +333,9 @@ After completing the basic version, a **roguelike system** and **event system** 
 - [x] Interface integration
 
 ### Future Development Plan
-<<<<<<< HEAD
 - [x] Character expansion and performance feature implementation
 - [ ] Skill system implementation
 - [x] UI enhancement (using images to display gacha results etc.)
-=======
-- [ ] Character expansion and performance feature implementation
-- [ ] Skill system implementation
-- [ ] UI enhancement (using images to display gacha results, performance processes, etc.)
->>>>>>> origin/develop
 - [ ] Roguelike system
 - [ ] Event system
 
@@ -405,7 +348,6 @@ After completing the basic version, a **roguelike system** and **event system** 
 ```plaintext
 .
 ├── app
-<<<<<<< HEAD
 │   ├── application
 │   │   ├── cards_app.py
 │   │   ├── funds_app.py
@@ -467,50 +409,6 @@ After completing the basic version, a **roguelike system** and **event system** 
 │   └── skills
 │       └── __init__.py
 ├── __init__.py
-=======
-│   ├── application
-│   │   ├── cards_app.py
-│   │   ├── gacha_app.py
-│   │   ├── __init__.py
-│   │   └── init.py
-│   ├── assets
-│   │   └── images
-│   │       ├── backgrounds
-│   │       └── cards
-│   ├── card_system
-│   │   ├── cards.py
-│   │   └── __init__.py
-│   ├── data_management
-│   │   ├── config.py
-│   │   ├── __init__.py
-│   │   ├── init.py
-│   │   ├── ports.py
-│   │   └── repository
-│   │       ├── connection.py
-│   │       ├── repository.py
-│   │       └── sql.py
-│   ├── gacha
-│   │   ├── characters.py
-│   │   ├── gacha.py
-│   │   ├── __init__.py
-│   │   └── util.py
-│   ├── __init__.py
-│   ├── live
-│   │   └── __init__.py
-│   ├── maintenance
-│   │   ├── cleaner.py
-│   │   ├── event.py
-│   │   └── __init__.py
-│   ├── schemas
-│   │   ├── errors.py
-│   │   ├── __init__.py
-│   │   └── schemas.py
-│   ├── services
-│   │   ├── __init__.py
-│   │   └── service.py
-│   └── skills
-│       └── __init__.py
->>>>>>> origin/develop
 ├── LICENSE
 ├── main.py
 ├── metadata.yaml
@@ -519,18 +417,10 @@ After completing the basic version, a **roguelike system** and **event system** 
 ├── README.md
 ├── requirements.txt
 └── tests
-<<<<<<< HEAD
     ├── test_intergration
     │   ├── conftest.py
     │   ├── test_card_io.py
     │   └── test_database.py
-=======
-    ├── __init__.py
-    ├── test_intergration
-    │   ├── conftest.py
-    │   ├── test_database.py
-    │   └── test_gacha_in.py
->>>>>>> origin/develop
     └── test_unit
         ├── test_cleaner.py
         ├── test_db_init.py
@@ -547,7 +437,6 @@ After completing the basic version, a **roguelike system** and **event system** 
 
 ## Developer Documentation
 
-<<<<<<< HEAD
 
 > Note  
 > The system architecture, business rules, and all implementations of this project were designed and developed by the author.  
@@ -572,24 +461,6 @@ Application Layer (Use Case)
 Domain / Service Layer
 ↓
 Repository / Storage Layer
-=======
-### 1. Overall Architecture Design
-
-This project adopts a layered architecture with strict dependency direction control. The core goal is to:
-In the form of an AstrBot plugin, implement a backend system that is migratable, testable, and evolvable.
-
-The architecture is divided into four layers:
-
-```
-
-Interface Layer (Interface)
-↓
-Application Layer (Application / Use Case)
-↓
-Logic Layer (Domain / Service)
-↓
-Data Layer (Repository / Storage)
->>>>>>> origin/develop
 
 ```
 
@@ -597,7 +468,6 @@ Data Layer (Repository / Storage)
 
 Located in `main.py`.
 
-<<<<<<< HEAD
 Responsibilities:
 
 - Command parsing (regular expressions / command routing)
@@ -608,16 +478,6 @@ This layer contains no business logic and does not access the database directly.
 
 The interface layer can be regarded as an adapter.  
 AstrBot is only one of the possible integration targets.
-=======
-Responsibilities only include:
-- Command parsing (regular expressions / command routing)
-- Input validation (Pydantic)
-- Exception handling and user feedback
-
-Contains no business rules and does not directly access the database.
-
-The interface layer can be viewed as an Adapter, with AstrBot being just one of many possible access methods.
->>>>>>> origin/develop
 
 ---
 
@@ -625,7 +485,6 @@ The interface layer can be viewed as an Adapter, with AstrBot being just one of 
 
 Located in `app/application`.
 
-<<<<<<< HEAD
 Each function represents a complete use case:
 
 - `normal_gacha`: paid gacha
@@ -643,27 +502,10 @@ The interface layer must not bypass it to directly access Services or Repositori
 ---
 
 #### 3. Domain / Service Layer
-=======
-Each function corresponds to a complete use case:
-- `normal_gacha`: Paid gacha
-- `free_gacha`: Check-in + free gacha
-
-Responsibilities:
-- Orchestrating business processes
-- Controlling transaction boundaries
-- Coordinating multiple Services and Repositories
-
-The application layer is the sole entry point for system behavior; the interface layer cannot bypass it to directly call Services or Repositories.
-
----
-
-#### 3. Logic Layer (Domain / Service Layer)
->>>>>>> origin/develop
 
 Located in `app/services`.
 
 Includes:
-<<<<<<< HEAD
 
 - `Fund_service`: fund validation and deduction rules
 - `Card_service`: card numbering, slot reuse, card lookup and transfer rules
@@ -710,55 +552,11 @@ Design trade-offs:
 - The current strategy does not allow retries, even when failures occur
 - This is suitable for chatbot scenarios to prevent duplicated charges and rewards
 - If retry-on-failure is required in the future, event submission can be delayed or split into separate transactions
-=======
-- `Fund_service`: Fund validation and deduction rules
-- `Card_service`: Card numbering and slot reuse rules
-- `Sign_in_service`: Check-in count / cooldown logic
-
-Characteristics:
-- Unaware of interface forms
-- Does not manage transactions
-- Only expresses business rules
-
-This layer can be reused for Web APIs, scheduled tasks, or other game interfaces.
-
----
-
-#### 4. Data Layer (Repository Layer)
-
-Located in `app/data_management`.
-
-Implemented using SQLite, but decoupled via Repository + Protocol (ports).
-
-Characteristics:
-- Repository only handles data access, no business semantics
-- Transactions are uniformly controlled by the outer `connection()`
-- All database exceptions are converted to domain / infrastructure exceptions
-
-Can be migrated to PostgreSQL / MySQL non-intrusively in the future.
-
----
-
-### 2. Key Mechanism Explanations
-
-#### 1. Idempotence Design (No Retry on Failure)
-
-The system adopts a **strong idempotence strategy with event-first persistence**:
-- Each user message uses `message_id` as the idempotency key
-- Before any business processing, the event is written to the `events` table first
-- `event_id` is the primary key; duplicate requests directly trigger unique key conflicts
-
-Design trade-off explanation:
-- Current strategy: **No retry allowed even on failure**
-- Suitable for chatbot scenarios to avoid duplicate deductions and rewards
-- If "retry on failure" is needed in the future, event submission can be delayed or transactions can be split
->>>>>>> origin/develop
 
 ---
 
 #### 2. Transaction Boundary Design
 
-<<<<<<< HEAD
 - Database connections are wrapped using a `contextmanager`
 - Each use case explicitly defines its transaction scope at the application layer
 - Any exception triggers a rollback to avoid partial success
@@ -850,57 +648,6 @@ The test coverage includes:
 - New sections such as “Key Mechanisms”, “Testability”, and “Limitations and Evolution” have been added
 - Player-facing content is not affected; this documentation is intended for developers only
 
-=======
-- Uses `contextmanager` to encapsulate database connections
-- Each use case explicitly controls transaction scope at the application layer
-- Any exception triggers rollback to avoid partial success states
-
----
-
-#### 3. Decoupling Gacha and Numerical Systems
-
-- Gacha logic is located in `app/gacha`
-- Numerical calculations and probability distributions are centralized in `util`
-
-The gacha module has the following characteristics:
-- No database dependency
-- No AstrBot dependency
-- Can be tested, reused, or replaced independently
-
----
-
-### 3. Testability Design
-
-This project is designed with testability in mind from the start:
-
-- Uses `pytest` as the testing framework
-- Repository layer uses in-memory SQLite for isolated testing
-- Gacha module achieves deterministic testing via dependency injection (fake gacha / fake rarity)
-
-Test coverage includes:
-- Database CRUD
-- Idempotence logic
-- Transaction rollback
-- Fund boundary conditions
-- Cooldown and count limits
-
----
-
-### 4. Known Limitations and Future Evolution
-
-- SQLite has limited concurrency, suitable for small group scenarios
-- Cleaner is an in-process periodic cleanup, not a distributed task
-- Gacha probability uses a threshold model, not a weight table
-- `numpy` is a numerical dependency, which can be replaced with a lightweight implementation in the future
-
----
-
-### (Structural Change Notes)
-
-- Merged the original "Project Architecture / Detailed Outline" into a unified "Developer Documentation"
-- Added new sections: "Key Mechanisms", "Testability", "Limitations and Evolution"
-- No impact on player-facing content, only for developers
->>>>>>> origin/develop
 
 
 ## Contributing
