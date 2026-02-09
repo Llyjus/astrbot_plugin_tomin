@@ -1,3 +1,4 @@
 # requirements.txt
 pydantic>=2.0.0,<3.0.0
 playwright>=1.41.0
+astrbot>=3.8.0

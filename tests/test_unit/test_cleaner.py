@@ -1,13 +1,11 @@
 import pytest
+from pytest_mock import MockerFixture
 
 from app.maintenance import Cleaner
 
 
 
-def test_cleaner(mocker):
-
-    def fake_cleaning(time_now, conn):
-        pass
+def test_cleaner(mocker: MockerFixture):
 
     fake_connection = mocker.Mock()
     

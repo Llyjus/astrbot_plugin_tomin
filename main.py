@@ -123,7 +123,7 @@ class TominPlugin(Star):
                                     {"user_id": user_id, "fund_spent": fund_spent, "times": times},
                                     renderer=self.renderer,
                                     message_id=message_id,
-                                    data_source=self.data_path,
+                                    db_path=self.data_path,
         )
             if result['return_type'] == 'png':
                 path = self.picture_path / f"{message_id}.png"
@@ -175,7 +175,7 @@ class TominPlugin(Star):
             {"user_id": user_id},
             renderer=self.renderer,
             message_id=message_id,
-            data_source=self.data_path,
+            db_path=self.data_path,
             )
 
             if result['return_type'] == 'png':
@@ -214,7 +214,7 @@ class TominPlugin(Star):
                                              {'user_id': user_id, 'card_id': card_id}, 
                                              renderer=self.renderer,
                                              message_id=message_id,
-                                             data_source=self.data_path,
+                                             db_path=self.data_path,
                     )
                 
 
@@ -266,7 +266,7 @@ class TominPlugin(Star):
                     {"user_id": user_id},
                     renderer=self.renderer,
                     message_id=message_id,
-                    data_source=self.data_path,
+                    db_path=self.data_path,
                 )
 
             else:
@@ -289,7 +289,7 @@ class TominPlugin(Star):
                                 {"user_id": user_id, "band": band, "rarity": rarity},
                                 renderer=self.renderer,
                                 message_id=message_id,
-                                data_source=self.data_path,
+                                db_path=self.data_path,
                             )
 
 
@@ -302,7 +302,7 @@ class TominPlugin(Star):
                             {"user_id": user_id, "band": band},
                             renderer=self.renderer,
                             message_id=message_id,
-                            data_source=self.data_path,
+                            db_path=self.data_path,
                         )
 
 
@@ -316,7 +316,7 @@ class TominPlugin(Star):
                             {"user_id": user_id, "rarity": rarity},
                             renderer=self.renderer,
                             message_id=message_id,
-                            data_source=self.data_path,
+                            db_path=self.data_path,
                         )
 
                 
@@ -361,7 +361,7 @@ class TominPlugin(Star):
                 {"user_id": user_id},
                 renderer=self.renderer,
                 message_id=message_id,
-                data_source=self.data_path,
+                db_path=self.data_path,
             )
 
 
@@ -410,7 +410,7 @@ class TominPlugin(Star):
                     {"user_id": user_id, "card_id": card_id},
                     renderer=self.renderer,
                     message_id=message_id,
-                    data_source=self.data_path,
+                    db_path=self.data_path,
                 )
 
 
@@ -460,7 +460,7 @@ class TominPlugin(Star):
                     {"user_id": user_id, "rarity": rarity},
                     renderer=self.renderer,
                     message_id=message_id,
-                    data_source=self.data_path,
+                    db_path=self.data_path,
                 )
 
 
@@ -511,7 +511,7 @@ class TominPlugin(Star):
                     {"giver_id": giver_id, "accepter_id": accepter_id, "card_id": card_id},
                     renderer=self.renderer,
                     message_id=message_id,
-                    data_source=self.data_path,
+                    db_path=self.data_path,
                 )
 
 
@@ -527,7 +527,7 @@ class TominPlugin(Star):
                     {"giver_id": giver_id, "accepter_id": accepter_id, "card_id": card_id},
                     renderer=self.renderer,
                     message_id=message_id,
-                    data_source=self.data_path,
+                    db_path=self.data_path,
                 )
 
 
@@ -577,7 +577,7 @@ class TominPlugin(Star):
                 {"amount": text},
                 renderer=self.renderer,
                 message_id=message_id,
-                data_source=self.data_path,
+                db_path=self.data_path,
             )
 
 
