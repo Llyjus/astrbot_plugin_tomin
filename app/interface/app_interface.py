@@ -3,7 +3,7 @@ import logging
 from app.application.cards_app import *
 from app.application.funds_app import *
 from app.application.gacha_app import *
-from app.infrastuctures import template_generator, render_html_to_png_bytes, Renderer_html_to_png_bytes
+from app.infrastuctures import template_generator, Renderer_html_to_png_bytes
 
 
 app_dict = {

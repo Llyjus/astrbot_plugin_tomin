@@ -1,26 +1,26 @@
 from playwright.async_api import async_playwright
 
-async def render_html_to_png_bytes(html: str, width: int = 720, wait_ms: int = 100) -> bytes:
-    async with async_playwright() as p:
-        browser = await p.chromium.launch()
-        page = await browser.new_page(viewport={"width": width, "height": 10})
+# async def render_html_to_png_bytes(html: str, width: int = 720, wait_ms: int = 100) -> bytes:
+#     async with async_playwright() as p:
+#         browser = await p.chromium.launch()
+#         page = await browser.new_page(viewport={"width": width, "height": 10})
 
-        await page.set_content(html, wait_until="load")
-        # await page.evaluate("() => document.fonts.ready")  # ensure loaded
-        await page.wait_for_timeout(200)
+#         await page.set_content(html, wait_until="load")
+#         # await page.evaluate("() => document.fonts.ready")  # ensure loaded
+#         await page.wait_for_timeout(200)
 
         
 
 
-        if wait_ms:
-            await page.wait_for_timeout(wait_ms)
+#         if wait_ms:
+#             await page.wait_for_timeout(wait_ms)
 
-        height = await page.evaluate("() => Math.ceil(document.documentElement.scrollHeight)")
-        await page.set_viewport_size({"width": width, "height": height})
+#         height = await page.evaluate("() => Math.ceil(document.documentElement.scrollHeight)")
+#         await page.set_viewport_size({"width": width, "height": height})
 
-        png = await page.screenshot(full_page=True, type="png")
-        await browser.close()
-        return png
+#         png = await page.screenshot(full_page=True, type="png")
+#         await browser.close()
+#         return png
     
 
 class Renderer_html_to_png_bytes:
@@ -30,10 +30,10 @@ class Renderer_html_to_png_bytes:
         self.wait_ms = wait_ms
         self._p = None
         self._browser = None
-        self._context  = None
 
-    async def render(self) -> bytes:
-        return await render_html_to_png_bytes(self.html, self.width, self.wait_ms)
+
+    # async def render(self) -> bytes:
+    #     return await render_html_to_png_bytes(self.html, self.width, self.wait_ms)
     
     async def initial(self):
         if self._browser:
@@ -43,14 +43,8 @@ class Renderer_html_to_png_bytes:
         self._browser = await self._p.chromium.launch(
             args=["--no-sandbox", "--disable-setuid-sandbox"],
         )
-        self._context = await self._browser.new_context(
-            viewport={"width": self.width, "height": 10},
-        )
-
+        
     async def close(self):
-        if self._context:
-            await self._context.close()
-            self._context = None
         if self._browser:
             await self._browser.close()
             self._browser = None
@@ -59,16 +53,18 @@ class Renderer_html_to_png_bytes:
             self._p = None
 
     async def render(self, html: str) -> bytes:
-        if not self._context:
+        if not self._browser:
             raise RuntimeError("Playwright 还没有启动！请重启bot以初始化。")
+        context = await self._browser.new_context(
+            viewport={"width": self.width, "height": 10},
+        )
 
-        page = await self._context.new_page()
+        page = await context.new_page()
         try:
             await page.set_content(html, wait_until="domcontentloaded")
 
             if self.wait_ms:
                 await page.wait_for_timeout(self.wait_ms)
-
             await page.evaluate("""() => Promise.all(
               [...document.images].map(img =>
                 img.decode ? img.decode().catch(()=>{}) : Promise.resolve()
@@ -81,3 +77,4 @@ class Renderer_html_to_png_bytes:
             return await page.screenshot(full_page=True, type="png")
         finally:
             await page.close()
+            await context.close()

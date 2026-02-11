@@ -15,20 +15,22 @@ intro:str
 template_path = Path(__file__).resolve().parent / 'templates'
 
 def template_generator(temp:str, content:dict) -> str:
+    '''
+    combine base html and css with template html and css, 
+    then render the final html with content
+    '''
 
-
+    
     def loader(name: str) -> str:
         return (template_path / name).read_text(encoding="utf-8")
     
-
+    # load base html and css
     base_html = loader("base.html")
-
     base_css  = loader("base.css")
-
     base = base_html.replace("/* style_base */", base_css)
 
 
-
+    # hardcode replace background image with base64
     def background_hardcode_replace(html:str, content:dict):
         import base64
         from pathlib import Path
@@ -63,7 +65,7 @@ def template_generator(temp:str, content:dict) -> str:
 
 
 
-
+    # templates renderer
     def cards_temp(html:str, content:dict):
 
 
@@ -98,6 +100,8 @@ cards:cards list
 
     }
 
+
+    # call renderer
     if temp not in temp_dict:
         raise Invalid_input(f'未知的模板类型：{temp}')
 

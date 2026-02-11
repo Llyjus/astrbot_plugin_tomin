@@ -1,7 +1,7 @@
 header{
     padding-top: 40px;
     font-size: 36px;
-    color: rgb(128, 202, 0);
+    color: rgb(156, 154, 255);
     font-weight: 700;
 }
 
@@ -14,8 +14,8 @@ h1{
     text-align: left;
     margin-left: 100px;
     margin-top: 70px;
-    color: rgb(48, 235, 61);
-    font-weight: 700;
+    color: rgba(156, 154, 255);
+    font-weight: 1000;
 }
 
 .content{
@@ -29,7 +29,7 @@ h1{
 
 
 .item{
-    background-color:rgba(220, 255, 176, 0.7);
+    background-color:rgb(255, 205, 236);
 
     border-radius: 36px;
     flex: 0 0 auto; 

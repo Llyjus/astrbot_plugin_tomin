@@ -1,0 +1,42 @@
+:root{
+    font-size: 24px;
+    font-weight: 700;
+    color: rgb(133, 86, 227);
+}
+
+#root{
+    width: 1048px;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  
+}
+
+
+
+
+
+.bg-root{
+  width: 100%;
+
+  background-image: url("background2_url");
+  background-repeat: repeat-y;
+  background-position: center;
+  background-size: 100% auto;
+
+  text-align: center;
+
+}
+
+
+
+img{
+    display: block;
+  width: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% auto;
+} 
+
