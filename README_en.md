@@ -52,53 +52,102 @@ Additional systems (such as a roguelike mini-game and event system) will be deve
 
 ---
 
-## Project Overview
-
-### Introduction
-
-Tomin - Girls Band Game is a built-in plugin for AstrBot.  
-Players can collect cards and form their own bands to participate in performances.
-
-### Current Status
-
-***The current version only contains core game logic. The interface layer is still under development.  
-It is currently NOT usable and is for reference only.***
-
----
-
 ## Installation
 
-### Version Requirements
+1. Install from the AstrBot plugin marketplace by searching for **“少女乐队游戏”**.
 
-```plaintext
- astrbot >= 4.10.3 
-python >= 3.12.0 
-```
+2. Install via Git (clone into AstrBot’s `data/plugins/` directory):
 
-
-### Installation Methods
-
-1. Search for **Girls Band Game** in the AstrBot plugin marketplace and install it.
-2. Clone directly via:
 ```bash
 git clone https://github.com/Llyjus/astrbot_plugin_Tomin
 ```
-Place it into AstrBot’s `data/plugins/` directory, then restart AstrBot.
-3. Download the ZIP file and extract it into AstrBot’s `data/plugins/` directory, then restart AstrBot.
 
-- Tips
-If your system is Linux, you may be missing system-level dependencies required by numpy. For proper plugin functionality:
+Restart AstrBot after installation.
 
-Linux users, please enter in terminal (copy directly):
+3. Alternatively, download the project ZIP and extract it into AstrBot’s `data/plugins/` directory.
+
+Restart AstrBot after extraction.
+
+---
+
+## Dependencies and Deployment
+
+This plugin uses **Playwright + Chromium** for local HTML-to-image rendering.
+
+### Local Deployment
+
+After installing Python dependencies from `requirements.txt`, you must also install the Chromium browser for rendering support:
+
 ```bash
-sudo apt-get update
-sudo apt-get install -y python3-dev build-essential
-sudo apt-get install -y libblas-dev liblapack-dev gfortran
+python -m playwright install chromium
 ```
-If you are a macOS user, please enter:
-```bash
-brew install openblas
-export OPENBLAS=$(brew --prefix openblas)
+
+The rendering system defaults to a maximum concurrency of **2** and a render timeout of **15 seconds**.
+If needed, these defaults can be adjusted by modifying the values in the `TominPlugin` initialization:
+
+```python
+max_renderer = int(os.getenv("RENDER_MAX_CONCURRENCY", "2"))
+timeout_s = float(os.getenv("RENDER_TIMEOUT_S", "15"))
+```
+
+Changing `2` and `15` will adjust rendering concurrency and timeout.
+Since browser rendering is CPU-intensive, a typical recommendation is:
+
+> concurrency ≈ CPU cores × 0.6–0.8
+
+For example, an 8-core CPU is typically suited for **4–6 concurrent renders**.
+
+---
+
+### Docker / docker-compose Deployment
+
+If AstrBot is deployed using Docker, Chromium must be installed during the image build stage:
+
+```dockerfile
+FROM soulter/astrbot:latest
+
+RUN python -m pip install --no-cache-dir playwright
+RUN python -m playwright install --with-deps chromium
+```
+
+It is also recommended to allocate sufficient shared memory to the container, otherwise Chromium rendering may become slow or unstable:
+
+```yaml
+shm_size: 1g
+```
+
+Because Chromium rendering is CPU- and memory-intensive, the plugin enforces default limits:
+
+* Default maximum render concurrency: **2**
+* Default render timeout: **15 seconds**
+
+These values can be overridden via environment variables in `docker-compose`:
+
+```yaml
+- RENDER_MAX_CONCURRENCY=6
+- RENDER_TIMEOUT_S=15
+```
+
+Below is a complete example `docker-compose.yml` configuration:
+
+```yaml
+services:
+  astrbot:
+    build: .
+    image: astrbot-playwright:latest
+    shm_size: 1g
+    container_name: astrbot
+    restart: always
+    ports:
+      - "6185:6185"
+      - "6199:6199"
+    environment:
+      - TZ=Asia/Shanghai
+      - RENDER_MAX_CONCURRENCY=6
+      - RENDER_TIMEOUT_S=15
+    volumes:
+      - ./data:/AstrBot/data
+      - /etc/localtime:/etc/localtime:ro
 ```
 
 ---
