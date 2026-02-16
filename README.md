@@ -1,3 +1,5 @@
+![CI](https://github.com/Llyjus/astrbot_plugin_tomin/actions/workflows/main.yml/badge.svg)
+
 # Tomin - 少女乐队游戏
 
 Tomin是一个**AstrBot**的内置插件，是一个少女偶像乐队休闲游戏插件，包含抽卡、演出等功能，其它功能（比如肉鸽小游戏，活动系统）会在后续的开发中继续跟进，敬请期待。
@@ -68,7 +70,7 @@ playwright>=1.41.0
 
 ```bash
 git clone https://github.com/Llyjus/astrbot_plugin_Tomin
-````
+```
 
 重启 AstrBot。
 
@@ -78,19 +80,31 @@ git clone https://github.com/Llyjus/astrbot_plugin_Tomin
 
 ---
 
-## 依赖说明（Playwright / Chromium）
+## 依赖及部署说明
 
 本插件使用 Playwright + Chromium 进行本地渲染截图。
 
-安装 Python 依赖后，需要额外安装浏览器：
+### 本地部署
+
+对于本地部署，在 requirements 安装 Python 依赖后，需要额外安装浏览器保证图片渲染正确：
 
 ```bash
 python -m playwright install chromium
+```
+
+图片渲染系统默认最大并发为 2，渲染超时时间为 15 秒。
+如需调整，可通过修改 TominPlugin 初始化中的默认值。
+```python
+max_renderer = int(os.getenv("RENDER_MAX_CONCURRENCY", "2"))
+timeout_s = float(os.getenv("RENDER_TIMEOUT_S", "15"))
+```
+更改`2`和`15`参数来改变渲染并行；
+浏览器渲染属于 CPU 密集型任务，一般建议并发设置为 CPU 核数的 0.6–0.8 倍。例如 8 核 CPU 推荐并发约 4–6。
 
 
 ---
 
-## Docker / docker-compose 部署注意事项
+### Docker / docker-compose 部署
 
 如果使用 Docker 部署 AstrBot，必须在镜像构建阶段安装 Chromium（直接复制）：
 
@@ -108,10 +122,21 @@ RUN python -m playwright install --with-deps chromium
 shm_size: 1g
 ```
 
-完整版可复制的docker compose yml内容：
-```yaml
-version: "3.8"
+图片渲染采用浏览器引擎（Chromium）执行，属于 CPU 与内存密集型任务。
+为避免资源竞争与系统不稳定，渲染系统默认限制并发与超时：
 
+默认最大并发渲染数：2
+
+默认渲染超时时间：15 秒
+
+可以通过在docker-compose的environment变量中配置该参数：
+```yaml
+- RENDER_MAX_CONCURRENCY=6
+- RENDER_TIMEOUT_S=15
+```
+
+以下是完整版可复制的docker-compose.yml内容：
+```yaml
 services:
   astrbot:
     build: .
@@ -124,20 +149,21 @@ services:
       - "6199:6199"
     environment:
       - TZ=Asia/Shanghai
+      - RENDER_MAX_CONCURRENCY=6
+      - RENDER_TIMEOUT_S=15
     volumes:
       - ./data:/AstrBot/data
       - /etc/localtime:/etc/localtime:ro
-
 ```
 
 
 ---
 
-## 说明
+### 说明
 
 * 已移除原版本中的重量级依赖 `numpy`。
 
-
+--- 
 
 
 

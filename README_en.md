@@ -1,3 +1,5 @@
+![CI](https://github.com/Llyjus/astrbot_plugin_tomin/actions/workflows/main.yml/badge.svg)
+
 # Tomin - Girls Band Game
 
 This plugin is a **built-in plugin for AstrBot**, designed as a casual idol girls band game.  

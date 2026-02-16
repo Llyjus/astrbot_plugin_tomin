@@ -1,4 +1,5 @@
 from playwright.async_api import async_playwright
+import asyncio
 
 # async def render_html_to_png_bytes(html: str, width: int = 720, wait_ms: int = 100) -> bytes:
 #     async with async_playwright() as p:
@@ -25,11 +26,14 @@ from playwright.async_api import async_playwright
 
 class Renderer_html_to_png_bytes:
 
-    def __init__(self, width: int = 720, wait_ms: int = 100):
+    def __init__(self, sem:int = 2, width: int = 720, wait_ms: int = 100, timeout_s: int = 15):
         self.width = width
         self.wait_ms = wait_ms
+        # make sure the max concurrency of rendering is sem
+        self.sem = asyncio.Semaphore(sem) 
         self._p = None
         self._browser = None
+        self._timeout_s = timeout_s
 
 
     # async def render(self) -> bytes:
@@ -55,6 +59,14 @@ class Renderer_html_to_png_bytes:
     async def render(self, html: str) -> bytes:
         if not self._browser:
             raise RuntimeError("Playwright 还没有启动！请重启bot以初始化。")
+        
+        async with self.sem:
+            return await asyncio.wait_for(self._single_render(html), timeout=self._timeout_s)
+        
+
+
+
+    async def _single_render(self, html: str) -> bytes:
         context = await self._browser.new_context(
             viewport={"width": self.width, "height": 10},
         )

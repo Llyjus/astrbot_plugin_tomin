@@ -19,6 +19,8 @@ if PLUGIN_DIR not in sys.path:
 from app import *
 
 
+
+
 @register("Tomin - 少女乐队游戏", "Llyjus", "一个少女乐队游戏插件，实现抽卡、演出等功能。 ", "0.2.0")
 class TominPlugin(Star):
     def __init__(self, context: Context):
@@ -26,7 +28,11 @@ class TominPlugin(Star):
         self.cleaner = Cleaner()
         self.data_path = str(StarTools.get_data_dir() / 'data.db')
         self.picture_path = StarTools.get_data_dir() / 'picture'
-        self.renderer = Renderer_html_to_png_bytes()
+
+        max_renderer = int(os.getenv("RENDER_MAX_CONCURRENCY", "2"))
+        timeout_s = float(os.getenv("RENDER_TIMEOUT_S", "15"))
+        self.renderer = Renderer_html_to_png_bytes(sem=max_renderer, 
+                                                   timeout_s=timeout_s)
 
 
     async def initialize(self):
