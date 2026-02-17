@@ -30,9 +30,18 @@ html, body {
 
 }
 
+#avatar{
+  margin: 40px auto;
+  display: flex;
+  justify-content: center;
+}
 
+.avatar{
+  width: 30%;
+  border-radius: 18px;
+}
 
-img{
+.background{
     display: block;
   width: 100%;
   background-repeat: no-repeat;

@@ -4,7 +4,7 @@ from app.application.cards_app import *
 from app.application.funds_app import *
 from app.application.gacha_app import *
 from app.infrastuctures import template_generator, Renderer_html_to_png_bytes
-
+from app.interface.get_avatar import inter_dict
 
 app_dict = {
     'normal_gacha': normal_gacha,
@@ -22,9 +22,12 @@ app_dict = {
 
 }
 
+#used for avatar url generation
+
 
 async def app_inter(function_name, 
                     kwargs:dict, 
+                    platform:str = "qq",
                     *,
                     renderer:Renderer_html_to_png_bytes=None, 
                     message_id=None, 
@@ -57,6 +60,14 @@ async def app_inter(function_name,
 
 
                 try:
+
+                    #add user avatar url from interface layer
+                    current_platform = inter_dict.get(platform, None)
+                    if current_platform and 'user_id' in result:
+                        result['content']['avatar_url'] = current_platform(result['user_id'])
+                    else:
+                        result['content']['avatar_url'] = ''
+
                     #convert to image
                     html = template_generator(result['temp_type'], result['content'])
 
@@ -101,4 +112,5 @@ async def app_inter(function_name,
         logger.error(f"Unknown error: {e}")
 
     return result
+
 

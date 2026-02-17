@@ -44,7 +44,8 @@ def search_card_app(user_id, card_id, *, db_path=None, connect=None):
               'content':{'cards':cards_li,
                          'title':'卡牌信息',
                          'intro':'这是你查询到的卡牌信息：'},
-              'txt':card_txt
+              'txt':card_txt,
+              'user_id': user_id
                          }
 
         
@@ -78,7 +79,9 @@ def search_cards_app(user_id, *, db_path=None, connect=None):
               'content':{'cards':cards_li,
                          'title':'卡牌信息',
                          'intro':'目前拥有卡牌：'},
-              'txt':cards_txt}
+              'txt':cards_txt,
+              'user_id': user_id
+                         }
 
     return result
 
@@ -112,7 +115,8 @@ def search_cards_rarity_app(user_id, rarity, *, db_path=None, connect=None):
                   'content':{'cards':cards_li,
                               'title':f'稀有度{rarity}卡牌查询结果',
                               'intro':f'稀有度为{rarity}的卡牌你目前拥有：'},
-                  'txt':cards_txt}
+                  'txt':cards_txt,
+                  'user_id': user_id}
 
     return result
 
@@ -146,7 +150,8 @@ def search_cards_band_app(user_id, band, *, db_path=None, connect=None):
                   'content':{'cards':cards_li,
                               'title':f'{band}卡牌查询结果',
                               'intro':f'{band}的角色卡牌你目前拥有：'},
-                  'txt':cards_txt}
+                  'txt':cards_txt,
+                  'user_id': user_id}
 
     return result
 
@@ -178,7 +183,8 @@ def search_cards_both_band_rarity(user_id, band, rarity, *, db_path=None, connec
                   'content':{'cards':cards_li,
                               'title':f'{band} {rarity}卡牌查询结果',
                               'intro':f'{band}角色卡牌你目前拥有：'},
-                  'txt':cards_txt}
+                  'txt':cards_txt,
+                  'user_id': user_id}
 
     return result
 

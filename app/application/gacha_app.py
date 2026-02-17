@@ -79,11 +79,13 @@ def normal_gacha(user_id, fund_spent, times, *, db_path=None, gacha_cls = Gacha,
             raise RuntimeError('抽卡成功，连接数据库失败，请稍后再试') from e
         
     result = {'return_type':'html',
+
                   'temp_type':'cards',
                   'content':{'cards':cards_li,
                               'title':'抽卡结果',
                               'intro':f'您花费{fund_spent * times}资金成功抽取到了{times}张卡牌：'},
-                  'txt':cards_txt}
+                'user_id': user_id, 
+                'txt':cards_txt}
     return result
 
 
@@ -165,7 +167,9 @@ def free_gacha(user_id, *, db_path=None, gacha_cls = Gacha, connect = None):
                   'content':{'cards':cards_li,
                               'title':'打卡成功',
                               'intro':f'{cards_intro}'},
-                  'txt':cards_txt}
+                
+              'user_id': user_id,
+              'txt':cards_txt}
         
     return result
 

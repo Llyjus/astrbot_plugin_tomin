@@ -38,6 +38,7 @@ def template_generator(temp:str, content:dict) -> str:
         background1_url:str
         background2_url:str
         background3_url:str
+        avatar_url:str
         '''
 
         def uri(p: Path, mime="image/jpeg") -> str:
@@ -51,11 +52,12 @@ def template_generator(temp:str, content:dict) -> str:
         bg1 = uri(static_link / "backgrounds/background1.jpg")
         bg2 = uri(static_link / "backgrounds/background2.jpg")
         bg3 = uri(static_link / "backgrounds/background3.jpg")
+        avtr = content.get('avatar_url', uri(static_link / "logo/logo.jpg"))
 
         html = html.replace("background1_url", bg1)
         html = html.replace("background2_url", bg2)
         html = html.replace("background3_url", bg3)
-
+        html = html.replace("avatar_url", avtr)
         return html
 
 
