@@ -4,7 +4,7 @@ from app.application.cards_app import *
 from app.application.funds_app import *
 from app.application.gacha_app import *
 from app.infrastuctures import template_generator, Renderer_html_to_png_bytes
-from app.interface.get_avatar import inter_dict
+from app.infrastuctures import get_avatar
 
 app_dict = {
     'normal_gacha': normal_gacha,
@@ -28,6 +28,7 @@ app_dict = {
 async def app_inter(function_name, 
                     kwargs:dict, 
                     platform:str = "qq",
+                    avatar_path:str = None,
                     *,
                     renderer:Renderer_html_to_png_bytes=None, 
                     message_id=None, 
@@ -53,7 +54,7 @@ async def app_inter(function_name,
         if result:
 
             if result['return_type'] == 'str':
-                pass
+                result['error'] = None
             
             elif result['return_type'] == 'html':
 
@@ -62,11 +63,13 @@ async def app_inter(function_name,
                 try:
 
                     #add user avatar url from interface layer
-                    current_platform = inter_dict.get(platform, None)
-                    if current_platform and 'user_id' in result:
-                        result['content']['avatar_url'] = current_platform(result['user_id'])
-                    else:
-                        result['content']['avatar_url'] = ''
+                    if avatar_path:
+                        avatar_result = await get_avatar(user_id=result['user_id'], 
+                                                        avatar_loc=avatar_path,
+                                                        platform=platform)
+
+                        result['content']['avatar_path'] = avatar_result['avatar_loc']
+
 
                     #convert to image
                     html = template_generator(result['temp_type'], result['content'])
@@ -74,10 +77,12 @@ async def app_inter(function_name,
                     img = await renderer.render(html=html)
 
                     result = {'return_type': 'png', 
-                            'content': img}
-                except TimeoutError:
+                            'content': img,
+                            'error': avatar_result['error'] if avatar_path else None}
+                except TimeoutError as e:
                     result = {'return_type': 'str', 
-                            'content': '生成图片超时,以下是文本内容：\n' + result.get('txt', '')}
+                            'content': result.get('txt', ''),
+                            'error': e}
 
 
 
@@ -88,28 +93,20 @@ async def app_inter(function_name,
         
     except App_error as e:
         result = {'return_type': 'str', 
-                            'content': str(e)}
+                            'content': str(e),
+                            'error': e}
         
 
     except Infra_error as e:
         result = {'return_type': 'str', 
-                            'content': str(e)}
-        
-        logger = logging.getLogger(__name__)
-        logger.error(f"Infra_error: {e}")
-
-
-    except TimeoutError as e:
-        result = {'return_type': 'str', 
-                            'content': '生成图片超时，请重试'}
+                            'content': str(e),
+                            'error': e}
         
 
     except Exception as e:
         result = {'return_type': 'str', 
-                            'content': f'未知错误，请联系管理员处理{e}'}
-        
-        logger = logging.getLogger(__name__)
-        logger.error(f"Unknown error: {e}")
+                            'content': f'未知错误，请联系管理员处理{str(e)}',
+                            'error': e}
 
     return result
 

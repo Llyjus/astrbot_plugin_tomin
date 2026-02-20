@@ -423,3 +423,54 @@ class Repository(function_ports):
 
         if cursor.rowcount == 0:
             raise Cooldown('正在冷却中，请勿重复操作！')
+
+
+
+
+
+
+# avatar
+
+
+
+    def add_avatar(self, user_id, timestamp):
+        cursor = self.conn.cursor()
+
+        sql = avatar_interact_sql()[0]
+
+        try:
+            cursor.execute(sql, (user_id, timestamp))
+
+        except sqlite3.IntegrityError as e:
+            raise Request_repeat('重复执行')  
+            
+        except sqlite3.Error as e:
+            
+            raise Database_error('查询失败，数据库连接错误，请稍候再试') from e
+        
+
+    def search_avatar(self, user_id):
+        cursor = self.conn.cursor()
+
+        sql = avatar_interact_sql()[1]
+
+        try:
+            result = cursor.execute(sql, (user_id, )).fetchone()
+            
+            return result
+        
+        except sqlite3.Error as e:
+            raise Database_error(f'操作失败，数据库连接错误，请稍候再试:{e}') from e
+        
+
+
+    def update_avatar(self, user_id, timestamp):
+        cursor = self.conn.cursor()
+
+        sql = avatar_interact_sql()[2]
+
+        try:
+            cursor.execute(sql, (timestamp, user_id))
+            
+        except sqlite3.Error as e:
+            raise Database_error(f'操作失败，数据库连接错误，请稍候再试:{e}') from e

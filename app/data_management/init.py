@@ -22,20 +22,20 @@ def db_init(path=DB_PATH):
         db_path.parent.mkdir(parents=True, exist_ok=True)
 
 
+    try:
+        conn = sqlite3.connect(db_path)
+
         try:
-            conn = sqlite3.connect(db_path)
 
-            try:
-
-                repo = Repository(conn)
-                repo.create_table()
-                conn.commit()
-            finally:
-                conn.close()
+            repo = Repository(conn)
+            repo.create_table()
+            conn.commit()
+        finally:
+            conn.close()
             
     
                 
-        except Exception as e:
-            raise RuntimeError('数据库初始化失败') from e
+    except Exception as e:
+        raise RuntimeError('数据库初始化失败') from e
         
     return db_path

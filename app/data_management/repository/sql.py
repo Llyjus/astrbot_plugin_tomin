@@ -1,5 +1,5 @@
 def table_create_sql():
-    return [USERS_TABLE_SQL, CARDS_TABLE_SQL, BANDS_TABLE_SQL, SLOTS_TABLE_SQL, EVENT_TABLE_SQL, SIGN_IN_SQL]
+    return [USERS_TABLE_SQL, CARDS_TABLE_SQL, BANDS_TABLE_SQL, SLOTS_TABLE_SQL, EVENT_TABLE_SQL, SIGN_IN_SQL, AVATAR_TABLE_SQL]
 
 def user_interact_sql():
     return [USER_INSERT_SQL, USER_CHECK_SQL, USERS_CHECK_ALL_SQL, FUND_GIVEN_SQL, FUND_GIVEN_ALL_USER_SQL]
@@ -25,7 +25,8 @@ def event_interact_sql():
 def sign_in_interact_sql():
     return [SIGN_IN_INSERT_SQL, SIGN_IN_SEARCH_SQL, SIGN_IN_DATE_UPDATE_SQL, SIGN_IN_COUNT_UPDATE_SQL]
 
-
+def avatar_interact_sql():
+    return [AVATAR_INSERT_SQL, AVATAR_SEARCH_SQL, AVATAR_UPDATE_SQL]
 
 
 USERS_TABLE_SQL = """
@@ -111,6 +112,15 @@ CREATE TABLE IF NOT EXISTS sign_in(
 );
 
 '''
+
+AVATAR_TABLE_SQL = '''
+CREATE TABLE IF NOT EXISTS avatar(
+    user_id VARCHAR(50) PRIMARY KEY,
+    update_time int
+);
+'''
+
+
 
 
 
@@ -293,3 +303,21 @@ SIGN_IN_COUNT_UPDATE_SQL = '''
             AND ? - `timestamp` >= 3600*4;
 ''' 
 
+
+
+AVATAR_INSERT_SQL = '''
+        INSERT INTO avatar (user_id, update_time)
+        VALUES (?, ?);
+'''
+
+AVATAR_SEARCH_SQL = '''
+        SELECT *
+        FROM avatar
+        WHERE user_id = ?;
+'''
+
+AVATAR_UPDATE_SQL = '''
+        UPDATE avatar
+        SET update_time = ?
+        WHERE user_id = ?;
+'''

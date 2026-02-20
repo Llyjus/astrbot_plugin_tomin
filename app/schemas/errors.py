@@ -56,6 +56,8 @@ class Cooldown(App_error):
 class Timeout(App_error):
      pass
 
+class Request_error(App_error):
+     pass
 
 
 

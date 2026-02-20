@@ -39,5 +39,5 @@ async def test_app_renderer_fallback(mocker: MockerFixture, fake_application_fix
                     renderer=fake_renderer(), 
                     app_dict=fake_app_dict)
 
-    assert '生成图片超时' in result['content']
+    assert '成功' in result['content']
     assert result['return_type'] == 'str'

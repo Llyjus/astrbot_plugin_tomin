@@ -49,10 +49,11 @@ def template_generator(temp:str, content:dict) -> str:
         
 
         static_link = Path(__file__).resolve().parents[1] / "images"
+        user_avatar_link = content.get('avatar_path', )
         bg1 = uri(static_link / "backgrounds/background1.jpg")
         bg2 = uri(static_link / "backgrounds/background2.jpg")
         bg3 = uri(static_link / "backgrounds/background3.jpg")
-        avtr = content.get('avatar_url', uri(static_link / "logo/logo.jpg"))
+        avtr = uri(static_link / "logo/logo.jpg") if not user_avatar_link else uri(Path(user_avatar_link))  
 
         html = html.replace("background1_url", bg1)
         html = html.replace("background2_url", bg2)

@@ -1,7 +1,7 @@
 import sys
 import os
-from pytest import raises
-from time import sleep
+from pytest import raises, mark
+
 
 from app.services import *
 from app.schemas import *
@@ -50,7 +50,7 @@ def test_users_table(memory_db_connection):
 
 
 
-def test_cards_table(memory_db_connection):
+def test_service_and_cards_related_table(memory_db_connection):
     repo = memory_db_connection
     uid1 = 'test'
     uid2 = 't'
@@ -307,3 +307,25 @@ def test_cards_table(memory_db_connection):
 
     with raises(Card_not_found) as error5:
         car_str_ser.sell_cards_by_rarity(uid2, 3)
+
+
+def test_avatar_service_and_table(memory_db_connection):
+    repo = memory_db_connection
+    avt_ser1 = Avatar_service(repo)
+    avt_ser1.ensure_user_exists('test')
+
+    result1 = avt_ser1.check_avatar('test')
+    assert result1 == None
+
+    avt_ser1.update_avatar_record('test', None)
+
+    result2 = avt_ser1.check_avatar('test')
+    assert result2 == True
+
+    avt_ser2 = Avatar_service(repo)
+
+    result3 = avt_ser2.check_avatar('test', gap=0)
+
+    assert result3 == False
+
+

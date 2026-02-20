@@ -1,7 +1,9 @@
 from time import time
-from app.data_management import Repository
 
+
+from app.data_management import Repository
 from app.schemas import *
+
 
 
 class Service():
@@ -344,3 +346,35 @@ class Card_storage_service(Service):
         cards_id = [card_id for card_id, user_id in cards_id]
 
         return {'cards_sold':cards_list_length, 'fund_gain': fund_gained, 'cards_id_list':cards_id}
+    
+
+
+class Avatar_service(Service):
+
+    def __init__(self, repo):
+        super().__init__(repo)
+
+
+
+    def check_avatar(self, user_id, gap = 3 * 24 * 3600):
+
+        result = self.repo.search_avatar(user_id)
+        time_now = int(time())
+        _gap = gap
+
+        if result == None:
+            return None
+        elif time_now - result['update_time'] >= _gap:
+            return False
+        else:
+            return True
+
+    def update_avatar_record(self, user_id, result):
+        if result is None:
+            self.repo.add_avatar(user_id, int(time()))
+        elif result == False:
+            self.repo.update_avatar(user_id, int(time()))
+        else:
+            self.repo.update_avatar(user_id, int(time()))
+        return True
+        

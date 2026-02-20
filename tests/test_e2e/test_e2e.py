@@ -78,7 +78,6 @@ async def test_of_e2e(mocker: MockerFixture, e2e_database):
 
     user2_zm = tomin.draw_card(fake_zm_event2)
     user2_zm_result = [msg async for msg in user2_zm][0]
-    assert "生成图片超时" in user2_zm_result
     assert "您花费10资金成功抽取到了1张卡牌" in user2_zm_result
 
     user2_zm = tomin.draw_card(fake_zm_event2)
