@@ -21,7 +21,7 @@ from app import *
 
 
 
-@register("Tomin - 少女乐队游戏", "Llyjus", "一个少女乐队游戏插件，实现抽卡、演出等功能。 ", "0.2.0")
+@register("Tomin - 少女乐队游戏", "Llyjus", "一个少女乐队游戏插件，实现抽卡、演出等功能。 ", "0.2.2")
 class TominPlugin(Star):
     def __init__(self, context: Context):
         super().__init__(context)
@@ -135,9 +135,12 @@ class TominPlugin(Star):
                                     avatar_path=self.avatar_path,
                                     platform="qq",
         )
+            
+            #check error before returning result
+            if result['error']:
+                logger.error(result['error'])
             if result['return_type'] == 'png':
-                if result['error']:
-                    logger.error(f"渲染头像错误: {result['error']}")
+
                 try:
                     path = self.picture_path / f"{message_id}.png"
                     path.write_bytes(result['content'])
@@ -145,8 +148,12 @@ class TominPlugin(Star):
                 finally:
                     path.unlink(missing_ok=True)
                 return
+            
             else:
-                result = result['content']
+                if result['error']:
+                    result = '渲染图片失败，以下是文字内容：' + result['content']
+                else:
+                    result = result['content']
 
         except Invalid_input as e:
             result = str(e)
@@ -194,6 +201,9 @@ class TominPlugin(Star):
             platform="qq",
             )
 
+
+            if result['error']:
+                logger.error(result['error'])
             if result['return_type'] == 'png':
                 try:
                     path = self.picture_path / f"{message_id}.png"
@@ -203,7 +213,10 @@ class TominPlugin(Star):
                     path.unlink(missing_ok=True)
                 return
             else:
-                result = result['content']
+                if result['error']:
+                    result = '渲染图片失败，以下是文字内容：' + result['content']
+                else:
+                    result = result['content']
 
 
         except ValidationError as e:
@@ -241,12 +254,15 @@ class TominPlugin(Star):
                         
                 else:
                     result = {'return_type':'str',
-                              'content': '输入格式错误！请查询helpckp来找到命令。'}
+                              'content': '输入格式错误！请查询helpckp来找到命令。',
+                              'error': ''}
             else:
                 result = {'return_type':'str',
-                          'content': '请输入参数！若要查找全部卡牌请输入ckpj。'}
+                          'content': '请输入参数！若要查找全部卡牌请输入ckpj。',
+                          'error': ''}
             
-
+            if result['error']:
+                logger.error(result['error'])
             if result['return_type'] == 'png':
                 try:
                     path = self.picture_path / f"{message_id}.png"
@@ -256,7 +272,10 @@ class TominPlugin(Star):
                     path.unlink()
                 return
             else:
-                result = result['content']
+                if result['error']:
+                    result = '渲染图片失败，以下是文字内容：' + result['content']
+                else:
+                    result = result['content']
 
 
 
@@ -352,9 +371,11 @@ class TominPlugin(Star):
                 
                 else:
                     result = {'return_type':'str',
-                              'content': '输入格式错误！请查询helpckpj来找到命令。'}
+                              'content': '输入格式错误！请查询helpckpj来找到命令。',
+                              'error': ''}
                     
-
+            if result['error']:
+                logger.error(result['error'])
             if result['return_type'] == 'png':
                 try:
                     path = self.picture_path / f"{message_id}.png"
@@ -364,7 +385,10 @@ class TominPlugin(Star):
                     path.unlink(missing_ok=True)
                 return
             else:
-                result = result['content']
+                if result['error']:
+                    result = '渲染图片失败，以下是文字内容：' + result['content']
+                else:
+                    result = result['content']
 
 
         except ValidationError as e:
@@ -398,7 +422,8 @@ class TominPlugin(Star):
                 platform="qq",
             )
 
-
+            if result['error']:
+                logger.error(result['error'])
             if result['return_type'] == 'png':
                 try:
                     path = self.picture_path / f"{message_id}.png"
@@ -408,7 +433,10 @@ class TominPlugin(Star):
                     path.unlink(missing_ok=True)
                 return
             else:
-                result = result['content']
+                if result['error']:
+                    result = '渲染图片失败，以下是文字内容：' + result['content']
+                else:
+                    result = result['content']
         
         except ValidationError as e:
             result = error_message(e)
@@ -454,9 +482,11 @@ class TominPlugin(Star):
 
             else:
                 result = {'return_type':'str',
-                          'content': '参数格式错误，请查阅hpcs。'}
+                          'content': '参数格式错误，请查阅hpcs。',
+                          'error': ''}
                 
-
+            if result['error']:
+                logger.error(result['error'])
             if result['return_type'] == 'png':
                 try:
                     path = self.picture_path / f"{message_id}.png"
@@ -466,7 +496,10 @@ class TominPlugin(Star):
                     path.unlink(missing_ok=True)
                 return
             else:
-                result = result['content']
+                if result['error']:
+                    result = '渲染图片失败，以下是文字内容：' + result['content']
+                else:
+                    result = result['content']
 
 
         except ValidationError as e:
@@ -508,9 +541,11 @@ class TominPlugin(Star):
 
             else:
                 result = {'return_type':'str',
-                          'content': '参数格式错误，请查阅hpxcs。'}
+                          'content': '参数格式错误，请查阅hpxcs。',
+                          'error': ''}
                 
-
+            if result['error']:
+                logger.error(result['error'])
             if result['return_type'] == 'png':
                 try:
                     path = self.picture_path / f"{message_id}.png"
@@ -520,7 +555,10 @@ class TominPlugin(Star):
                     path.unlink(missing_ok=True)
                 return
             else:
-                result = result['content']
+                if result['error']:
+                    result = '渲染图片失败，以下是文字内容：' + result['content']
+                else:
+                    result = result['content']
             
 
 
@@ -581,8 +619,11 @@ class TominPlugin(Star):
 
             else:
                 result = {'return_type':'str',
-                            'content': '参数格式错误，请查阅hpzs。'}
+                            'content': '参数格式错误，请查阅hpzs。',
+                            'error': ''}
 
+            if result['error']:
+                logger.error(result['error'])
             if result['return_type'] == 'png':
                 try:
                     path = self.picture_path / f"{message_id}.png"
@@ -592,7 +633,10 @@ class TominPlugin(Star):
                     path.unlink(missing_ok=True)
                 return
             else:
-                result = result['content']
+                if result['error']:
+                    result = '渲染图片失败，以下是文字内容：' + result['content']
+                else:
+                    result = result['content']
 
 
         except ValidationError as e:
@@ -631,7 +675,8 @@ class TominPlugin(Star):
             )
 
 
-
+            if result['error']:
+                logger.error(result['error'])
             if result['return_type'] == 'png':
                 try:
                     path = self.picture_path / f"{message_id}.png"
@@ -640,8 +685,12 @@ class TominPlugin(Star):
                 finally:
                     path.unlink(missing_ok=True)
                 return
+            
             else:
-                result = result['content']
+                if result['error']:
+                    result = '渲染图片失败，以下是文字内容：' + result['content']
+                else:
+                    result = result['content']
 
 
 

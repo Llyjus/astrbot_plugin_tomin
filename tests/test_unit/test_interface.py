@@ -17,7 +17,9 @@ async def test_draw_card_success(mocker):
 
     # mock app_inter
     mock_app_inter = mocker.AsyncMock(
-        return_value={"return_type": "str", "content": "character: ksm"}
+        return_value={"return_type": "str", 
+                      "content": "character: ksm",
+                      "error": ""}
     )
     mocker.patch("main.app_inter", mock_app_inter)
 
@@ -71,7 +73,9 @@ async def test_sell_card(mocker):
     plugin.cleaner.cleaning_check = mocker.Mock()
 
     mock_app_inter = mocker.AsyncMock(
-        return_value={"return_type": "str", "content": "成功"}
+        return_value={"return_type": "str", 
+                      "content": "成功",
+                      "error": ""}
     )
     mocker.patch("main.app_inter", mock_app_inter)
 

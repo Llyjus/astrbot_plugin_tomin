@@ -54,7 +54,7 @@ async def app_inter(function_name,
         if result:
 
             if result['return_type'] == 'str':
-                result['error'] = None
+                result['error'] = ''
             
             elif result['return_type'] == 'html':
 
@@ -78,11 +78,11 @@ async def app_inter(function_name,
 
                     result = {'return_type': 'png', 
                             'content': img,
-                            'error': avatar_result['error'] if avatar_path else None}
+                            'error': avatar_result['error'] if avatar_path else ''}
                 except TimeoutError as e:
                     result = {'return_type': 'str', 
                             'content': result.get('txt', ''),
-                            'error': e}
+                            'error': str(e)}
 
 
 
@@ -94,19 +94,19 @@ async def app_inter(function_name,
     except App_error as e:
         result = {'return_type': 'str', 
                             'content': str(e),
-                            'error': e}
+                            'error': str(e)}
         
 
     except Infra_error as e:
         result = {'return_type': 'str', 
                             'content': str(e),
-                            'error': e}
+                            'error': str(e)}
         
 
     except Exception as e:
         result = {'return_type': 'str', 
                             'content': f'未知错误，请联系管理员处理{str(e)}',
-                            'error': e}
+                            'error': str(e)}
 
     return result
 
