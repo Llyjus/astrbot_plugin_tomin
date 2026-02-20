@@ -92,9 +92,14 @@ git clone https://github.com/Llyjus/astrbot_plugin_Tomin
 python -m playwright install chromium
 ```
 
+目前仅支持qq平台，但如支持其它平台后也可以通过更改默认值来更改适配平台。
+```python
+platform = str(os.getenv("PLATFORM", "qq"))
+```
 图片渲染系统默认最大并发为 2，渲染超时时间为 15 秒。
 如需调整，可通过修改 TominPlugin 初始化中的默认值。
 ```python
+
 max_renderer = int(os.getenv("RENDER_MAX_CONCURRENCY", "2"))
 timeout_s = float(os.getenv("RENDER_TIMEOUT_S", "15"))
 ```
@@ -131,10 +136,13 @@ shm_size: 1g
 
 可以通过在docker-compose的environment变量中配置该参数：
 ```yaml
-- RENDER_MAX_CONCURRENCY=6
+- RENDER_MAX_CONCURRENCY=2
 - RENDER_TIMEOUT_S=15
 ```
-
+目前仅支持qq平台，但如支持其它平台后也可以通过更改默认值来更改适配平台。
+```yaml
+- PLATFORM="qq"
+```
 以下是完整版可复制的docker-compose.yml内容：
 ```yaml
 services:
@@ -149,7 +157,8 @@ services:
       - "6199:6199"
     environment:
       - TZ=Asia/Shanghai
-      - RENDER_MAX_CONCURRENCY=6
+      - PLATFORM='qq'
+      - RENDER_MAX_CONCURRENCY=2
       - RENDER_TIMEOUT_S=15
     volumes:
       - ./data:/AstrBot/data

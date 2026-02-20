@@ -21,7 +21,7 @@ from app import *
 
 
 
-@register("Tomin - 少女乐队游戏", "Llyjus", "一个少女乐队游戏插件，实现抽卡、演出等功能。 ", "0.2.2")
+@register("Tomin - 少女乐队游戏", "Llyjus", "一个少女乐队游戏插件，实现抽卡、演出等功能。 ", "0.2.3")
 class TominPlugin(Star):
     def __init__(self, context: Context):
         super().__init__(context)
@@ -29,6 +29,8 @@ class TominPlugin(Star):
         self.data_path = str(StarTools.get_data_dir() / 'data.db')
         self.picture_path = StarTools.get_data_dir() / 'picture'
         self.avatar_path = StarTools.get_data_dir() / 'avatar'
+
+        self.platform = str(os.getenv("PLATFORM", "qq"))
 
         max_renderer = int(os.getenv("RENDER_MAX_CONCURRENCY", "2"))
         timeout_s = float(os.getenv("RENDER_TIMEOUT_S", "15"))
@@ -133,7 +135,7 @@ class TominPlugin(Star):
                                     message_id=message_id,
                                     db_path=self.data_path,
                                     avatar_path=self.avatar_path,
-                                    platform="qq",
+                                    platform=self.platform,
         )
             
             #check error before returning result
@@ -198,7 +200,7 @@ class TominPlugin(Star):
             message_id=message_id,
             db_path=self.data_path,
             avatar_path=self.avatar_path,
-            platform="qq",
+            platform=self.platform,
             )
 
 
@@ -247,7 +249,7 @@ class TominPlugin(Star):
                                              message_id=message_id,
                                              db_path=self.data_path,
                                              avatar_path=self.avatar_path,
-                                             platform="qq",
+                                             platform=self.platform,
                     )
                 
 
@@ -309,7 +311,7 @@ class TominPlugin(Star):
                     message_id=message_id,
                     db_path=self.data_path,
                     avatar_path=self.avatar_path,
-                    platform="qq",
+                    platform=self.platform,
                 )
 
             else:
@@ -334,7 +336,7 @@ class TominPlugin(Star):
                                 message_id=message_id,
                                 db_path=self.data_path,
                                 avatar_path=self.avatar_path,
-                                platform="qq",
+                                platform=self.platform,
                             )
 
 
@@ -349,7 +351,7 @@ class TominPlugin(Star):
                             message_id=message_id,
                             db_path=self.data_path,
                             avatar_path=self.avatar_path,
-                            platform="qq",
+                            platform=self.platform,
                         )
 
 
@@ -365,7 +367,7 @@ class TominPlugin(Star):
                             message_id=message_id,
                             db_path=self.data_path,
                             avatar_path=self.avatar_path,
-                            platform="qq",
+                            platform=self.platform,
                         )
 
                 
@@ -419,7 +421,7 @@ class TominPlugin(Star):
                 message_id=message_id,
                 db_path=self.data_path,
                 avatar_path=self.avatar_path,
-                platform="qq",
+                platform=self.platform,
             )
 
             if result['error']:
@@ -476,7 +478,7 @@ class TominPlugin(Star):
                     message_id=message_id,
                     db_path=self.data_path,
                     avatar_path=self.avatar_path,
-                    platform="qq",  
+                    platform=self.platform,  
                 )
 
 
@@ -535,7 +537,7 @@ class TominPlugin(Star):
                     message_id=message_id,
                     db_path=self.data_path,
                     avatar_path=self.avatar_path,
-                    platform="qq",
+                    platform=self.platform,
                 )
 
 
@@ -595,7 +597,7 @@ class TominPlugin(Star):
                     message_id=message_id,
                     db_path=self.data_path,
                     avatar_path=self.avatar_path,
-                    platform="qq",
+                    platform=self.platform,
                 )
 
 
@@ -613,7 +615,7 @@ class TominPlugin(Star):
                     message_id=message_id,
                     db_path=self.data_path,
                     avatar_path=self.avatar_path,
-                    platform="qq",
+                    platform=self.platform,
                 )
 
 
@@ -672,6 +674,8 @@ class TominPlugin(Star):
                 renderer=self.renderer,
                 message_id=message_id,
                 db_path=self.data_path,
+                platform=self.platform,
+                avatar_path=self.avatar_path,
             )
 
 

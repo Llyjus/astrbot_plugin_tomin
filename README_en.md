@@ -82,6 +82,11 @@ After installing Python dependencies from `requirements.txt`, you must also inst
 python -m playwright install chromium
 ```
 
+Currently, only the QQ platform is supported. However, when other platforms are supported, the adapter platform can be changed by modifying the default value.
+```python
+platform = str(os.getenv("PLATFORM", "qq"))
+```
+
 The rendering system defaults to a maximum concurrency of **2** and a render timeout of **15 seconds**.
 If needed, these defaults can be adjusted by modifying the values in the `TominPlugin` initialization:
 
@@ -90,7 +95,7 @@ max_renderer = int(os.getenv("RENDER_MAX_CONCURRENCY", "2"))
 timeout_s = float(os.getenv("RENDER_TIMEOUT_S", "15"))
 ```
 
-Changing `2` and `15` will adjust rendering concurrency and timeout.
+Changing the `2` and `15` parameters adjusts rendering concurrency and timeout.
 Since browser rendering is CPU-intensive, a typical recommendation is:
 
 > concurrency ≈ CPU cores × 0.6–0.8
@@ -101,7 +106,7 @@ For example, an 8-core CPU is typically suited for **4–6 concurrent renders**.
 
 ### Docker / docker-compose Deployment
 
-If AstrBot is deployed using Docker, Chromium must be installed during the image build stage:
+If AstrBot is deployed using Docker, Chromium must be installed during the image build stage (copy directly):
 
 ```dockerfile
 FROM soulter/astrbot:latest
@@ -110,25 +115,31 @@ RUN python -m pip install --no-cache-dir playwright
 RUN python -m playwright install --with-deps chromium
 ```
 
-It is also recommended to allocate sufficient shared memory to the container, otherwise Chromium rendering may become slow or unstable:
+It is also recommended to allocate sufficient shared memory to the container; otherwise, Chromium rendering may become slow or unstable:
 
 ```yaml
 shm_size: 1g
 ```
 
-Because Chromium rendering is CPU- and memory-intensive, the plugin enforces default limits:
+The image rendering uses a browser engine (Chromium) and is CPU- and memory-intensive.
+To avoid resource competition and system instability, the rendering system enforces default limits on concurrency and timeout:
 
 * Default maximum render concurrency: **2**
 * Default render timeout: **15 seconds**
 
-These values can be overridden via environment variables in `docker-compose`:
+These values can be configured via environment variables in `docker-compose`:
 
 ```yaml
-- RENDER_MAX_CONCURRENCY=6
+- RENDER_MAX_CONCURRENCY=2
 - RENDER_TIMEOUT_S=15
 ```
 
-Below is a complete example `docker-compose.yml` configuration:
+Currently, only the QQ platform is supported. However, when other platforms are supported, the adapter platform can be changed by modifying the default value.
+```yaml
+- PLATFORM="qq"
+```
+
+Below is a complete, copyable example `docker-compose.yml` configuration:
 
 ```yaml
 services:
@@ -143,6 +154,7 @@ services:
       - "6199:6199"
     environment:
       - TZ=Asia/Shanghai
+      - PLATFORM='qq'
       - RENDER_MAX_CONCURRENCY=6
       - RENDER_TIMEOUT_S=15
     volumes:
