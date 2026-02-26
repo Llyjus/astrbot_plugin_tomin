@@ -331,6 +331,8 @@ def test_avatar_service_and_table(memory_db_connection:Repository):
 def test_working_table(memory_db_connection:Repository):
     repo = memory_db_connection
 
+
+    #test repository methods
     uid1 = 'user1'
     uid2 = 'user2'
 
@@ -364,7 +366,7 @@ def test_working_table(memory_db_connection:Repository):
 
     result_space = repo.search_space_worker()
     for r in result_space:
-        count_val = r['count(*)']
+        count_val = r['worker']
         if r['space'] == 'B':
             assert count_val == 1
         elif r['space'] == 'A':
@@ -373,3 +375,34 @@ def test_working_table(memory_db_connection:Repository):
 
     repo.delete_working(1)
     assert len(repo.search_working_by_user(uid1)) == 1
+
+
+    # test service
+    service = Working_service(repo)
+
+
+    service.start_working(uid1, 1, 'C', 0, 100)
+    result1 = service.search_working_by_user(uid1)
+    assert any(r['space'] == 'C' for r in result1)
+
+    with raises(Already_in_working, match='该卡牌正在工作中！猪...') as error1:
+        service.start_working(uid1, 1, 'D', 300, 150)
+
+
+    with raises(Card_not_found, match='没有该卡牌呢！猪...') as error2:
+        service.start_working(uid1, 999, 'E', 0, 0)
+
+    result_2 = service.search_working_space_status()
+    for r in result_2:
+        if r['space'] == 'A':
+            assert r['worker'] == 1
+        elif r['space'] == 'B':
+            assert r['worker'] == 1
+        elif r['space'] == 'C':
+            assert r['worker'] == 1
+
+    service.delete_working(uid1, 1)
+    assert service.search_working_by_card(uid1, 1) is None
+
+    with raises(Card_not_found, match='没有该卡牌呢！猪...') as error3:
+        service.delete_working(uid1, 6)

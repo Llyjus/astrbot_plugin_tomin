@@ -408,3 +408,42 @@ class Avatar_service(Service):
 
 
 
+class Working_service(Service):
+
+    def __init__(self, repo):
+        super().__init__(repo)
+
+
+    def start_working(self, user_id, card_id, space, end_time, reward_fund):
+
+        card = self.repo.search_card(card_id, user_id)
+        if not card:
+            raise Card_not_found('没有该卡牌呢！猪...')
+
+        status = self.repo.search_working_by_card(user_id, card_id)
+        if status:
+            raise Already_in_working('该卡牌正在工作中！猪...')
+        self.repo.add_working(card['card_uid'], space, end_time, reward_fund)
+    
+    def search_working_by_user(self, user_id):
+
+        result = self.repo.search_working_by_user(user_id)
+        return result
+    
+    def search_working_by_card(self, user_id, card_id):
+
+        result = self.repo.search_working_by_card(user_id, card_id)
+        return result
+
+    def search_working_space_status(self):
+
+        result = self.repo.search_space_worker()
+        return result
+
+    def delete_working(self, user_id, card_id):
+
+        card = self.repo.search_card(card_id, user_id)
+        if not card:
+            raise Card_not_found('没有该卡牌呢！猪...')
+
+        self.repo.delete_working(card['card_uid'])

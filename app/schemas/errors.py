@@ -59,6 +59,14 @@ class Timeout(App_error):
 class Request_error(App_error):
      pass
 
+class Already_in_working(App_error):
+     pass
+
+
+
+
+
+
 
 
 class Infra_error(Exception):

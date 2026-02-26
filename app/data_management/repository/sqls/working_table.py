@@ -20,7 +20,7 @@ WORKING_SEARCH_BY_CARD_SQL = '''
 '''
 
 WORKING_SPACE_SEARCH_SQL = '''
-        SELECT count(*), space
+        SELECT count(*) AS worker, space
         FROM work_place
         GROUP BY space;
 '''
