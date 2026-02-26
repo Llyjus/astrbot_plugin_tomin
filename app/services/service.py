@@ -66,10 +66,6 @@ class Card_service(Service):
         
 
 
-
-
-
-
     def delete_slots(self, user_id, slot_list:list):
 
         slots = []
@@ -127,6 +123,15 @@ class Card_service(Service):
         # insert
         self.repo.add_slots(slots)
     
+
+
+
+
+
+
+
+
+
 
 class Fund_service(Service):
 
@@ -209,6 +214,16 @@ class Sign_in_service(Service):
             minutes = seconds // 60
             hours = minutes // 60 + 1
             raise Cooldown(f'还未到冷却时间！{hours}小时{minutes % 60}分钟后再试吧！')
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -378,3 +393,18 @@ class Avatar_service(Service):
             self.repo.update_avatar(user_id, int(time()))
         return True
         
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -6,7 +6,7 @@ from pytest import raises, mark
 from app.services import *
 from app.schemas import *
 from app.maintenance import Cleaner
-
+from app.data_management import Repository
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 
@@ -309,7 +309,7 @@ def test_service_and_cards_related_table(memory_db_connection):
         car_str_ser.sell_cards_by_rarity(uid2, 3)
 
 
-def test_avatar_service_and_table(memory_db_connection):
+def test_avatar_service_and_table(memory_db_connection:Repository):
     repo = memory_db_connection
     avt_ser1 = Avatar_service(repo)
     avt_ser1.ensure_user_exists('test')
@@ -328,4 +328,48 @@ def test_avatar_service_and_table(memory_db_connection):
 
     assert result3 == False
 
+def test_working_table(memory_db_connection:Repository):
+    repo = memory_db_connection
 
+    uid1 = 'user1'
+    uid2 = 'user2'
+
+    card = [(1, uid1, 'ksm', 'ppp', 'voice', 3, 100, 100, 20, None, None, None),
+            (2, uid1, 'ksm', 'ppp', 'voice', 3, 100, 100, 20, None, None, None),
+            (1, uid2, 'ksm', 'ppp', 'voice', 3, 100, 100, 20, None, None, None)]
+    
+
+    repo.add_user(uid1)
+    repo.add_user(uid2)
+    repo.add_cards(card)
+
+
+    card_1 = repo.search_cards(uid1)
+    card_2 = repo.search_cards(uid2)
+    
+    card_uid_1 = card_1[0]['card_uid']
+    card_uid_2 = card_1[1]['card_uid']
+    card_uid_3 = card_2[0]['card_uid']
+
+    repo.add_working(card_uid_1, 'A', 0, 50)
+    repo.add_working(card_uid_2, 'A', 0, 60)
+    repo.add_working(card_uid_3, 'B', 0, 30)
+
+    result_1 = repo.search_working_by_user(uid1)
+    uid = [r['card_uid'] for r in result_1]
+    assert card_uid_1 and card_uid_2 in uid
+
+    result_card = repo.search_working_by_card(uid1, 1)
+    assert result_card['card_uid'] == card_uid_1
+
+    result_space = repo.search_space_worker()
+    for r in result_space:
+        count_val = r['count(*)']
+        if r['space'] == 'B':
+            assert count_val == 1
+        elif r['space'] == 'A':
+            assert count_val == 2
+
+
+    repo.delete_working(1)
+    assert len(repo.search_working_by_user(uid1)) == 1

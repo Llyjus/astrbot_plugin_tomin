@@ -474,3 +474,89 @@ class Repository(function_ports):
             
         except sqlite3.Error as e:
             raise Database_error(f'操作失败，数据库连接错误，请稍候再试:{e}') from e
+        
+
+
+
+# working
+
+
+    def add_working(self, card_uid, space, end_time, reward_fund):
+        cursor = self.conn.cursor()
+
+        sql = working_interact_sql()[0]
+
+        try:
+            cursor.execute(sql, (card_uid, space, end_time, reward_fund))
+
+        except sqlite3.IntegrityError as e:
+            raise Request_repeat('重复执行')  
+            
+        except sqlite3.Error as e:
+            
+            raise Database_error('查询失败，数据库连接错误，请稍候再试') from e
+        
+    
+
+    def search_working_by_user(self, user_id):
+        cursor = self.conn.cursor()
+
+        sql = working_interact_sql()[1]
+
+        try:
+            result = cursor.execute(sql, (user_id, )).fetchall()
+            
+            return result
+        
+        except sqlite3.Error as e:
+            raise Database_error(f'操作失败，数据库连接错误，请稍候再试:{e}') from e
+        
+
+    def search_working_by_card(self, user_id, card_id):
+        cursor = self.conn.cursor()
+
+        sql = working_interact_sql()[2]
+
+        try:
+            result = cursor.execute(sql, (user_id, card_id)).fetchone()
+            
+            return result
+        
+        except sqlite3.Error as e:
+            raise Database_error(f'操作失败，数据库连接错误，请稍候再试:{e}') from e
+        
+
+
+    def search_space_worker(self):
+        cursor = self.conn.cursor()
+
+        sql = working_interact_sql()[3]
+
+        try:
+            result = cursor.execute(sql).fetchall()
+            
+            return result
+        
+        except sqlite3.Error as e:
+            raise Database_error(f'操作失败，数据库连接错误，请稍候再试:{e}') from e
+        
+    
+
+
+    def delete_working(self, card_uid):
+        cursor = self.conn.cursor()
+
+        sql = working_interact_sql()[4]
+
+        try:
+            cursor.execute(sql, (card_uid,))
+            
+        except sqlite3.Error as e:
+            raise Database_error(f'操作失败，数据库连接错误，请稍候再试:{e}') from e
+        
+
+
+
+
+
+
