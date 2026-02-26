@@ -32,6 +32,7 @@ class TominPlugin(Star):
 
         self.platform = str(os.getenv("PLATFORM", "qq"))
         self.return_type = str(os.getenv("RETURN_TYPE", "html"))
+        self.bot_id = str(os.getenv("BOT_ID", ""))
 
         max_renderer = int(os.getenv("RENDER_MAX_CONCURRENCY", "2"))
         timeout_s = float(os.getenv("RENDER_TIMEOUT_S", "15"))
@@ -71,11 +72,19 @@ class TominPlugin(Star):
 
 
         if text in help_dict:
-            help = help_dict[text]
-
+            result = help_dict[text]
         else:
-            help = help_dict['help']
-        yield event.plain_result(help)
+            result = help_dict['help']
+
+        if self.bot_id:
+            node = Node(uin = self.bot_id, 
+                        name = 'Tomin', 
+                        content = [Plain(result)])
+            
+            yield event.chain_result([node])
+        else:
+            yield event.plain_result(result)
+
 
 
 
@@ -162,10 +171,14 @@ class TominPlugin(Star):
         except ValidationError as e:
             result = error_message(e)
 
-        
-
-
-        yield event.plain_result(result)
+        if self.bot_id:
+            node = Node(uin = self.bot_id, 
+                        name = 'Tomin', 
+                        content = [Plain(result)])
+            
+            yield event.chain_result([node])
+        else:
+            yield event.plain_result(result)
 
 
 
@@ -280,7 +293,15 @@ class TominPlugin(Star):
             result = error_message(e)
 
 
-        yield event.plain_result(result)
+        if self.bot_id:
+            node = Node(uin = self.bot_id, 
+                        name = 'Tomin', 
+                        content = [Plain(result)])
+            
+            yield event.chain_result([node])
+        else:
+            yield event.plain_result(result)
+
 
 
 
@@ -395,8 +416,15 @@ class TominPlugin(Star):
         except ValidationError as e:
             result = error_message(e)
 
+        if self.bot_id:
+            node = Node(uin = self.bot_id, 
+                        name = 'Tomin', 
+                        content = [Plain(result)])
+            
+            yield event.chain_result([node])
+        else:
+            yield event.plain_result(result)
 
-        yield event.plain_result(result)
 
 
 
@@ -444,7 +472,15 @@ class TominPlugin(Star):
             result = error_message(e)
 
 
-        yield event.plain_result(result)
+        if self.bot_id:
+            node = Node(uin = self.bot_id, 
+                        name = 'Tomin', 
+                        content = [Plain(result)])
+            
+            yield event.chain_result([node])
+        else:
+            yield event.plain_result(result)
+
 
 
 
@@ -508,7 +544,17 @@ class TominPlugin(Star):
         except ValidationError as e:
             result = error_message(e)
 
-        yield event.plain_result(result)
+        if self.bot_id:
+            node = Node(uin = self.bot_id, 
+                        name = 'Tomin', 
+                        content = [Plain(result)])
+            
+            yield event.chain_result([node])
+        else:
+            yield event.plain_result(result)
+
+          
+          
             
             
     @filter.regex(r'^(稀有度出售|xcs|x出售).*')
@@ -570,7 +616,17 @@ class TominPlugin(Star):
             result = error_message(e)
 
 
-        yield event.plain_result(result)
+        if self.bot_id:
+            node = Node(uin = self.bot_id, 
+                        name = 'Tomin', 
+                        content = [Plain(result)])
+            
+            yield event.chain_result([node])
+        else:
+            yield event.plain_result(result)
+
+
+
 
     @filter.regex(r'^(赠送|zs).*$')
     async def give_card_away(self, event: AstrMessageEvent) ->AsyncGenerator[str, None]:
@@ -649,7 +705,15 @@ class TominPlugin(Star):
             result = error_message(e)
 
             
-        yield event.plain_result(result)
+        if self.bot_id:
+            node = Node(uin = self.bot_id, 
+                        name = 'Tomin', 
+                        content = [Plain(result)])
+            
+            yield event.chain_result([node])
+        else:
+            yield event.plain_result(result)
+
 
 
 
@@ -710,7 +774,15 @@ class TominPlugin(Star):
         
 
 
-        yield event.plain_result(result)
+        if self.bot_id:
+            node = Node(uin = self.bot_id, 
+                        name = 'Tomin', 
+                        content = [Plain(result)])
+            
+            yield event.chain_result([node])
+        else:
+            yield event.plain_result(result)
+
 
             
 

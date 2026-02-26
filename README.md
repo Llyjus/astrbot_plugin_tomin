@@ -141,9 +141,13 @@ shm_size: 1g
 ```
 目前仅支持qq平台，但如支持其它平台后也可以通过更改默认值来更改适配平台。
 ```yaml
-- PLATFORM="qq"
+- PLATFORM=qq
 ```
-以下是完整版可复制的docker-compose.yml内容：
+如果想使用qq的转发段落消息功能，可以在environment配置中添加：
+```yaml
+- BOT_ID=xxx(您的bot机器人的qq号)
+```
+以下是完整版用于qq的可复制docker-compose.yml内容（可根据需要更改配置）：
 ```yaml
 services:
   astrbot:
