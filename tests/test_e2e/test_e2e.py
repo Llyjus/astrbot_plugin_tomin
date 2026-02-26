@@ -116,5 +116,16 @@ async def test_of_e2e(mocker: MockerFixture, e2e_database):
 
     assert last_checker == True
 
+    # part5: Test the return type of string chosen
+    fake_ck_event5 = mocker.Mock()
+    fake_ck_event5.get_sender_id.return_value = "user1"
+    fake_ck_event5.message_obj.message_id = '5'
+    fake_ck_event5.message_obj.message_str = "ckp2"
+    fake_ck_event5.plain_result.side_effect = lambda x: x
 
+    tomin.return_type = 'str'
+
+    user1_ck = tomin.search_card(fake_ck_event5)
+    user1_ck_result = [msg async for msg in user1_ck][0]
+    assert "卡牌id：2" in user1_ck_result
     

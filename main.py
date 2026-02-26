@@ -31,6 +31,7 @@ class TominPlugin(Star):
         self.avatar_path = StarTools.get_data_dir() / 'avatar'
 
         self.platform = str(os.getenv("PLATFORM", "qq"))
+        self.return_type = str(os.getenv("RETURN_TYPE", "html"))
 
         max_renderer = int(os.getenv("RENDER_MAX_CONCURRENCY", "2"))
         timeout_s = float(os.getenv("RENDER_TIMEOUT_S", "15"))
@@ -136,6 +137,7 @@ class TominPlugin(Star):
                                     db_path=self.data_path,
                                     avatar_path=self.avatar_path,
                                     platform=self.platform,
+                                    request_return_type=self.return_type,
         )
             
             #check error before returning result
@@ -152,10 +154,7 @@ class TominPlugin(Star):
                 return
             
             else:
-                if result['error']:
-                    result = '渲染图片失败，以下是文字内容：' + result['content']
-                else:
-                    result = result['content']
+                result = result['content']
 
         except Invalid_input as e:
             result = str(e)
@@ -201,6 +200,7 @@ class TominPlugin(Star):
             db_path=self.data_path,
             avatar_path=self.avatar_path,
             platform=self.platform,
+            request_return_type=self.return_type,
             )
 
 
@@ -215,10 +215,7 @@ class TominPlugin(Star):
                     path.unlink(missing_ok=True)
                 return
             else:
-                if result['error']:
-                    result = '渲染图片失败，以下是文字内容：' + result['content']
-                else:
-                    result = result['content']
+                result = result['content']
 
 
         except ValidationError as e:
@@ -250,6 +247,7 @@ class TominPlugin(Star):
                                              db_path=self.data_path,
                                              avatar_path=self.avatar_path,
                                              platform=self.platform,
+                                             request_return_type=self.return_type,
                     )
                 
 
@@ -274,10 +272,7 @@ class TominPlugin(Star):
                     path.unlink()
                 return
             else:
-                if result['error']:
-                    result = '渲染图片失败，以下是文字内容：' + result['content']
-                else:
-                    result = result['content']
+                result = result['content']
 
 
 
@@ -312,6 +307,7 @@ class TominPlugin(Star):
                     db_path=self.data_path,
                     avatar_path=self.avatar_path,
                     platform=self.platform,
+                    request_return_type=self.return_type,
                 )
 
             else:
@@ -337,6 +333,7 @@ class TominPlugin(Star):
                                 db_path=self.data_path,
                                 avatar_path=self.avatar_path,
                                 platform=self.platform,
+                                request_return_type=self.return_type,
                             )
 
 
@@ -352,6 +349,7 @@ class TominPlugin(Star):
                             db_path=self.data_path,
                             avatar_path=self.avatar_path,
                             platform=self.platform,
+                            request_return_type=self.return_type,
                         )
 
 
@@ -368,6 +366,7 @@ class TominPlugin(Star):
                             db_path=self.data_path,
                             avatar_path=self.avatar_path,
                             platform=self.platform,
+                            request_return_type=self.return_type,
                         )
 
                 
@@ -422,6 +421,7 @@ class TominPlugin(Star):
                 db_path=self.data_path,
                 avatar_path=self.avatar_path,
                 platform=self.platform,
+                request_return_type=self.return_type,
             )
 
             if result['error']:
@@ -479,6 +479,7 @@ class TominPlugin(Star):
                     db_path=self.data_path,
                     avatar_path=self.avatar_path,
                     platform=self.platform,  
+                    request_return_type=self.return_type,
                 )
 
 
@@ -538,6 +539,7 @@ class TominPlugin(Star):
                     db_path=self.data_path,
                     avatar_path=self.avatar_path,
                     platform=self.platform,
+                    request_return_type=self.return_type,
                 )
 
 
@@ -598,6 +600,7 @@ class TominPlugin(Star):
                     db_path=self.data_path,
                     avatar_path=self.avatar_path,
                     platform=self.platform,
+                    request_return_type=self.return_type,
                 )
 
 
@@ -616,6 +619,7 @@ class TominPlugin(Star):
                     db_path=self.data_path,
                     avatar_path=self.avatar_path,
                     platform=self.platform,
+                    request_return_type=self.return_type,
                 )
 
 
@@ -676,6 +680,7 @@ class TominPlugin(Star):
                 db_path=self.data_path,
                 platform=self.platform,
                 avatar_path=self.avatar_path,
+                request_return_type=self.return_type,
             )
 
 

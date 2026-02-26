@@ -27,8 +27,9 @@ app_dict = {
 
 async def app_inter(function_name, 
                     kwargs:dict, 
-                    platform:str = "qq",
+                    platform:str ,
                     avatar_path:str = None,
+                    request_return_type:str = 'html',
                     *,
                     renderer:Renderer_html_to_png_bytes=None, 
                     message_id=None, 
@@ -39,6 +40,10 @@ async def app_inter(function_name,
     func = app_dict.get(function_name, )
     if func is None:
         raise Invalid_input(f'函数名称错误：{function_name}')
+    
+    result = {'return_type': 'str',
+              'content': '',
+              'error': ''}
     
     try:
         event_creater(message_id=message_id, 
@@ -57,39 +62,43 @@ async def app_inter(function_name,
                 result['error'] = ''
             
             elif result['return_type'] == 'html':
+                if request_return_type == 'html':
 
 
+                    try:
 
-                try:
+                        #add user avatar url from interface layer
+                        if avatar_path:
+                            avatar_result = await get_avatar(user_id=result['user_id'], 
+                                                            avatar_loc=avatar_path,
+                                                            platform=platform)
 
-                    #add user avatar url from interface layer
-                    if avatar_path:
-                        avatar_result = await get_avatar(user_id=result['user_id'], 
-                                                        avatar_loc=avatar_path,
-                                                        platform=platform)
-
-                        result['content']['avatar_path'] = avatar_result['avatar_loc']
+                            result['content']['avatar_path'] = avatar_result['avatar_loc']
 
 
-                    #convert to image
-                    html = template_generator(result['temp_type'], result['content'])
+                        #convert to image
+                        html = template_generator(result['temp_type'], result['content'])
 
-                    img = await renderer.render(html=html)
+                        img = await renderer.render(html=html)
 
-                    result = {'return_type': 'png', 
-                            'content': img,
-                            'error': avatar_result['error'] if avatar_path else ''}
-                except TimeoutError as e:
+                        result = {'return_type': 'png', 
+                                'content': img,
+                                'error': avatar_result['error'] if avatar_path else ''}
+                    except TimeoutError as e:
+                        result = {'return_type': 'str', 
+                                'content': result.get('txt', ''),
+                                'error': str(e)}
+
+                elif request_return_type == 'str':
                     result = {'return_type': 'str', 
-                            'content': result.get('txt', ''),
-                            'error': str(e)}
-
-
-
-
-
+                                'content': result.get('txt', ''),
+                                'error': ''}
         else:
-            return
+            raise Invalid_input('执行失败，未返回结果')
+                    
+
+
+
         
     except App_error as e:
         result = {'return_type': 'str', 

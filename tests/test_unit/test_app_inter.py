@@ -12,14 +12,15 @@ async def test_app_inter_func_call(mocker: MockerFixture, fake_application_fixtu
 
     fake_app_dict, fake_kwargs = fake_application_fixture
     result1 = await app_inter('normal_gacha', 
-                    fake_kwargs, 
+                    fake_kwargs,
+                    platform='qq', 
                     app_dict=fake_app_dict)
     
     assert result1['content'] == '成功'
     
 
     with raises(Invalid_input) as error1:
-        await app_inter('x_func', {})
+        await app_inter('x_func',  {}, platform='qq')
     assert '函数名称错误' in str(error1.value)
 
 @pytest.mark.asyncio
@@ -36,6 +37,7 @@ async def test_app_renderer_fallback(mocker: MockerFixture, fake_application_fix
 
     result = await app_inter('picture_type', 
                     fake_kwargs, 
+                    platform='qq',
                     renderer=fake_renderer(), 
                     app_dict=fake_app_dict)
 
