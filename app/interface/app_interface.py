@@ -1,5 +1,3 @@
-import logging
-
 from app.application.cards_app import *
 from app.application.funds_app import *
 from app.application.gacha_app import *
@@ -86,16 +84,21 @@ async def app_inter(function_name,
                                 'error': avatar_result['error'] if avatar_path else ''}
                     except TimeoutError as e:
                         result = {'return_type': 'str', 
-                                'content': result.get('txt', ''),
-                                'error': str(e)}
+                                'content': '渲染图片失败，以下是文字内容：' + result.get('txt', ''),
+                                'error': str(e),
+                                'error_sign': None}
 
                 elif request_return_type == 'str':
                     result = {'return_type': 'str', 
                                 'content': result.get('txt', ''),
-                                'error': ''}
+                                'error': '',
+                                'error_sign': None}
         else:
-            raise Invalid_input('执行失败，未返回结果')
-                    
+            result = {'return_type': 'str', 
+                                'content': "没有返回结果",
+                                'error': "没有返回结果",
+                                'error_sign': 1}
+                        
 
 
 
@@ -103,19 +106,22 @@ async def app_inter(function_name,
     except App_error as e:
         result = {'return_type': 'str', 
                             'content': str(e),
-                            'error': str(e)}
+                            'error': "",
+                            'error_sign': 1}
         
 
     except Infra_error as e:
         result = {'return_type': 'str', 
                             'content': str(e),
-                            'error': str(e)}
+                            'error': str(e),
+                            'error_sign': 1}
         
 
     except Exception as e:
         result = {'return_type': 'str', 
                             'content': f'未知错误，请联系管理员处理{str(e)}',
-                            'error': str(e)}
+                            'error': str(e),
+                            'error_sign': 1}
 
     return result
 

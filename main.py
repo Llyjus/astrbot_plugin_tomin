@@ -33,6 +33,7 @@ class TominPlugin(Star):
         self.platform = str(os.getenv("PLATFORM", "qq"))
         self.return_type = str(os.getenv("RETURN_TYPE", "html"))
         self.bot_id = str(os.getenv("BOT_ID", ""))
+        self.bot_name = str(os.getenv("BOT_NAME", "Tomin"))
 
         max_renderer = int(os.getenv("RENDER_MAX_CONCURRENCY", "2"))
         timeout_s = float(os.getenv("RENDER_TIMEOUT_S", "15"))
@@ -78,7 +79,7 @@ class TominPlugin(Star):
 
         if self.bot_id:
             node = Node(uin = self.bot_id, 
-                        name = 'Tomin', 
+                        name = self.bot_name, 
                         content = [Plain(result)])
             
             yield event.chain_result([node])
@@ -171,9 +172,9 @@ class TominPlugin(Star):
         except ValidationError as e:
             result = error_message(e)
 
-        if self.bot_id:
+        if self.bot_id and not result['error_sign']:
             node = Node(uin = self.bot_id, 
-                        name = 'Tomin', 
+                        name = self.bot_name, 
                         content = [Plain(result)])
             
             yield event.chain_result([node])
@@ -235,7 +236,15 @@ class TominPlugin(Star):
             
             result = error_message(e)
 
-        yield event.plain_result(result)
+        if self.bot_id and not result['error_sign']:
+            node = Node(uin = self.bot_id, 
+                        name = self.bot_name, 
+                        content = [Plain(result)])
+            
+            yield event.chain_result([node])
+        else:
+            yield event.plain_result(result)
+
 
 
     @filter.regex(r'^(查卡牌|ckp)\s*(\d+)?\s*$')
@@ -293,14 +302,15 @@ class TominPlugin(Star):
             result = error_message(e)
 
 
-        if self.bot_id:
+        if self.bot_id and not result['error_sign']:
             node = Node(uin = self.bot_id, 
-                        name = 'Tomin', 
+                        name = self.bot_name, 
                         content = [Plain(result)])
             
             yield event.chain_result([node])
         else:
             yield event.plain_result(result)
+
 
 
 
@@ -407,23 +417,21 @@ class TominPlugin(Star):
                     path.unlink(missing_ok=True)
                 return
             else:
-                if result['error']:
-                    result = '渲染图片失败，以下是文字内容：' + result['content']
-                else:
-                    result = result['content']
+                result = result['content']
 
 
         except ValidationError as e:
             result = error_message(e)
 
-        if self.bot_id:
+        if self.bot_id and not result['error_sign']:
             node = Node(uin = self.bot_id, 
-                        name = 'Tomin', 
+                        name = self.bot_name, 
                         content = [Plain(result)])
             
             yield event.chain_result([node])
         else:
             yield event.plain_result(result)
+
 
 
 
@@ -463,18 +471,15 @@ class TominPlugin(Star):
                     path.unlink(missing_ok=True)
                 return
             else:
-                if result['error']:
-                    result = '渲染图片失败，以下是文字内容：' + result['content']
-                else:
-                    result = result['content']
+                result = result['content']
         
         except ValidationError as e:
             result = error_message(e)
 
 
-        if self.bot_id:
+        if self.bot_id and not result['error_sign']:
             node = Node(uin = self.bot_id, 
-                        name = 'Tomin', 
+                        name = self.bot_name, 
                         content = [Plain(result)])
             
             yield event.chain_result([node])
@@ -535,23 +540,21 @@ class TominPlugin(Star):
                     path.unlink(missing_ok=True)
                 return
             else:
-                if result['error']:
-                    result = '渲染图片失败，以下是文字内容：' + result['content']
-                else:
-                    result = result['content']
+                result = result['content']
 
 
         except ValidationError as e:
             result = error_message(e)
 
-        if self.bot_id:
+        if self.bot_id and not result['error_sign']:
             node = Node(uin = self.bot_id, 
-                        name = 'Tomin', 
+                        name = self.bot_name, 
                         content = [Plain(result)])
             
             yield event.chain_result([node])
         else:
             yield event.plain_result(result)
+
 
           
           
@@ -605,10 +608,7 @@ class TominPlugin(Star):
                     path.unlink(missing_ok=True)
                 return
             else:
-                if result['error']:
-                    result = '渲染图片失败，以下是文字内容：' + result['content']
-                else:
-                    result = result['content']
+                result = result['content']
             
 
 
@@ -616,14 +616,15 @@ class TominPlugin(Star):
             result = error_message(e)
 
 
-        if self.bot_id:
+        if self.bot_id and not result['error_sign']:
             node = Node(uin = self.bot_id, 
-                        name = 'Tomin', 
+                        name = self.bot_name, 
                         content = [Plain(result)])
             
             yield event.chain_result([node])
         else:
             yield event.plain_result(result)
+
 
 
 
@@ -695,24 +696,22 @@ class TominPlugin(Star):
                     path.unlink(missing_ok=True)
                 return
             else:
-                if result['error']:
-                    result = '渲染图片失败，以下是文字内容：' + result['content']
-                else:
-                    result = result['content']
+                result = result['content']
 
 
         except ValidationError as e:
             result = error_message(e)
 
             
-        if self.bot_id:
+        if self.bot_id and not result['error_sign']:
             node = Node(uin = self.bot_id, 
-                        name = 'Tomin', 
+                        name = self.bot_name, 
                         content = [Plain(result)])
             
             yield event.chain_result([node])
         else:
             yield event.plain_result(result)
+
 
 
 
@@ -760,10 +759,7 @@ class TominPlugin(Star):
                 return
             
             else:
-                if result['error']:
-                    result = '渲染图片失败，以下是文字内容：' + result['content']
-                else:
-                    result = result['content']
+                result = result['content']
 
 
 
@@ -774,14 +770,15 @@ class TominPlugin(Star):
         
 
 
-        if self.bot_id:
+        if self.bot_id and not result['error_sign']:
             node = Node(uin = self.bot_id, 
-                        name = 'Tomin', 
+                        name = self.bot_name, 
                         content = [Plain(result)])
             
             yield event.chain_result([node])
         else:
             yield event.plain_result(result)
+
 
 
             

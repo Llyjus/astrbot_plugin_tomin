@@ -138,6 +138,11 @@ Currently, only the QQ platform is supported. However, when other platforms are 
 ```yaml
 - PLATFORM="qq"
 ```
+To use the forwarded paragraph messaging feature for QQ, you can add the following to the environment configuration:  
+```yaml
+- BOT_ID=xxx (your bot's QQ number)
+- BOT_NAME=xxx (your bot's nickname; if an ID is provided but the name is not filled in, it defaults to Tomin)
+```
 
 Below is a complete, copyable example `docker-compose.yml` configuration:
 

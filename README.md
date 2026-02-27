@@ -145,7 +145,8 @@ shm_size: 1g
 ```
 如果想使用qq的转发段落消息功能，可以在environment配置中添加：
 ```yaml
-- BOT_ID=xxx(您的bot机器人的qq号)
+- BOT_ID=xxx(您的bot的qq号)
+- BOT_NAME=xxx(您的bot的昵称，如有id而不填写name默认为Tomin)
 ```
 以下是完整版用于qq的可复制docker-compose.yml内容（可根据需要更改配置）：
 ```yaml
