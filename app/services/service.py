@@ -414,7 +414,7 @@ class Working_service(Service):
         super().__init__(repo)
 
 
-    def start_working(self, user_id, card_id, space, end_time, reward_fund):
+    def start_working(self, user_id, card_id, space, end_time, reward_fund, *, time_now = None):
 
         card = self.repo.search_card(card_id, user_id)
         if not card:
@@ -422,9 +422,23 @@ class Working_service(Service):
 
         status = self.repo.search_working_by_card(user_id, card_id)
         if status:
-            raise Already_in_working('该卡牌正在工作中！猪...')
+            if time_now is None:
+                time_now = int(time())
+
+            if status['end_time'] > time_now:
+                raise Already_in_working('该卡牌正在工作中！猪...')
+            elif status['end_time'] > time_now-3600*3:
+                remaining_hour = (time_now - status['end_time']) // 3600
+                remaining_minute = (time_now - status['end_time']) % 3600 // 60
+                raise Take_a_break(f'该卡牌正在休息中！还剩{remaining_hour}小时{remaining_minute}分钟!')
+            else:
+                self.repo.delete_working(status['card_uid'])
+                
         self.repo.add_working(card['card_uid'], space, end_time, reward_fund)
-    
+        return True
+            
+            
+        
     def search_working_by_user(self, user_id):
 
         result = self.repo.search_working_by_user(user_id)
@@ -447,3 +461,4 @@ class Working_service(Service):
             raise Card_not_found('没有该卡牌呢！猪...')
 
         self.repo.delete_working(card['card_uid'])
+        return True

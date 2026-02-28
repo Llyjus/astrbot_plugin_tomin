@@ -23,3 +23,6 @@ def test_wage_calc():
     # no buff
     result4 = working_func("toge", 1, place, hours, current_time=now)
     assert result4['wage'] == 20
+
+    result5 = working_func(band, 1, place, 4, current_time=now)
+    assert result5['wage'] == 53

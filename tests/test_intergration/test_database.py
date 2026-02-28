@@ -378,21 +378,21 @@ def test_working_table(memory_db_connection:Repository):
 
 
     # test service
-    service = Working_service(repo)
+    wkg_ser = Working_service(repo)
+    repo.delete_working(card_uid_1)
 
-
-    service.start_working(uid1, 1, 'C', 0, 100)
-    result1 = service.search_working_by_user(uid1)
+    wkg_ser.start_working(uid1, 1, 'C', 0, 100)
+    result1 = wkg_ser.search_working_by_user(uid1)
     assert any(r['space'] == 'C' for r in result1)
 
     with raises(Already_in_working, match='该卡牌正在工作中！猪...') as error1:
-        service.start_working(uid1, 1, 'D', 300, 150)
+        wkg_ser.start_working(uid1, 1, 'D', 300, 150, time_now=-1)
 
 
     with raises(Card_not_found, match='没有该卡牌呢！猪...') as error2:
-        service.start_working(uid1, 999, 'E', 0, 0)
+        wkg_ser.start_working(uid1, 999, 'E', 0, 0)
 
-    result_2 = service.search_working_space_status()
+    result_2 = wkg_ser.search_working_space_status()
     for r in result_2:
         if r['space'] == 'A':
             assert r['worker'] == 1
@@ -401,8 +401,13 @@ def test_working_table(memory_db_connection:Repository):
         elif r['space'] == 'C':
             assert r['worker'] == 1
 
-    service.delete_working(uid1, 1)
-    assert service.search_working_by_card(uid1, 1) is None
+    wkg_ser.delete_working(uid1, 1)
+    assert wkg_ser.search_working_by_card(uid1, 1) is None
 
     with raises(Card_not_found, match='没有该卡牌呢！猪...') as error3:
-        service.delete_working(uid1, 6)
+        wkg_ser.delete_working(uid1, 6)
+
+    repo.delete_working(card_uid_1)
+    repo.add_working(card_uid_1, 'RestTest', 1000, 0)
+    with raises(Take_a_break, match='该卡牌正在休息中！'):
+        wkg_ser.start_working(uid1, 1, 'E', 5000, 100, time_now=2000)

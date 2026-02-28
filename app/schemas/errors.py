@@ -62,7 +62,8 @@ class Request_error(App_error):
 class Already_in_working(App_error):
      pass
 
-
+class Take_a_break(App_error):
+     pass
 
 
 

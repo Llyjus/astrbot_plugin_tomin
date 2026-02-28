@@ -32,7 +32,7 @@ def working_func(band:str,
     
     end_time = current_time + hours*3600
     
-    wage = ceil(10 * base * hours)
+    wage = ceil(10 * base * min(hours, 3))+ ceil(5 * base * max(hours - 3, 0))
 
     return {'wage': wage, 'end_time': end_time}
 
