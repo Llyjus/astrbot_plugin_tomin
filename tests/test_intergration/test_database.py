@@ -353,9 +353,9 @@ def test_working_table(memory_db_connection:Repository):
     card_uid_2 = card_1[1]['card_uid']
     card_uid_3 = card_2[0]['card_uid']
 
-    repo.add_working(card_uid_1, 'A', 0, 50)
-    repo.add_working(card_uid_2, 'A', 0, 60)
-    repo.add_working(card_uid_3, 'B', 0, 30)
+    repo.add_working(card_uid_1, 'A', 0, 50, 'working')
+    repo.add_working(card_uid_2, 'A', 0, 60, 'working')
+    repo.add_working(card_uid_3, 'B', 0, 30, 'working')
 
     result_1 = repo.search_working_by_user(uid1)
     uid = [r['card_uid'] for r in result_1]
@@ -373,24 +373,15 @@ def test_working_table(memory_db_connection:Repository):
             assert count_val == 2
 
 
-    repo.delete_working(1)
-    assert len(repo.search_working_by_user(uid1)) == 1
-
-
     # test service
     wkg_ser = Working_service(repo)
-    repo.delete_working(card_uid_1)
 
-    wkg_ser.start_working(uid1, 1, 'C', 0, 100)
+    wkg_ser._update_working(card_uid_1, 'C', 0, 100, 'working')
     result1 = wkg_ser.search_working_by_user(uid1)
     assert any(r['space'] == 'C' for r in result1)
 
     with raises(Already_in_working, match='该卡牌正在工作中！猪...') as error1:
-        wkg_ser.start_working(uid1, 1, 'D', 300, 150, time_now=-1)
-
-
-    with raises(Card_not_found, match='没有该卡牌呢！猪...') as error2:
-        wkg_ser.start_working(uid1, 999, 'E', 0, 0)
+        wkg_ser.start_working(uid1, 1, card_uid_1, 'D', 300, 150, time_now=-1)
 
     result_2 = wkg_ser.search_working_space_status()
     for r in result_2:
@@ -404,10 +395,10 @@ def test_working_table(memory_db_connection:Repository):
     wkg_ser.delete_working(uid1, 1)
     assert wkg_ser.search_working_by_card(uid1, 1) is None
 
-    with raises(Card_not_found, match='没有该卡牌呢！猪...') as error3:
-        wkg_ser.delete_working(uid1, 6)
-
-    repo.delete_working(card_uid_1)
-    repo.add_working(card_uid_1, 'RestTest', 1000, 0)
+    wkg_ser.finish_working(uid2, current_time=10000, gap=10000)
     with raises(Take_a_break, match='该卡牌正在休息中！'):
-        wkg_ser.start_working(uid1, 1, 'E', 5000, 100, time_now=2000)
+        wkg_ser.start_working(uid2, 1, card_uid_3, 'E', 5000, 100, time_now=2000)
+
+    wkg_ser.stop_working(card_uid_2, current_time=0)
+    wkg_ser.start_working(uid1, 2, card_uid_2, 'F', 300, 150, time_now=0)
+    assert wkg_ser.search_working_by_card(uid1, 2)['space'] == 'F'

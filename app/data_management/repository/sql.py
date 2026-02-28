@@ -52,7 +52,8 @@ def working_interact_sql():
             WORKING_SEARCH_BY_USER_SQL, 
             WORKING_SEARCH_BY_CARD_SQL, 
             WORKING_SPACE_SEARCH_SQL, 
-            WORKING_DELETE_SQL]
+            WORKING_DELETE_SQL,
+            WORKING_UPDATE_SQL]
 
 
 

@@ -43,3 +43,17 @@ place_dict = {
 }
 
 
+place_out_dict = {
+    "SPACE": "SPACE",
+    "CiRCLE": "CiRCLE",
+    "RiNG": "RiNG",
+
+    "Yamabuki_Bakery": "山吹面包房",
+    "wutagawa_laamen": "拉面馆",
+    "rokka_onsenryokan": "温泉旅馆",
+    "Tsurumaki_amusement_park": "弦卷游乐园",
+
+    "Yoshinoya": "吉野家",
+
+    'STARRY': 'STARRY',
+}

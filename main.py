@@ -21,7 +21,7 @@ from app import *
 
 
 
-@register("Tomin - 少女乐队游戏", "Llyjus", "一个少女乐队游戏插件，实现抽卡、演出等功能。 ", "0.2.3")
+@register("Tomin - 少女乐队游戏", "Llyjus", "一个少女乐队游戏插件，实现抽卡、演出等功能。 ", "0.3.0")
 class TominPlugin(Star):
     def __init__(self, context: Context):
         super().__init__(context)

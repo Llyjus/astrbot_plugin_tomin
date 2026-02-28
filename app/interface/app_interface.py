@@ -1,6 +1,7 @@
 from app.application.cards_app import *
 from app.application.funds_app import *
 from app.application.gacha_app import *
+from app.application.working_app import *
 from app.infrastuctures import template_generator, Renderer_html_to_png_bytes
 from app.infrastuctures import get_avatar
 
@@ -17,6 +18,12 @@ app_dict = {
     'give_away_cards_app': give_away_cards_app,
     'sell_card_app': sell_card_app,
     'sell_cards_by_rarity_app': sell_cards_by_rarity_app,
+    'card_working_status_app': card_working_status_app,
+    'start_working_app': start_working_app,
+    'card_working_status_app': card_working_status_app,
+    'user_working_status_app': user_working_status_app,
+    'stop_working_app': stop_working_app,
+    'finish_working_app': finish_working_app,
 
 }
 

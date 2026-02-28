@@ -481,13 +481,13 @@ class Repository(function_ports):
 # working
 
 
-    def add_working(self, card_uid, space, end_time, reward_fund):
+    def add_working(self, card_uid, space, end_time, reward_fund, status):
         cursor = self.conn.cursor()
 
         sql = working_interact_sql()[0]
 
         try:
-            cursor.execute(sql, (card_uid, space, end_time, reward_fund))
+            cursor.execute(sql, (card_uid, space, end_time, reward_fund, status))
 
         except sqlite3.IntegrityError as e:
             raise Request_repeat('重复执行')  
@@ -555,7 +555,16 @@ class Repository(function_ports):
             raise Database_error(f'操作失败，数据库连接错误，请稍候再试:{e}') from e
         
 
+    def update_working(self, card_uid, space, end_time, reward_fund, status):
+        cursor = self.conn.cursor()
 
+        sql = working_interact_sql()[5]
+
+        try:
+            cursor.execute(sql, (space, end_time, reward_fund, status, card_uid))
+            
+        except sqlite3.Error as e:
+            raise Database_error(f'操作失败，数据库连接错误，请稍候再试:{e}') from e
 
 
 

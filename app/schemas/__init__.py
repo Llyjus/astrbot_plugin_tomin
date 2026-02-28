@@ -1,6 +1,7 @@
 from app.schemas.errors import *
 from app.schemas.schemas import *
 from app.schemas.inter_util.text_dict import *
+from app.schemas.inter_util.place_dict import place_out_dict
 
 
 __all__ = ['Gacha_input', 'error_message', 'Card_input','Funds_reward_input',
@@ -10,4 +11,4 @@ __all__ = ['Gacha_input', 'error_message', 'Card_input','Funds_reward_input',
                'Card_already_exists', 'Card_not_found', 'Cooldown',
                'band_dict', 'help_dict', 'fund_map',
                'Already_in_working', 'Timeout', 'Request_error',
-               'Take_a_break']
+               'Take_a_break', 'place_out_dict', 'Working_card_limit']

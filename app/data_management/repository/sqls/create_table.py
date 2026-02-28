@@ -96,6 +96,7 @@ CREATE TABLE IF NOT EXISTS work_place(
     space TEXT,
     end_time INT,
     reward_fund INT,
+    status TEXT,
 
     PRIMARY KEY (card_uid),
     FOREIGN KEY (card_uid) REFERENCES cards(card_uid) ON DELETE CASCADE

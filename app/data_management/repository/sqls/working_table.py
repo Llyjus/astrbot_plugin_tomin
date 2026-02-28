@@ -1,8 +1,8 @@
 
 
 WORKING_INSERT_SQL = '''
-        INSERT INTO work_place (card_uid, space, end_time, reward_fund)
-        VALUES (?, ?, ?, ?);    
+        INSERT INTO work_place (card_uid, space, end_time, reward_fund, status)
+        VALUES (?, ?, ?, ?, ?);    
 '''
 
 WORKING_SEARCH_BY_USER_SQL = '''
@@ -29,5 +29,11 @@ WORKING_SPACE_SEARCH_SQL = '''
 WORKING_DELETE_SQL = '''
         DELETE
         FROM work_place
+        WHERE card_uid = ?;
+'''
+
+WORKING_UPDATE_SQL = '''
+        UPDATE work_place
+        SET space = ?, end_time = ?, reward_fund = ?, status = ?
         WHERE card_uid = ?;
 '''

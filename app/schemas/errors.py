@@ -65,7 +65,8 @@ class Already_in_working(App_error):
 class Take_a_break(App_error):
      pass
 
-
+class Working_card_limit(App_error):
+     pass
 
 
 
