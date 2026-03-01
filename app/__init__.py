@@ -21,5 +21,5 @@ __all__=['normal_gacha', 'free_gacha',
          'Renderer_html_to_png_bytes',
 
 
-         'place_dict', 'Working_input',
-         ]
+         'place_dict', 'Working_input', 'help_simple_list'
+         ]  

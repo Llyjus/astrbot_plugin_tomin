@@ -101,6 +101,7 @@ help_dict = {'dk':dk_text, '打卡':dk_text, 'qd':dk_text, '签到':dk_text,
              '资金':zj_text, 'zj':zj_text,
              'zs':zs_text, '赠送': zs_text}
 
+help_simple_list = [hp_text, dk_text, zm_text, ckp_text, ckpj_text, cs_text, zj_text, zs_text]
 
 
 band_dict = {'ppp':'popipa', 'popipa':'popipa',

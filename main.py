@@ -6,7 +6,7 @@ from pydantic import ValidationError
 
 from astrbot.api.event import filter, AstrMessageEvent, MessageEventResult
 from astrbot.api.star import Context, Star, register, StarTools
-from astrbot.api.message_components import At, Plain, Node, Plain, Image
+from astrbot.api.message_components import At, Plain, Node, Plain, Image, Nodes
 from astrbot.api import logger
 
 import os, sys
@@ -71,18 +71,19 @@ class TominPlugin(Star):
         text = event.message_obj.message_str
         text = re.sub(r'^(帮助|help|hp|bz)\s*', '', text).strip()
 
-
+        help_list = []
         if text in help_dict:
+            help_list.append(help_dict[text])
             result = help_dict[text]
         else:
             result = help_dict['help']
-
+            help_list = help_simple_list
         if self.bot_id:
-            node = Node(uin = self.bot_id, 
-                        name = self.bot_name, 
-                        content = [Plain(result)])
+            help_list = [Nodes([Node(uin = self.bot_id, 
+                                        name = self.bot_name, 
+                                        content = [Plain(text)]) for text in help_list])]
             
-            yield event.chain_result([node])
+            yield event.chain_result(help_list)
         else:
             yield event.plain_result(result)
 

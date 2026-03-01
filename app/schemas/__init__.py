@@ -12,4 +12,4 @@ __all__ = ['Gacha_input', 'error_message', 'Card_input','Funds_reward_input',
                'band_dict', 'help_dict', 'fund_map',
                'Already_in_working', 'Timeout', 'Request_error',
                'Take_a_break', 'place_dict', 'place_out_dict', 'Working_card_limit', 
-               'Working_input']
+               'Working_input', 'help_simple_list']
