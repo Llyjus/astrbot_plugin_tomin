@@ -20,7 +20,6 @@ app_dict = {
     'sell_cards_by_rarity_app': sell_cards_by_rarity_app,
     'card_working_status_app': card_working_status_app,
     'start_working_app': start_working_app,
-    'card_working_status_app': card_working_status_app,
     'user_working_status_app': user_working_status_app,
     'stop_working_app': stop_working_app,
     'finish_working_app': finish_working_app,

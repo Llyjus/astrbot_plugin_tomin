@@ -57,8 +57,9 @@ def start_working_app(user_id,
                                   end_time=end_time, 
                                   reward_fund=reward_fund, 
                                   time_now=time_now)
-        
+  
     result = user_working_status_app(user_id, db_path=db_path, connect=connect)
+
     if result['return_type'] == 'html':
         result['content']['title'] = f'派遣工作成功'
         result['content']['intro'] = f'{card["character"]} 已经开始工作了！目前正在工作和休息的卡牌如下：'
@@ -93,11 +94,11 @@ def user_working_status_app(user_id, *,
                 if time_diff <= 0:
                     status_txt = '工作完成，正在等待结算中...'
                 else:
-                    status_txt = f'工作中，剩余时间：{time_diff//3600}小时{(time_diff%3600)//60}分钟'
+                    status_txt = f'工作中'
                 work_sign = True
             elif status == 'resting':
                 if time_diff > 0:
-                    status_txt = f'休息中，剩余时间：{(time_diff)//3600}小时{((time_diff)%3600)//60}分钟'
+                    status_txt = f'休息中\n剩余时间：{(time_diff)//3600}小时{((time_diff)%3600)//60}分钟'
                 else:
                     continue
 
@@ -110,6 +111,7 @@ def user_working_status_app(user_id, *,
             稀有度：{card['rarity']}
             id：{card['card_id']}
             状态：{status_txt}
+            剩余时间：{f'{(time_diff)//3600}小时{((time_diff)%3600)//60}分钟' if time_diff > 0 else '空闲中~'}
             工作地点：{space if work_sign and space else '无'}
             工资：{card['reward_fund'] if (work_sign and card['reward_fund'] != 0) else '无'}"""
 
@@ -123,15 +125,13 @@ def user_working_status_app(user_id, *,
              f"工资：{card['reward_fund'] if (work_sign and card['reward_fund'] != 0) else '无'}"
 ])
         if not cards_li:
-            result = {'return_type':'str',
-                        'txt':f'目前没有卡牌在工作和休息了哦！',
-                        'user_id': user_id}
+            raise Card_not_found('目前没有卡牌在工作和休息了哦！')
         else:
             result = {'return_type':'html',
                     'temp_type':'cards',
                     'content':{'cards':cards_li,
-                                'title':f'卡牌工作状态',
-                                'intro':f'目前正在工作和休息的卡牌如下：'},
+                                'title':'卡牌工作状态',
+                                'intro':'目前正在工作和休息的卡牌如下：'},
                     'txt':cards_txt,
                     'user_id': user_id}
 
@@ -160,11 +160,11 @@ def card_working_status_app(user_id, card_id, *, db_path=None, connect=None):
         if time_diff <= 0:
             status_txt = '工作完成，正在等待结算中...'
         else:
-            status_txt = f'工作中，剩余时间：{time_diff//3600}小时{(time_diff%3600)//60}分钟'
+            status_txt = f'工作中\n剩余时间：{time_diff//3600}小时{(time_diff%3600)//60}分钟'
         work_sign = True
     elif status == 'resting':
         if time_diff > 0:
-            status_txt = f'休息中，剩余时间：{(time_diff)//3600}小时{((time_diff)%3600)//60}分钟'
+            status_txt = f'休息中\n剩余时间：{(time_diff)//3600}小时{((time_diff)%3600)//60}分钟'
         else:
             status_txt = '空闲中，正在等待新工作...'
 
@@ -223,13 +223,14 @@ def stop_working_app(user_id, card_id, *, db_path=None, connect=None, time_now=N
         card_uid = card['card_uid']
 
         wkg_ser.stop_working(card_uid, current_time=time_now)
-        
-    result = user_working_status_app(user_id, db_path=db_path, connect=connect)
-    result['txt'] = f"{card['character']} 已经停止工作了！" + result['txt']
-    if result['return_type'] == 'html':
-        result['content']['title'] = f'停止工作成功'
-        result['content']['intro'] = f'{card["character"]} 已经停止工作了！目前正在工作和休息的卡牌如下：'
-
+    try:    
+        result = user_working_status_app(user_id, db_path=db_path, connect=connect)
+        result['txt'] = f"{card['character']} 已经停止工作了！" + result['txt']
+        if result['return_type'] == 'html':
+            result['content']['title'] = f'停止工作成功'
+            result['content']['intro'] = f'{card["character"]} 已经停止工作了！目前正在工作和休息的卡牌如下：'
+    except Card_not_found:
+        raise Card_not_found(f'{card["character"]} 已经停止工作了！目前没有卡牌在工作和休息了哦！')
     return result
 
 
@@ -254,11 +255,12 @@ def finish_working_app(user_id, *, db_path=None, connect=None, time_now=None):
     cards = ', '.join(finish_result['cards_finished'])
     fund_gain = finish_result['wages']
     fund_total = repo.search_user(user_id)['fund']
-    result = user_working_status_app(user_id, db_path=db_path, connect=connect, current_time=time_now)
-    print(result)
-    # Update result( card who finished must be resting so no "no card" branch)
-    result['content']['title'] = '工作结束'
-    result['content']['intro'] = f'{cards}结束了工作，获得了{fund_gain}资金，目前总资金为{fund_total}。还在工作和休息的卡牌如下：'
-    result['txt'] = f'{cards}结束了工作，获得了{fund_gain}资金，目前总资金为{fund_total}。还在工作和休息的卡牌如下：'
-
+    try:
+        result = user_working_status_app(user_id, db_path=db_path, connect=connect, current_time=time_now)
+        # Update result( card who finished must be resting so no "no card" branch)
+        result['content']['title'] = '工作结束'
+        result['content']['intro'] = f'{cards}结束了工作，获得了{fund_gain}资金，目前总资金为{fund_total}。还在工作和休息的卡牌如下：'
+        result['txt'] = f'{cards}结束了工作，获得了{fund_gain}资金，目前总资金为{fund_total}。还在工作和休息的卡牌如下：'
+    except Card_not_found:
+        raise Card_not_found(f'{cards}结束了工作，获得了{fund_gain}资金，目前总资金为{fund_total}。目前没有卡牌在工作和休息了哦！')
     return result

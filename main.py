@@ -95,6 +95,7 @@ class TominPlugin(Star):
     @filter.regex(r'(招募|zm)\s*(\d+)?(?:\s*[xX ]\s*(\d+))?$')
     async def draw_card(self, event: AstrMessageEvent) ->AsyncGenerator[str, None]:
         """招募指令"""
+        result_plain = {}
 
         message_text = event.message_obj.message_str
 
@@ -139,7 +140,7 @@ class TominPlugin(Star):
 
 
             # gacha
-            result = await app_inter(
+            result_plain = await app_inter(
                                     "normal_gacha",
                                     {"user_id": user_id, "fund_spent": fund_spent, "times": times},
                                     renderer=self.renderer,
@@ -151,28 +152,27 @@ class TominPlugin(Star):
         )
             
             #check error before returning result
-            if result['error']:
-                logger.error(result['error'])
-            if result['return_type'] == 'png':
+            if result_plain.get('error'):
+                logger.error(result_plain['error'])
+            if result_plain.get('return_type') == 'png':
 
                 try:
                     path = self.picture_path / f"{message_id}.png"
-                    path.write_bytes(result['content'])
+                    path.write_bytes(result_plain['content'])
                     yield event.image_result(str(path))
                 finally:
                     path.unlink(missing_ok=True)
                 return
-            
             else:
-                result = result['content']
-
-        except Invalid_input as e:
-            result = str(e)
+                result = result_plain['content']
 
         except ValidationError as e:
             result = error_message(e)
+        except Exception as e:
+            result = str(e)
 
-        if self.bot_id and not result['error_sign']:
+
+        if self.bot_id and result_plain.get('error_sign'):
             node = Node(uin = self.bot_id, 
                         name = self.bot_name, 
                         content = [Plain(result)])
@@ -189,6 +189,7 @@ class TominPlugin(Star):
     @filter.command("打卡", alias={'dk', '签到', 'qd'})
     async def sign_in(self, event: AstrMessageEvent) ->AsyncGenerator[str, None]:
         """打卡指令"""
+        result_plain = {}
         try:
 
             self.cleaner.cleaning_check()
@@ -206,7 +207,7 @@ class TominPlugin(Star):
 
             # gacha
 
-            result = await app_inter(
+            result_plain = await app_inter(
             "free_gacha",     
             {"user_id": user_id},
             renderer=self.renderer,
@@ -218,25 +219,27 @@ class TominPlugin(Star):
             )
 
 
-            if result['error']:
-                logger.error(result['error'])
-            if result['return_type'] == 'png':
+            if result_plain.get('error'):
+                logger.error(result_plain['error'])
+            if result_plain.get('return_type') == 'png':
                 try:
                     path = self.picture_path / f"{message_id}.png"
-                    path.write_bytes(result['content'])
+                    path.write_bytes(result_plain['content'])
                     yield event.image_result(str(path))
                 finally:
                     path.unlink(missing_ok=True)
                 return
             else:
-                result = result['content']
+                result = result_plain['content']
 
 
         except ValidationError as e:
-            
             result = error_message(e)
+        except Exception as e:
+            result = str(e)
 
-        if self.bot_id and not result['error_sign']:
+
+        if self.bot_id and result_plain.get('error_sign'):
             node = Node(uin = self.bot_id, 
                         name = self.bot_name, 
                         content = [Plain(result)])
@@ -250,6 +253,7 @@ class TominPlugin(Star):
     @filter.regex(r'^(查卡牌|ckp)\s*(\d+)?\s*$')
     async def search_card(self, event: AstrMessageEvent) ->AsyncGenerator[str, None]:
         """查卡指令"""
+        result_plain = {}
         try:
             self.cleaner.cleaning_check()
 
@@ -262,7 +266,7 @@ class TominPlugin(Star):
             if text:
                 if text.group(2):
                     card_id = int(text.group(2))
-                    result = await app_inter('search_card_app', 
+                    result_plain = await app_inter('search_card_app', 
                                              {'user_id': user_id, 'card_id': card_id}, 
                                              renderer=self.renderer,
                                              message_id=message_id,
@@ -275,34 +279,36 @@ class TominPlugin(Star):
 
                         
                 else:
-                    result = {'return_type':'str',
+                    result_plain = {'return_type':'str',
                               'content': '输入格式错误！请查询helpckp来找到命令。',
                               'error': ''}
             else:
-                result = {'return_type':'str',
+                result_plain = {'return_type':'str',
                           'content': '请输入参数！若要查找全部卡牌请输入ckpj。',
                           'error': ''}
             
-            if result['error']:
-                logger.error(result['error'])
-            if result['return_type'] == 'png':
+            if result_plain.get('error'):
+                logger.error(result_plain['error'])
+            if result_plain.get('return_type') == 'png':
                 try:
                     path = self.picture_path / f"{message_id}.png"
-                    path.write_bytes(result['content'])
+                    path.write_bytes(result_plain['content'])
                     yield event.image_result(str(path))
                 finally:
                     path.unlink()
                 return
             else:
-                result = result['content']
+                result = result_plain['content']
 
 
 
         except ValidationError as e:
             result = error_message(e)
+        except Exception as e:
+            result = str(e)
 
 
-        if self.bot_id and not result['error_sign']:
+        if self.bot_id and result_plain.get('error_sign'):
             node = Node(uin = self.bot_id, 
                         name = self.bot_name, 
                         content = [Plain(result)])
@@ -319,6 +325,7 @@ class TominPlugin(Star):
     @filter.regex(r'^(查卡牌集|ckpj)\s*([^\d\s]+)?\s*(\d+)?\s*$')
     async def search_cards(self, event: AstrMessageEvent) ->AsyncGenerator[str, None]:
         """查卡指令"""
+        result_plain = {}
         try:
             self.cleaner.cleaning_check()
 
@@ -330,7 +337,7 @@ class TominPlugin(Star):
             text = re.sub(r'^(查卡牌集|ckpj)\s*', '', message).strip()
             
             if text == '':
-                result = await app_inter(
+                result_plain = await app_inter(
                     "search_cards_app",
                     {"user_id": user_id},
                     renderer=self.renderer,
@@ -356,7 +363,7 @@ class TominPlugin(Star):
                             inputs = Card_input(band=text.group(1), rarity=text.group(2))
                             band, rarity = inputs.band, inputs.rarity
 
-                            result = await app_inter(
+                            result_plain = await app_inter(
                                 "search_cards_both_band_rarity",  
                                 {"user_id": user_id, "band": band, "rarity": rarity},
                                 renderer=self.renderer,
@@ -372,7 +379,7 @@ class TominPlugin(Star):
                             inputs = Card_input(band=text.group(1))
                             band = inputs.band
 
-                            result = await app_inter(
+                            result_plain = await app_inter(
                             "search_cards_band_app",  
                             {"user_id": user_id, "band": band},
                             renderer=self.renderer,
@@ -389,7 +396,7 @@ class TominPlugin(Star):
                         inputs = Card_input(rarity=text.group(2))
                         rarity = inputs.rarity
 
-                        result = await app_inter(
+                        result_plain = await app_inter(
                             "search_cards_rarity_app", 
                             {"user_id": user_id, "rarity": rarity},
                             renderer=self.renderer,
@@ -402,28 +409,31 @@ class TominPlugin(Star):
 
                 
                 else:
-                    result = {'return_type':'str',
+                    result_plain = {'return_type':'str',
                               'content': '输入格式错误！请查询helpckpj来找到命令。',
                               'error': ''}
                     
-            if result['error']:
-                logger.error(result['error'])
-            if result['return_type'] == 'png':
+            if result_plain.get('error'):
+                logger.error(result_plain['error'])
+            if result_plain.get('return_type') == 'png':
                 try:
                     path = self.picture_path / f"{message_id}.png"
-                    path.write_bytes(result['content'])
+                    path.write_bytes(result_plain['content'])
                     yield event.image_result(str(path))
                 finally:
                     path.unlink(missing_ok=True)
                 return
             else:
-                result = result['content']
+                result = result_plain['content']
 
 
         except ValidationError as e:
             result = error_message(e)
+        except Exception as e:
+            result = str(e)
 
-        if self.bot_id and not result['error_sign']:
+
+        if self.bot_id and result_plain.get('error_sign'):
             node = Node(uin = self.bot_id, 
                         name = self.bot_name, 
                         content = [Plain(result)])
@@ -440,6 +450,7 @@ class TominPlugin(Star):
     @filter.command('资金', alias={'zj'})
     async def fund_check(self, event:AstrMessageEvent) ->AsyncGenerator[str, None]:
         '''查资金指令'''
+        result_plain = {}
         try:
             self.cleaner.cleaning_check()
 
@@ -449,7 +460,7 @@ class TominPlugin(Star):
             user_id = event.get_sender_id()
             user_id = str(user_id)
 
-            result = await app_inter(
+            result_plain = await app_inter(
                 "fund_checker", 
                 {"user_id": user_id},
                 renderer=self.renderer,
@@ -460,24 +471,26 @@ class TominPlugin(Star):
                 request_return_type=self.return_type,
             )
 
-            if result['error']:
-                logger.error(result['error'])
-            if result['return_type'] == 'png':
+            if result_plain.get('error'):
+                logger.error(result_plain['error'])
+            if result_plain.get('return_type') == 'png':
                 try:
                     path = self.picture_path / f"{message_id}.png"
-                    path.write_bytes(result['content'])
+                    path.write_bytes(result_plain['content'])
                     yield event.image_result(str(path))
                 finally:
                     path.unlink(missing_ok=True)
                 return
             else:
-                result = result['content']
+                result = result_plain['content']
         
         except ValidationError as e:
             result = error_message(e)
+        except Exception as e:
+            result = str(e)
 
 
-        if self.bot_id and not result['error_sign']:
+        if self.bot_id and result_plain.get('error_sign'):
             node = Node(uin = self.bot_id, 
                         name = self.bot_name, 
                         content = [Plain(result)])
@@ -496,6 +509,7 @@ class TominPlugin(Star):
     @filter.regex(r'^(出售|cs).*')
     async def sell_card(self, event: AstrMessageEvent) ->AsyncGenerator[str, None]:
         """出售指令"""
+        result_plain = {}
         try:
             self.cleaner.cleaning_check()
 
@@ -512,7 +526,7 @@ class TominPlugin(Star):
 
                 _test = Card_input(card_id=card_id)
 
-                result = await app_inter(
+                result_plain = await app_inter(
                     "sell_card_app",
                     {"user_id": user_id, "card_id": card_id},
                     renderer=self.renderer,
@@ -525,28 +539,31 @@ class TominPlugin(Star):
 
 
             else:
-                result = {'return_type':'str',
+                result_plain = {'return_type':'str',
                           'content': '参数格式错误，请查阅hpcs。',
                           'error': ''}
                 
-            if result['error']:
-                logger.error(result['error'])
-            if result['return_type'] == 'png':
+            if result_plain.get('error'):
+                logger.error(result_plain['error'])
+            if result_plain.get('return_type') == 'png':
                 try:
                     path = self.picture_path / f"{message_id}.png"
-                    path.write_bytes(result['content'])
+                    path.write_bytes(result_plain['content'])
                     yield event.image_result(str(path))
                 finally:
                     path.unlink(missing_ok=True)
                 return
             else:
-                result = result['content']
+                result = result_plain['content']
 
 
         except ValidationError as e:
             result = error_message(e)
+        except Exception as e:
+            result = str(e)
 
-        if self.bot_id and not result['error_sign']:
+
+        if self.bot_id and result_plain.get('error_sign'):
             node = Node(uin = self.bot_id, 
                         name = self.bot_name, 
                         content = [Plain(result)])
@@ -563,6 +580,7 @@ class TominPlugin(Star):
     @filter.regex(r'^(稀有度出售|xcs|x出售).*')
     async def sell_cards_rarity(self, event: AstrMessageEvent) ->AsyncGenerator[str, None]:
         """出售指令"""
+        result_plain = {}
         try:
             self.cleaner.cleaning_check()
 
@@ -580,7 +598,7 @@ class TominPlugin(Star):
                 _test = Card_input(rarity=rarity)
 
 
-                result = await app_inter(
+                result_plain = await app_inter(
                     "sell_cards_by_rarity_app",
                     {"user_id": user_id, "rarity": rarity},
                     renderer=self.renderer,
@@ -593,30 +611,31 @@ class TominPlugin(Star):
 
 
             else:
-                result = {'return_type':'str',
+                result_plain = {'return_type':'str',
                           'content': '参数格式错误，请查阅hpxcs。',
                           'error': ''}
                 
-            if result['error']:
-                logger.error(result['error'])
-            if result['return_type'] == 'png':
+            if result_plain.get('error'):
+                logger.error(result_plain['error'])
+            if result_plain.get('return_type') == 'png':
                 try:
                     path = self.picture_path / f"{message_id}.png"
-                    path.write_bytes(result['content'])
+                    path.write_bytes(result_plain['content'])
                     yield event.image_result(str(path))
                 finally:
                     path.unlink(missing_ok=True)
                 return
             else:
-                result = result['content']
+                result = result_plain['content']
             
 
 
         except ValidationError as e:
             result = error_message(e)
+        except Exception as e:
+            result = str(e)
 
-
-        if self.bot_id and not result['error_sign']:
+        if self.bot_id and result_plain.get('error_sign'):
             node = Node(uin = self.bot_id, 
                         name = self.bot_name, 
                         content = [Plain(result)])
@@ -632,6 +651,7 @@ class TominPlugin(Star):
     @filter.regex(r'^(赠送|zs).*$')
     async def give_card_away(self, event: AstrMessageEvent) ->AsyncGenerator[str, None]:
         """出售指令"""
+        result_plain = {}
         try:
             self.cleaner.cleaning_check()
 
@@ -649,7 +669,7 @@ class TominPlugin(Star):
                 accepter_id = match.group(2)
                 card_id = int(match.group(3))
 
-                result = await app_inter(
+                result_plain = await app_inter(
                     "give_away_cards_app",
                     {"giver_id": giver_id, "accepter_id": accepter_id, "card_id": card_id},
                     renderer=self.renderer,
@@ -668,7 +688,7 @@ class TominPlugin(Star):
                 if match:
                     card_id = int(match.group(1))
 
-                result = await app_inter(
+                result_plain = await app_inter(
                     "give_away_cards_app",
                     {"giver_id": giver_id, "accepter_id": accepter_id, "card_id": card_id},
                     renderer=self.renderer,
@@ -681,29 +701,116 @@ class TominPlugin(Star):
 
 
             else:
-                result = {'return_type':'str',
+                result_plain = {'return_type':'str',
                             'content': '参数格式错误，请查阅hpzs。',
                             'error': ''}
 
-            if result['error']:
-                logger.error(result['error'])
-            if result['return_type'] == 'png':
+            if result_plain.get('error'):
+                logger.error(result_plain['error'])
+            if result_plain.get('return_type') == 'png':
                 try:
                     path = self.picture_path / f"{message_id}.png"
-                    path.write_bytes(result['content'])
+                    path.write_bytes(result_plain['content'])
                     yield event.image_result(str(path))
                 finally:
                     path.unlink(missing_ok=True)
                 return
             else:
-                result = result['content']
+                result = result_plain['content']
 
 
         except ValidationError as e:
             result = error_message(e)
+        except Exception as e:
+            result = str(e)
 
+
+        if self.bot_id and result_plain.get('error_sign'):
+            node = Node(uin = self.bot_id, 
+                        name = self.bot_name, 
+                        content = [Plain(result)])
             
-        if self.bot_id and not result['error_sign']:
+            yield event.chain_result([node])
+        else:
+            yield event.plain_result(result)
+
+    @filter.regex(r'^(打工|dg).*$')
+    async def start_working(self, event: AstrMessageEvent) ->AsyncGenerator[str, None]:
+        """工作指令"""
+        result_plain = {}
+        try:
+            self.cleaner.cleaning_check()
+
+            message_id = event.message_obj.message_id
+            message = event.message_obj.message_str
+            user_id = event.get_sender_id()
+            
+
+            user_id = str(user_id)
+
+            text = re.sub(r'^(打工|dg)\s*', '', message).strip()
+            
+            if text == '':
+                result_plain = {'return_type':'str',
+                          'content': '请输入参数！请查询hpdg来找到命令格式。',
+                          'error': ''}
+            else:
+                text = re.match(r'^(\d+)\s*([^\d\s]+)\s*(\d+)?\s*$', text)
+                if text:
+                    card_id, place, hours = text.group(1), text.group(2), text.group(3)
+                    if hours is None:
+                            hours = 3
+                    if card_id and place and hours:
+                        working_input = Working_input(card_id=text.group(1), place=text.group(2), hours=text.group(3))
+                        card_id, place, hours = working_input.card_id, working_input.place, working_input.hours
+
+
+
+
+                        result_plain = await app_inter(
+                            "start_working_app",
+                            {"user_id": user_id, 
+                            "card_id": card_id, 
+                            "place": place, 
+                            "hours": hours},
+                            renderer=self.renderer,
+                            message_id=message_id,
+                            db_path=self.data_path,
+                            avatar_path=self.avatar_path,
+                            platform=self.platform,
+                            request_return_type=self.return_type,
+                        )
+                    else:
+                        result_plain = {'return_type':'str',
+                                'content': '输入格式错误！请查询hpgk来找到命令格式。',
+                                'error': ''}
+
+
+                else:
+                    result_plain = {'return_type':'str',
+                              'content': '输入格式错误！请查询hpgk来找到命令格式。',
+                              'error': ''}
+
+            if result_plain.get('error'):
+                logger.error(result_plain['error'])
+            if result_plain.get('return_type') == 'png':
+                try:
+                    path = self.picture_path / f"{message_id}.png"
+                    path.write_bytes(result_plain['content'])
+                    yield event.image_result(str(path))
+                finally:
+                    path.unlink(missing_ok=True)
+                return
+            else:
+                result = result_plain['content']
+
+        except ValidationError as e:
+            result = error_message(e)
+        except Exception as e:
+            result = str(e)
+
+
+        if self.bot_id and result_plain.get('error_sign'):
             node = Node(uin = self.bot_id, 
                         name = self.bot_name, 
                         content = [Plain(result)])
@@ -713,15 +820,175 @@ class TominPlugin(Star):
             yield event.plain_result(result)
 
 
+    @filter.command('下班', alias={'xb'})
+    async def end_working(self, event: AstrMessageEvent) ->AsyncGenerator[str, None]:
+        """下班指令"""
+        result_plain = {}
+        try:
+            self.cleaner.cleaning_check()
+
+            message_id = event.message_obj.message_id
+            user_id = event.get_sender_id()
+            user_id = str(user_id)
+
+            result_plain = await app_inter(
+                "finish_working_app",
+                {"user_id": user_id},
+                renderer=self.renderer,
+                message_id=message_id,
+                db_path=self.data_path,
+                avatar_path=self.avatar_path,
+                platform=self.platform,
+                request_return_type=self.return_type,
+            )
+
+            if result_plain.get('error'):
+                logger.error(result_plain['error'])
+            if result_plain.get('return_type') == 'png':
+                try:
+                    path = self.picture_path / f"{message_id}.png"
+                    path.write_bytes(result_plain['content'])
+                    yield event.image_result(str(path))
+                finally:
+                    path.unlink(missing_ok=True)
+                return
+            else:
+                result = result_plain['content']
+        except ValidationError as e:
+            result = error_message(e)
+        except Exception as e:
+            result = str(e)
 
 
+        if self.bot_id and result_plain.get('error_sign'):
+            node = Node(uin = self.bot_id, 
+                        name = self.bot_name, 
+                        content = [Plain(result)])
+            
+            yield event.chain_result([node])
+        else:
+            yield event.plain_result(result)
 
+
+    @filter.command('工作状态', alias={'gzt', 'gzzt'})
+    async def working_status(self, event: AstrMessageEvent) ->AsyncGenerator[str, None]:
+        """工作状态指令"""
+        result_plain = {}
+        try:
+            self.cleaner.cleaning_check()
+
+            message_id = event.message_obj.message_id
+            user_id = event.get_sender_id()
+            user_id = str(user_id)
+
+            result_plain = await app_inter(
+                "user_working_status_app",
+                {"user_id": user_id},
+                renderer=self.renderer,
+                message_id=message_id,
+                db_path=self.data_path,
+                avatar_path=self.avatar_path,
+                platform=self.platform,
+                request_return_type=self.return_type,
+            )
+
+            if result_plain.get('error'):
+                logger.error(result_plain['error'])
+            if result_plain.get('return_type') == 'png':
+                try:
+                    path = self.picture_path / f"{message_id}.png"
+                    path.write_bytes(result_plain['content'])
+                    yield event.image_result(str(path))
+                finally:
+                    path.unlink(missing_ok=True)
+                return
+            else:
+                result = result_plain['content']
+
+        except ValidationError as e:
+            result = error_message(e)
+        except Exception as e:
+            result = str(e)
+
+
+        if self.bot_id and result_plain.get('error_sign'):
+            node = Node(uin = self.bot_id, 
+                        name = self.bot_name, 
+                        content = [Plain(result)])
+            
+            yield event.chain_result([node])
+        else:
+            yield event.plain_result(result)
+
+    
+    @filter.regex(r'^(卡牌工作状态|kpgzzt|kgzt).*')
+    async def card_working_status(self, event: AstrMessageEvent) ->AsyncGenerator[str, None]:
+        """卡牌工作状态指令"""
+        result_plain = {}
+        try:
+            self.cleaner.cleaning_check()
+
+            message_id = event.message_obj.message_id
+            message = event.message_obj.message_str
+            user_id = event.get_sender_id()
+            user_id = str(user_id)
+
+            text = re.sub(r'^(卡牌工作状态|kpgzzt|kgzt)\s*', '', message).strip()
+            if text:
+                if text.isdigit():
+                    card_id = int(text)
+
+                    result_plain = await app_inter(
+                        "card_working_status_app",
+                        {"user_id": user_id, "card_id": card_id},
+                        renderer=self.renderer,
+                        message_id=message_id,
+                        db_path=self.data_path,
+                        avatar_path=self.avatar_path,
+                        platform=self.platform,
+                        request_return_type=self.return_type,
+                    )
+
+            else:
+                result_plain = {'return_type':'str',
+                          'content': '输入格式错误！请查询hpkpzt来找到命令格式。',
+                          'error': ''}
+                
+            if result_plain.get('error'):
+                logger.error(result_plain['error'])
+            if result_plain.get('return_type') == 'png':
+                try:
+                    path = self.picture_path / f"{message_id}.png"
+                    path.write_bytes(result_plain['content'])
+                    yield event.image_result(str(path))
+                finally:
+                    path.unlink(missing_ok=True)
+                return
+            else:
+                result = result_plain['content']
+
+        except ValidationError as e:
+            result = error_message(e)
+        except Exception as e:
+            result = str(e)
+
+
+        if self.bot_id and result_plain.get('error_sign'):
+            node = Node(uin = self.bot_id, 
+                        name = self.bot_name, 
+                        content = [Plain(result)])
+            
+            yield event.chain_result([node])
+        else:
+            yield event.plain_result(result)
+    
 
 
     @filter.permission_type(filter.PermissionType.ADMIN)
     @filter.regex(r'^(全服奖励|qfjl).*')
     async def gift(self, event: AstrMessageEvent):
 
+        result_plain = {}
         """全服奖励指令"""
         message_id = event.message_obj.message_id
 
@@ -735,7 +1002,7 @@ class TominPlugin(Star):
 
             _check = Funds_reward_input(fund_amount=text)
 
-            result = await app_inter(
+            result_plain = await app_inter(
                 "funds_giving",
                 {"amount": text},
                 renderer=self.renderer,
@@ -747,30 +1014,29 @@ class TominPlugin(Star):
             )
 
 
-            if result['error']:
-                logger.error(result['error'])
-            if result['return_type'] == 'png':
+            if result_plain.get('error'):
+                logger.error(result_plain['error'])
+            if result_plain.get('return_type') == 'png':
                 try:
                     path = self.picture_path / f"{message_id}.png"
-                    path.write_bytes(result['content'])
+                    path.write_bytes(result_plain['content'])
                     yield event.image_result(str(path))
                 finally:
                     path.unlink(missing_ok=True)
                 return
             
             else:
-                result = result['content']
+                result = result_plain['content']
 
 
 
+        except ValidationError as e:
+            result = error_message(e)
         except Exception as e:
             result = str(e)
-            logger.error(f"Unexpected error in sign_in: {e}")
-
-        
 
 
-        if self.bot_id and not result['error_sign']:
+        if self.bot_id and result_plain.get('error_sign'):
             node = Node(uin = self.bot_id, 
                         name = self.bot_name, 
                         content = [Plain(result)])

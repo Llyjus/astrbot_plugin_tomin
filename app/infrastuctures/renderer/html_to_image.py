@@ -26,7 +26,7 @@ import asyncio
 
 class Renderer_html_to_png_bytes:
 
-    def __init__(self, sem:int = 2, width: int = 720, wait_ms: int = 100, timeout_s: int = 15):
+    def __init__(self, sem:int = 2, width: int = 1400, wait_ms: int = 100, timeout_s: int = 15):
         self.width = width
         self.wait_ms = wait_ms
         # make sure the max concurrency of rendering is sem
@@ -68,7 +68,7 @@ class Renderer_html_to_png_bytes:
 
     async def _single_render(self, html: str) -> bytes:
         context = await self._browser.new_context(
-            viewport={"width": self.width, "height": 10},
+            viewport={"width": self.width, "height": 1080},
         )
 
         page = await context.new_page()
@@ -86,7 +86,14 @@ class Renderer_html_to_png_bytes:
             height = await page.evaluate("() => Math.ceil(document.documentElement.scrollHeight)")
             await page.set_viewport_size({"width": self.width, "height": height})
 
-            return await page.screenshot(full_page=True, type="png")
+            # give some extra time for font loading and rendering
+            await page.wait_for_timeout(100)
+            
+            # 【核心修改】使用 clip 严格限制截图只截取 x=0 到 width=720 的区域，切断所有右侧可能溢出的紫边！
+            return await page.screenshot(
+                clip={"x": 0, "y": 0, "width": self.width, "height": height},
+                type="png"
+            )
         finally:
             await page.close()
             await context.close()

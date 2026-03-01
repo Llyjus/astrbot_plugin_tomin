@@ -18,5 +18,8 @@ __all__=['normal_gacha', 'free_gacha',
 
          'app_inter',
 
-         'Renderer_html_to_png_bytes'
+         'Renderer_html_to_png_bytes',
+
+
+         'place_dict', 'Working_input',
          ]
