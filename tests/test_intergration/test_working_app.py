@@ -39,13 +39,12 @@ def test_working_app(memory_db_connection: Repository):
     assert "结算" in result3['txt']
     assert "ksm" in result3['txt']
 
-
-    result4 = stop_working_app(user_id=user1, 
-                                card_id=1, 
-                                time_now=0, 
-                                connect=repo.conn)
+    with raises(Card_not_found, match='ksm 已经停止工作了！目前没有卡牌在工作和休息了哦！') as error1:
+        result4 = stop_working_app(user_id=user1, 
+                                    card_id=1, 
+                                    time_now=0, 
+                                    connect=repo.conn)
         
-    assert "已经停止工作了！" in result4['txt']
 
 
 
