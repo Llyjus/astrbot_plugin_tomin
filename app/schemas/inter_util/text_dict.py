@@ -11,6 +11,10 @@ Tomin指令列表：
     '出售'/'cs'
     '资金'/'zj'
     '赠送'/'zs'
+    '打工'/'dg'
+    '下班'/'xb'
+    '工作状态'/'gzzt'/'gzt'
+    '卡牌工作状态'/'kpgzzt'/'kgzt'
     本机器人支持不使用空格分隔指令和参数；
     输入‘帮助 [指令名称]’可查看对应指令的使用说明。例如：
         帮助 zm
@@ -92,6 +96,49 @@ zs_text = '''
 
 '''
 
+dg_text = '''
+使用“打工 [卡牌id] [地点] [时长]”或“dg [卡牌id] [地点] [时长]”可以让卡牌开始打工。
+
+地点关键词包括：
+SPACE：space；
+CiRCLE：circle；
+RiNG：ring；
+面包房：Yamabuki_Bakery、面包房、mbf、山吹面包房、山吹、ymbk；
+宇田川家的拉面馆：wutagawa_laamen、wtgw、wutagawa、拉面、拉面馆、lm、lmg；
+六花家的温泉旅馆：rokka_onsenryokan、温泉、温泉旅馆、wq、wqlg、rokka、六花、lock；
+弦卷游乐园：Tsurumaki_amusement_park、弦卷、trmk、游乐园、yly、tsurumaki；
+吉野家：Yoshinoya、吉野家、ysny、jyj；
+STARRY：STARRY、starry。
+
+使用示例：打工 123 面包房 3、dg123mbf3、dg 123 ymbk。
+
+如果不填写时长，则默认工作时长为3小时，工作结束后需要手动结束工作。
+工资基础为2资金一小时，最多允许3人同时工作。各成员按工作地点和稀有度获得工资加成。在连续工作超过3小时后，工资减半。稀有度为4、5、6的角色分别能获得1.5倍、2倍和3倍的工资加成。
+
+具体工作地点加成如下：
+SPACE中，popipa为1.5倍，其它bangdream乐队均为1.2倍；
+CiRCLE中，所有bangdream乐队均为1.2倍；
+RiNG中，mygo和ave mujica为1.5倍，其它所有bangdream乐队均为1.2倍；
+山吹面包店中，popipa为1.5倍，其他bangdream乐队均为1.2倍；
+宇田川家的拉面馆中，afterglow和roselia为1.5倍，其他bangdream乐队均为1.2倍；
+六花家的温泉旅馆中，RAS为1.5倍，其他bangdream乐队均为1.2倍；
+弦卷游乐园中，hello_happy_world为1.5倍，其他bangdream乐队均为1.2倍；
+吉野家中，toge为1.5倍；
+STARRY中，kessoku band为1.5倍。
+
+'''
+
+xb_text = '''
+使用“下班”或“xb”指令，可以使工作结束的卡牌回归休息状态。
+'''
+
+gzzt_text = '''
+使用“工作状态”或“gzzt”指令可以查看正在工作的卡牌和工作结束但未下班的卡牌。
+'''
+
+kpgzzt_text = '''使用“卡牌工作状态 卡牌id”或“kpgzzt 卡牌id”可以查看特定卡牌的工作状态。
+''' 
+
 help_dict = {'dk':dk_text, '打卡':dk_text, 'qd':dk_text, '签到':dk_text,
              'zm':zm_text, '招募':zm_text,
              '帮助':hp_text, 'help':hp_text,
@@ -99,9 +146,18 @@ help_dict = {'dk':dk_text, '打卡':dk_text, 'qd':dk_text, '签到':dk_text,
              '查卡牌集':ckpj_text, 'ckpj':ckpj_text,
              '出售':cs_text, 'cs':cs_text,
              '资金':zj_text, 'zj':zj_text,
-             'zs':zs_text, '赠送': zs_text}
+             'zs':zs_text, '赠送': zs_text,
+             '打工':dg_text, 'dg':dg_text,
+             '下班':xb_text, 'xb':xb_text,
+             '工作状态':gzzt_text, 'gzzt':gzzt_text, 'gzt':gzzt_text,
+             '卡牌工作状态':kpgzzt_text, 'kpgzzt':kpgzzt_text, 'kgzt':kpgzzt_text}
 
-help_simple_list = [hp_text, dk_text, zm_text, ckp_text, ckpj_text, cs_text, zj_text, zs_text]
+help_simple_list = [hp_text, dk_text, 
+                    zm_text, ckp_text, 
+                    ckpj_text, cs_text, 
+                    zj_text, zs_text, 
+                    dg_text, xb_text, 
+                    gzzt_text, kpgzzt_text]
 
 
 band_dict = {'ppp':'popipa', 'popipa':'popipa',

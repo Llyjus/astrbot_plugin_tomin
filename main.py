@@ -762,7 +762,7 @@ class TominPlugin(Star):
                     if hours is None:
                             hours = 3
                     if card_id and place and hours:
-                        working_input = Working_input(card_id=text.group(1), place=text.group(2), hours=text.group(3))
+                        working_input = Working_input(card_id=text.group(1), place=(text.group(2).lower()), hours=text.group(3))
                         card_id, place, hours = working_input.card_id, working_input.place, working_input.hours
 
 
@@ -783,13 +783,13 @@ class TominPlugin(Star):
                         )
                     else:
                         result_plain = {'return_type':'str',
-                                'content': '输入格式错误！请查询hpgk来找到命令格式。',
+                                'content': '输入格式错误！请查询hpdg来找到命令格式。',
                                 'error': ''}
 
 
                 else:
                     result_plain = {'return_type':'str',
-                              'content': '输入格式错误！请查询hpgk来找到命令格式。',
+                              'content': '输入格式错误！请查询hpdg来找到命令格式。',
                               'error': ''}
 
             if result_plain.get('error'):

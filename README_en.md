@@ -358,6 +358,63 @@ Planned rarity tiers (6 levels) with default probabilities:
      When using a QQ number, you must separate the QQ number and the card ID
      with a space, `c`, or `C`.
 
+   8. Work Command
+
+   `work [card_id] [location] [duration]` or `wk [card_id] [location] [duration]` allows cards to start working.
+
+   - Location keywords are as follows:
+   | Store Name | Target ID | Aliases |
+   |---------|--------|------|
+   | Ramen Shop | wutagawa_laamen | wtgw, wutagawa, ramen, ramen_shop, lm, lmg |
+   | Hot Spring Inn | rokka_onsenryokan | hot_spring, hot_spring_inn, wq, wqlg, rokka, six_flowers, lock |
+   | Amusement Park | Tsurumaki_amusement_park | tsurumaki, trmk, amusement_park, yly, tsurumaki |
+   | Yoshinoya | Yoshinoya | yoshinoya, ysny, jyj |
+   | STARRY | STARRY | starry |
+
+   Examples:
+   
+   `work 123 bakery 3`
+   `wk123bkr3`
+   `wk 123 ymbk`
+
+   - If no duration is specified, the default work duration is 3 hours. After work ends, it needs to be manually concluded.
+
+   - Base wage is 2 funds per hour, with a maximum of 3 cards working simultaneously;
+   Each member receives wage bonuses based on work location and rarity;
+   Wages are halved after working continuously for more than 3 hours.
+   Cards with rarity 4, 5, and 6 receive 1.5x, 2x, and 3x wage bonuses respectively.
+   Specific work location bonuses are as follows:
+
+   | Store Name | popipa | afterglow | roselia | hello_happy_world | pastel_palettes | morfonica | RAS | mygo | ave mujica | toge | kessoku band |
+   |---------|--------|-----------|---------|-------------------|-----------------|-----------|-----|------|------------|------|--------------|
+   | SPACE | 1.5 | 1.2 | 1.2 | 1.2 | 1.2 | 1.2 | 1.2 | 1.2 | 1.2 | - | - |
+   | CiRCLE | 1.2 | 1.2 | 1.2 | 1.2 | 1.2 | 1.2 | 1.2 | 1.2 | 1.2 | - | - |
+   | RiNG | 1.2 | 1.2 | 1.2 | 1.2 | 1.2 | 1.2 | 1.2 | 1.5 | 1.5 | - | - |
+   | Yamabuki_Bakery | 1.5 | 1.2 | 1.2 | 1.2 | 1.2 | 1.2 | 1.2 | 1.2 | 1.2 | - | - |
+   | wutagawa_laamen | 1.2 | 1.5 | 1.5 | 1.2 | 1.2 | 1.2 | 1.2 | 1.2 | 1.2 | - | - |
+   | rokka_onsenryokan | 1.2 | 1.2 | 1.2 | 1.2 | 1.2 | 1.2 | 1.5 | 1.2 | 1.2 | - | - |
+   | Tsurumaki_amusement_park | 1.2 | 1.2 | 1.2 | 1.5 | 1.2 | 1.2 | 1.2 | 1.2 | 1.2 | - | - |
+   | Yoshinoya | - | - | - | - | - | - | - | - | - | 1.5 | - |
+   | STARRY | - | - | - | - | - | - | - | - | - | - | 1.5 |
+
+   9. Off Work Command
+
+   - Command `offwork` or `ow` allows cards that have finished working to return to rest status.
+
+   10. Work Status Command
+
+   - Command `work status`/`wkst` or `wst` allows users to query their currently working and resting cards.
+
+   11. Card Work Status Command
+
+   - Command `card work status [card_id]`/`cdwkst[card_id]` or `cwst[card_id]`
+   allows viewing the work status of a user's specific card ID.
+
+   - Examples:
+
+   `card work status 123`
+   `cwst123`
+
 
 ### Performance System
 
@@ -402,8 +459,9 @@ After completing the basic version, a **roguelike system** and **event system** 
 
 ### Future Development Plan
 - [x] Character expansion and performance feature implementation
-- [ ] Skill system implementation
+- [x] Working system
 - [x] UI enhancement (using images to display gacha results etc.)
+- [ ] performance system
 - [ ] Roguelike system
 - [ ] Event system
 
