@@ -12,7 +12,11 @@ def fake_application_fixture():
     def picture_type(user_id, fund_spent, times, db_path, connect):
         return {'return_type':'html',
               'temp_type':'cards',
-              'content':{'cards': 'card',
+              'content':{'cards': [{"text":[f"角色：test",
+                                            f"稀有度：test",
+                                            f"id：test"
+                                    ],
+                                "picture_key":('test', 'test')}],
                          'title':'卡牌信息',
                          'intro':'这是你查询到的卡牌信息：'},
               'txt':'成功'}

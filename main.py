@@ -911,6 +911,14 @@ class TominPlugin(Star):
                     return
                 else:
                     result = result_plain['content']
+
+
+
+#TODO: 全部停止工作功能，新app链条
+
+
+
+
         except ValidationError as e:
             result = error_message(e)
         except Exception as e:
@@ -1035,6 +1043,14 @@ class TominPlugin(Star):
             yield event.chain_result([node])
         else:
             yield event.plain_result(result)
+
+
+
+
+
+#TODO:工作预设配置指令，查询和使用： new table
+#TODO: 快捷工作指令，直接输入即可快速找到3个稀有度最高的卡牌
+    #  在加成最高的地点工作8小时 
     
 
 

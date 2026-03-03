@@ -132,6 +132,10 @@ xb_text = '''
 使用“下班”或“xb”指令，可以使工作结束的卡牌回归休息状态。
 '''
 
+tzgz_text = '''
+使用“停止工作”或“tzgz”指令可以放弃工资，使正在工作的卡牌回归空闲状态。
+'''
+
 gzzt_text = '''
 使用“工作状态”或“gzzt”指令可以查看正在工作的卡牌和工作结束但未下班的卡牌。
 '''
@@ -150,14 +154,16 @@ help_dict = {'dk':dk_text, '打卡':dk_text, 'qd':dk_text, '签到':dk_text,
              '打工':dg_text, 'dg':dg_text,
              '下班':xb_text, 'xb':xb_text,
              '工作状态':gzzt_text, 'gzzt':gzzt_text, 'gzt':gzzt_text,
-             '卡牌工作状态':kpgzzt_text, 'kpgzzt':kpgzzt_text, 'kgzt':kpgzzt_text}
+             '卡牌工作状态':kpgzzt_text, 'kpgzzt':kpgzzt_text, 'kgzt':kpgzzt_text,
+             '停止工作':tzgz_text, 'tzgz':tzgz_text, "tg":tzgz_text,
+             }
 
 help_simple_list = [hp_text, dk_text, 
                     zm_text, ckp_text, 
                     ckpj_text, cs_text, 
                     zj_text, zs_text, 
                     dg_text, xb_text, 
-                    gzzt_text, kpgzzt_text]
+                    gzzt_text, kpgzzt_text, tzgz_text,]
 
 
 band_dict = {'ppp':'popipa', 'popipa':'popipa',

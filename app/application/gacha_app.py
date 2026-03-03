@@ -56,11 +56,12 @@ def normal_gacha(user_id, fund_spent, times, *, db_path=None, gacha_cls = Gacha,
 乐队：{card_di['o_band']}
 稀有度：{card_di['rarity']}
 '''
-            cards_li.append([f"卡牌id：{card_di['card_id']}",
-                             f"用户id：{card_di['user_id']}",
-                             f"角色：{card_di['character']}",
-                             f"乐队：{card_di['o_band']}",
-                            f"稀有度：{card_di['rarity']}"])
+            cards_li.append({"text":[f"卡牌id：{card_di['card_id']}",
+                                    f"用户id：{card_di['user_id']}",
+                                    f"角色：{card_di['character']}",
+                                    f"乐队：{card_di['o_band']}",
+                                    f"稀有度：{card_di['rarity']}"],
+                             "picture_key":(card_di['character'], card_di['rarity'])})
             
             cards_tu.append(card_tu)
 
@@ -140,11 +141,12 @@ def free_gacha(user_id, *, db_path=None, gacha_cls = Gacha, connect = None):
 乐队：{card_di['o_band']}
 稀有度：{card_di['rarity']}
 '''
-        cards_li.append([f"卡牌id：{card_di['card_id']}",
-                             f"用户id：{card_di['user_id']}",
-                             f"角色：{card_di['character']}",
-                             f"乐队：{card_di['o_band']}",
-                            f"稀有度：{card_di['rarity']}"])
+        cards_li.append({"text":[f"卡牌id：{card_di['card_id']}",
+                                f"用户id：{card_di['user_id']}",
+                                f"角色：{card_di['character']}",
+                                f"乐队：{card_di['o_band']}",
+                                f"稀有度：{card_di['rarity']}"],
+                         "picture_key":(card_di['character'], card_di['rarity'])})
             
         cards_tu.append(card_tu)
 

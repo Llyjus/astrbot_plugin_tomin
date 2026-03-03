@@ -34,7 +34,8 @@ async def test_renderer():
     renderer = Renderer_html_to_png_bytes()
     await renderer.initial()
     html = template_generator('cards', 
-                              {'cards':[[1, 'card1', 'desc1'],],
+                              {'cards':[{"text":[[1, 'card1', 'desc1'],],
+                                "picture_key":('card1', 1)}],
                                 'title':'卡牌信息',
                                 'intro':'这是你查询到的卡牌信息：'})
 
@@ -48,7 +49,8 @@ async def test_renderer():
 
     with raises(Invalid_input) as error1:
         html = template_generator('fake_temp', 
-                                {'cards':[[1, 'card1', 'desc1'],],
+                              {'cards':[{"text":[[1, 'card1', 'desc1'],],
+                                "picture_key":('card1', 1)}],
                                 'title':'卡牌信息',
                                 'intro':'这是你查询到的卡牌信息：'})
 

@@ -3,11 +3,18 @@
     
         
         <div class="item">
-            {% for i in card %}
+            {% for i in card['text'] %}
             <p>
                 {{ i }}
             </p>
             {% endfor %}
+            <div class="char_pic_part">
+
+                {% if card['picture'] %}
+                    <img class="char_pic" src="{{ card['picture'] }}" alt="">
+                {% endif %}
+
+            </div>
         </div>
 
     {% endfor %}

@@ -304,14 +304,14 @@ CHARACTERS = {
         "speed": 93, 
         "resistance": 19,
     },
-    "riki": {
+    "taki": {
         "o_band": "mygo",
         "pos": "drummer",
         "power": 100,
         "speed": 97, 
         "resistance": 16,
     },
-    "laana": {
+    "raana": {
         "o_band": "mygo",
         "pos": "guitar",
         "power": 100,
@@ -333,7 +333,7 @@ CHARACTERS = {
         "speed": 98, 
         "resistance": 15,
     },
-    "otsune": {
+    "hatsune": {
         "o_band": "ave mujica",
         "pos": "bass",
         "power": 100,

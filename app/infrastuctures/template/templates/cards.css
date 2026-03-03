@@ -34,7 +34,7 @@ h1{
     border-radius: 36px;
     flex: 0 0 auto; 
     width: 350px;
-    height: 500px;
+    padding: 40px 20px; 
     place-items: center;
 
 
@@ -46,3 +46,16 @@ h1{
 }
 
 
+
+.char_pic_part{
+    display: flex;
+    justify-content: center;
+    height: 300px;
+    padding-top: 37.5px;
+}
+
+.char_pic{
+    width: 80%;
+    height: 80%;
+    object-fit: contain;
+}

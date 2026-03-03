@@ -19,7 +19,7 @@ def search_card_app(user_id, card_id, *, db_path=None, connect=None):
             raise Card_not_found('没有找到该卡牌！猪...')
 
 
-    cards_li = [[   f"卡牌id：{result['card_id']}",
+    cards_li = {'text':[   f"卡牌id：{result['card_id']}",
                 f"用户id：{result['user_id']}",
                 f"角色：{result['character']}",
                 f"乐队：{result['o_band']}",
@@ -27,7 +27,8 @@ def search_card_app(user_id, card_id, *, db_path=None, connect=None):
                 f"稀有度：{result['rarity']}",
                 f"综合力：{result['power']}",
                 f"速度：{result['speed']}",
-                f"抗性：{result['resistance']}"]]
+                f"抗性：{result['resistance']}"],
+                "picture_key":(result['character'], result['rarity'])}
     card_txt = f'''这是你查询到的卡牌信息：
 卡牌id：{result['card_id']}
 用户id：{result['user_id']}
@@ -63,22 +64,24 @@ def search_cards_app(user_id, *, db_path=None, connect=None):
 
         cards = cst_ser.cards_search_by_user(user_id)
 
-        cards_li = []
+    cards_li = []
 
-        cards_txt = '目前拥有卡牌：\n'
-        for card in cards:
-            cards_txt += '\n'
-            cards_txt += f"角色：{card['character']}\n稀有度：{card['rarity']}\n卡牌id：{card['card_id']}\n"
-            cards_li.append([
-                             f"角色：{card['character']}",
-                             f"稀有度：{card['rarity']}",
-                             f"卡牌id：{card['card_id']}"
-                             ])
+    cards_txt = '目前拥有卡牌：\n'
+    for card in cards:
+        cards_txt += '\n'
+        cards_txt += f"角色：{card['character']}\n稀有度：{card['rarity']}\n卡牌id：{card['card_id']}\n"
+        cards_li.append({   "text":[
+                                f"角色：{card['character']}",
+                                f"稀有度：{card['rarity']}",
+                                f"卡牌id：{card['card_id']}"
+                                ],
+                            "picture_key":(card['character'], card['rarity'])})
     result = {'return_type':'html',
               'temp_type':'cards',
               'content':{'cards':cards_li,
                          'title':'卡牌信息',
-                         'intro':'目前拥有卡牌：'},
+                         'intro':'目前拥有卡牌：',
+                         },
               'txt':cards_txt,
               'user_id': user_id
                          }
@@ -105,10 +108,11 @@ def search_cards_rarity_app(user_id, rarity, *, db_path=None, connect=None):
         for card in result:
             cards_txt += '\n'
             cards_txt += f"角色：{card['character']}\n稀有度：{card['rarity']}\nid：{card['card_id']}\n"
-            cards_li.append([f"角色：{card['character']}",
-                             f"稀有度：{card['rarity']}",
-                             f"id：{card['card_id']}"
-                             ])
+            cards_li.append({"text":[f"角色：{card['character']}",
+                                    f"稀有度：{card['rarity']}",
+                                    f"id：{card['card_id']}"
+                                    ],
+                             "picture_key":(card['character'], card['rarity'])})
         
         result = {'return_type':'html',
                   'temp_type':'cards',
@@ -140,10 +144,11 @@ def search_cards_band_app(user_id, band, *, db_path=None, connect=None):
         for card in result:
             cards_txt += '\n'
             cards_txt += f"角色：{card['character']}\n稀有度：{card['rarity']}\nid：{card['card_id']}\n"
-            cards_li.append([f"角色：{card['character']}",
+            cards_li.append({"text":[f"角色：{card['character']}",
                              f"稀有度：{card['rarity']}",
                              f"id：{card['card_id']}"
-                             ])
+                             ],
+                             "picture_key":(card['character'], card['rarity'])})
             
         result = {'return_type':'html',
                   'temp_type':'cards',
@@ -173,10 +178,11 @@ def search_cards_both_band_rarity(user_id, band, rarity, *, db_path=None, connec
         for card in result:
             cards_txt += '\n'
             cards_txt += f"角色：{card['character']}\n稀有度：{card['rarity']}\nid：{card['card_id']}\n"
-            cards_li.append([f"角色：{card['character']}",
+            cards_li.append({"text":[f"角色：{card['character']}",
                              f"稀有度：{card['rarity']}",
                              f"id：{card['card_id']}"
-                             ])
+                             ],
+                             "picture_key":(card['character'], card['rarity'])})
 
     result = {'return_type':'html',
                   'temp_type':'cards',

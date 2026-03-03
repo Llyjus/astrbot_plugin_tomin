@@ -117,13 +117,13 @@ def user_working_status_app(user_id, *,
 
 
 
-            cards_li.append([f"角色：{card['character']}",
-             f"稀有度：{card['rarity']}",
-             f"id：{card['card_id']}",
-             f"状态：{status_txt}",
-             f"工作地点：{space if work_sign and space else '无'}",
-             f"工资：{card['reward_fund'] if (work_sign and card['reward_fund'] != 0) else '无'}"
-])
+            cards_li.append({"text":[f"角色：{card['character']}",
+                            f"稀有度：{card['rarity']}",
+                            f"id：{card['card_id']}",
+                            f"状态：{status_txt}",
+                            f"工作地点：{space if work_sign and space else '无'}",
+                            f"工资：{card['reward_fund'] if (work_sign and card['reward_fund'] != 0) else '无'}"],
+                             "picture_key":(card['character'], card['rarity'])})
         if not cards_li:
             raise Card_not_found('目前没有卡牌在工作和休息了哦！')
         else:
@@ -182,13 +182,14 @@ def card_working_status_app(user_id, card_id, *, db_path=None, connect=None):
 
 
 
-    card_li.append([f"角色：{card['character']}",
-             f"稀有度：{card['rarity']}",
-             f"id：{card['card_id']}",
-             f"状态：{status_txt}",
-             f"工作地点：{space if work_sign and space else '无'}",
-             f"工资：{card['reward_fund'] if (work_sign and card['reward_fund'] != 0) else '无'}"
-])
+    card_li.append({"text":[f"角色：{card['character']}",
+                            f"稀有度：{card['rarity']}",
+                            f"id：{card['card_id']}",
+                            f"状态：{status_txt}",
+                            f"工作地点：{space if work_sign and space else '无'}",
+                            f"工资：{card['reward_fund'] if (work_sign and card['reward_fund'] != 0) else '无'}"],
+                     "picture_key":(card['character'], card['rarity'])}
+                    )
         
     result = {'return_type':'html',
                   'temp_type':'cards',
@@ -252,9 +253,9 @@ def finish_working_app(user_id, *, db_path=None, connect=None, time_now=None):
         wkg_ser = Working_service(repo)
         finish_result = wkg_ser.finish_working(user_id, current_time=time_now)
 
-    cards = ', '.join(finish_result['cards_finished'])
-    fund_gain = finish_result['wages']
-    fund_total = repo.search_user(user_id)['fund']
+        cards = ', '.join(finish_result['cards_finished'])
+        fund_gain = finish_result['wages']
+        fund_total = repo.search_user(user_id)['fund']
     try:
         result = user_working_status_app(user_id, db_path=db_path, connect=connect, current_time=time_now)
         # Update result( card who finished must be resting so no "no card" branch)

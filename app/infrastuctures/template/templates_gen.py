@@ -1,3 +1,5 @@
+import base64
+
 from pathlib import Path
 from jinja2 import Template
 from app.schemas import  *
@@ -28,11 +30,19 @@ def template_generator(temp:str, content:dict) -> str:
     base_html = loader("base.html")
     base_css  = loader("base.css")
     base = base_html.replace("/* style_base */", base_css)
+        
+    static_link = Path(__file__).resolve().parents[1] / "images"
+
+    def uri(p: Path, mime="image/jpeg") -> str:
+        return "data:%s;base64,%s" % (
+            mime,
+            base64.b64encode(p.read_bytes()).decode("ascii")
+        )
 
 
     # hardcode replace background image with base64
     def background_hardcode_replace(html:str, content:dict):
-        import base64
+
         from pathlib import Path
         '''
         background1_url:str
@@ -41,14 +51,10 @@ def template_generator(temp:str, content:dict) -> str:
         avatar_url:str
         '''
 
-        def uri(p: Path, mime="image/jpeg") -> str:
-            return "data:%s;base64,%s" % (
-                mime,
-                base64.b64encode(p.read_bytes()).decode("ascii")
-            )
+
         
 
-        static_link = Path(__file__).resolve().parents[1] / "images"
+
         user_avatar_link = content.get('avatar_path', )
         bg1 = uri(static_link / "backgrounds/background1.jpg")
         bg2 = uri(static_link / "backgrounds/background2.jpg")
@@ -84,6 +90,16 @@ cards:cards list
 
         card_html = loader("cards.html")
         card_css = loader('cards.css')
+        # assert character's picture for each card
+        for card in content['cards']:
+            character:str = card['picture_key'][0]
+            rarity:str = card['picture_key'][1]
+            pic_path = static_link / "characters" / character / f"{rarity}.png"
+            if pic_path.exists():
+                path = uri(pic_path)
+            else:
+                path = ""
+            card['picture'] = path
         
         # base_href = f'<base href="{base_link}">'
 
