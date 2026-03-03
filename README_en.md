@@ -415,6 +415,9 @@ Planned rarity tiers (6 levels) with default probabilities:
    `card work status 123`
    `cwst123`
 
+   12. Stop Working Command
+      - Use `stop working/tzgz/tg [card id]`can let the card which is working returning to rest status without wages.
+
 
 ### Performance System
 
