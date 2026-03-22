@@ -268,7 +268,7 @@ CHARACTERS = {
         "speed": 103, 
         "resistance": 23,
     },
-    "mask": {
+    "masking": {
         "o_band": "RAS",
         "pos": "drummer",
         "power": 100,

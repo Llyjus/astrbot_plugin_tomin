@@ -173,7 +173,7 @@ class TominPlugin(Star):
             result = str(e)
 
 
-        if self.bot_id and result_plain.get('error_sign'):
+        if self.bot_id and result_plain.get('error_sign') and result_plain['error_sign'] != 1:
             node = Node(uin = self.bot_id, 
                         name = self.bot_name, 
                         content = [Plain(result)])
@@ -240,7 +240,7 @@ class TominPlugin(Star):
             result = str(e)
 
 
-        if self.bot_id and result_plain.get('error_sign'):
+        if self.bot_id and result_plain.get('error_sign') and result_plain['error_sign'] != 1:
             node = Node(uin = self.bot_id, 
                         name = self.bot_name, 
                         content = [Plain(result)])
@@ -309,7 +309,7 @@ class TominPlugin(Star):
             result = str(e)
 
 
-        if self.bot_id and result_plain.get('error_sign'):
+        if self.bot_id and result_plain.get('error_sign') and result_plain['error_sign'] != 1:
             node = Node(uin = self.bot_id, 
                         name = self.bot_name, 
                         content = [Plain(result)])
@@ -434,7 +434,7 @@ class TominPlugin(Star):
             result = str(e)
 
 
-        if self.bot_id and result_plain.get('error_sign'):
+        if self.bot_id and result_plain.get('error_sign') and result_plain['error_sign'] != 1:
             node = Node(uin = self.bot_id, 
                         name = self.bot_name, 
                         content = [Plain(result)])
@@ -491,7 +491,7 @@ class TominPlugin(Star):
             result = str(e)
 
 
-        if self.bot_id and result_plain.get('error_sign'):
+        if self.bot_id and result_plain.get('error_sign') and result_plain['error_sign'] != 1:
             node = Node(uin = self.bot_id, 
                         name = self.bot_name, 
                         content = [Plain(result)])
@@ -564,7 +564,7 @@ class TominPlugin(Star):
             result = str(e)
 
 
-        if self.bot_id and result_plain.get('error_sign'):
+        if self.bot_id and result_plain.get('error_sign') and result_plain['error_sign'] != 1:
             node = Node(uin = self.bot_id, 
                         name = self.bot_name, 
                         content = [Plain(result)])
@@ -636,7 +636,7 @@ class TominPlugin(Star):
         except Exception as e:
             result = str(e)
 
-        if self.bot_id and result_plain.get('error_sign'):
+        if self.bot_id and result_plain.get('error_sign') and result_plain['error_sign'] != 1:
             node = Node(uin = self.bot_id, 
                         name = self.bot_name, 
                         content = [Plain(result)])
@@ -726,7 +726,7 @@ class TominPlugin(Star):
             result = str(e)
 
 
-        if self.bot_id and result_plain.get('error_sign'):
+        if self.bot_id and result_plain.get('error_sign') and result_plain['error_sign'] != 1:
             node = Node(uin = self.bot_id, 
                         name = self.bot_name, 
                         content = [Plain(result)])
@@ -811,7 +811,7 @@ class TominPlugin(Star):
             result = str(e)
 
 
-        if self.bot_id and result_plain.get('error_sign'):
+        if self.bot_id and result_plain.get('error_sign') and result_plain['error_sign'] != 1:
             node = Node(uin = self.bot_id, 
                         name = self.bot_name, 
                         content = [Plain(result)])
@@ -861,7 +861,7 @@ class TominPlugin(Star):
             result = str(e)
 
 
-        if self.bot_id and result_plain.get('error_sign'):
+        if self.bot_id and result_plain.get('error_sign') and result_plain['error_sign'] != 1:
             node = Node(uin = self.bot_id, 
                         name = self.bot_name, 
                         content = [Plain(result)])
@@ -924,7 +924,7 @@ class TominPlugin(Star):
         except Exception as e:
             result = str(e)
 
-        if self.bot_id and result_plain.get('error_sign'):
+        if self.bot_id and result_plain.get('error_sign') and result_plain['error_sign'] != 1:
             node = Node(uin = self.bot_id, 
                         name = self.bot_name, 
                         content = [Plain(result)])
@@ -973,7 +973,7 @@ class TominPlugin(Star):
             result = str(e)
 
 
-        if self.bot_id and result_plain.get('error_sign'):
+        if self.bot_id and result_plain.get('error_sign') and result_plain['error_sign'] != 1:
             node = Node(uin = self.bot_id, 
                         name = self.bot_name, 
                         content = [Plain(result)])
@@ -1035,7 +1035,7 @@ class TominPlugin(Star):
             result = str(e)
 
 
-        if self.bot_id and result_plain.get('error_sign'):
+        if self.bot_id and result_plain.get('error_sign') and result_plain['error_sign'] != 1:
             node = Node(uin = self.bot_id, 
                         name = self.bot_name, 
                         content = [Plain(result)])
@@ -1106,7 +1106,7 @@ class TominPlugin(Star):
             result = str(e)
 
 
-        if self.bot_id and result_plain.get('error_sign'):
+        if self.bot_id and result_plain.get('error_sign') and result_plain['error_sign'] != 1:
             node = Node(uin = self.bot_id, 
                         name = self.bot_name, 
                         content = [Plain(result)])
