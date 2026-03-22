@@ -36,7 +36,7 @@ def test_card_in_out(memory_db_connection):
     # Check the user's fund
     result1 = repo.search_user('test')
 
-    assert result1['fund'] == 0
+    assert result1['fund'] == 90
 
 
     # Check if card in the table 
@@ -74,7 +74,7 @@ def test_card_in_out(memory_db_connection):
     with raises(Not_enough_fund) as error:
 
         card3 = normal_gacha(user_id='test', 
-                        fund_spent=10, times=1, 
+                        fund_spent=1000, times=1, 
                         gacha_cls=Fake_gacha, 
                         connect=memory_db_connection.conn)
 
@@ -86,11 +86,11 @@ def test_card_in_out(memory_db_connection):
                         gacha_cls=Fake_gacha, 
                         connect=memory_db_connection.conn) 
     
-    assert '今日首次打卡成功！+10资金' in result5['txt']
+    assert '今日首次打卡成功！+50资金' in result5['txt']
 
     result6 = repo.search_user('test')
 
-    assert result6['fund'] == 10
+    assert result6['fund'] == 140
 
     #sell card and record slot
     result7 = sell_card_app('test', 1, connect=memory_db_connection.conn)

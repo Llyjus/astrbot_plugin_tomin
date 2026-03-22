@@ -173,8 +173,8 @@ class Sign_in_service(Service):
  
             self.repo.add_sign_in(user_id, date, time_now)
 
-            self.repo.add_fund(user_id, 10)
-            return '今日首次打卡成功！+10资金\n'
+            self.repo.add_fund(user_id, 50)
+            return '今日首次打卡成功！+50资金\n'
         
         # check date
         elif result['date'] == date and result['count'] < 5:

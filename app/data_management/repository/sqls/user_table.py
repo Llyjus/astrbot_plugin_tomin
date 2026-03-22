@@ -1,7 +1,7 @@
 
 USER_INSERT_SQL = '''
             INSERT INTO users(user_id, fund)
-            VALUES(?, 10);
+            VALUES(?, 100);
             '''
 
 USER_CHECK_SQL = '''

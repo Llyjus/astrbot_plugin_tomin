@@ -23,7 +23,7 @@ def test_users_table(memory_db_connection):
     repo.add_user('test')
     result = repo.search_user('test')
 
-    assert result['user_id'] == 'test' and result['fund'] == 10
+    assert result['user_id'] == 'test' and result['fund'] == 100
 
 
 
@@ -33,7 +33,7 @@ def test_users_table(memory_db_connection):
     repo.conn.commit()
     result = repo.search_user('test')
 
-    assert result['fund'] == 30
+    assert result['fund'] == 120
 
 
 
@@ -45,7 +45,7 @@ def test_users_table(memory_db_connection):
 
     # Illegal value
     with raises(Not_enough_fund, match='余额不足') as error2:
-        repo.add_fund('test', -100)
+        repo.add_fund('test', -1000)
 
 
 
@@ -228,7 +228,7 @@ def test_service_and_cards_related_table(memory_db_connection):
     assert result11 == True
 
     with raises(Not_enough_fund) as error4:
-        fund_ser.fund_check(uid1, 100)
+        fund_ser.fund_check(uid1, 1000)
 
 
     # Cleaner
@@ -303,7 +303,7 @@ def test_service_and_cards_related_table(memory_db_connection):
 
     result17 = repo.search_user(uid2)
 
-    assert result17['fund'] == 16
+    assert result17['fund'] == 106
 
     with raises(Card_not_found) as error5:
         car_str_ser.sell_cards_by_rarity(uid2, 3)
