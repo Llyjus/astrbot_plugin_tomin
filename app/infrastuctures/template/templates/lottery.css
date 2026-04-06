@@ -115,6 +115,7 @@ h2 {
   /* 渐变文字 */
   background: linear-gradient(90deg, #fff, #cdb4ff);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 
 

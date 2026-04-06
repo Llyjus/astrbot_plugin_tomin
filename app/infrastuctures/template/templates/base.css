@@ -101,6 +101,7 @@ html, body {
 
   background: linear-gradient(90deg, #464f9c, #6f618a, #7b5cff);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 
 }

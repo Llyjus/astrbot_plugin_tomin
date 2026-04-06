@@ -69,6 +69,7 @@ header{
 
     background: linear-gradient(90deg, #fff, #cdb4ff);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 
     text-shadow: 0 0 12px rgba(180, 140, 255, 0.5);
