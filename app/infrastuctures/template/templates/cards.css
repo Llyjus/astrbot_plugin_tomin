@@ -112,7 +112,7 @@ h1{
     background: linear-gradient(
         180deg,
         rgba(92, 81, 255, 0.493),
-        rgba(255, 255, 255, 0.192)
+        rgba(235, 103, 142, 0.527)
     );
 
     border-radius: 24px;
@@ -122,7 +122,7 @@ h1{
 
     box-shadow: 
         0 10px 30px rgba(0,0,0,0.4),
-        0 0 20px rgba(180,140,255,0.15);
+        0 0 20px rgba(255, 147, 192, 0.616);
 
 
     display: flex;
