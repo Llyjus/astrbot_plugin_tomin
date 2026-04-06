@@ -1,5 +1,5 @@
 :root{
-    font-size: 24px;
+    font-size: 30px;
     font-weight: 700;
     color: rgb(133, 86, 227);
 }
@@ -14,7 +14,7 @@
 html, body {
     margin: 0;
     padding: 0;
-    width: 1400px;
+    width: 1440px;
     overflow-x: hidden;     
     background-color: violet !important;
     word-wrap: break-word;   
@@ -22,7 +22,7 @@ html, body {
 }
 
 #root {
-    width: 1400px;
+    width: 1440px;
     margin: 0;
     padding: 0;
     overflow-x: hidden;  
@@ -48,16 +48,7 @@ html, body {
 
 }
 
-#avatar{
-  margin: 40px auto;
-  display: flex;
-  justify-content: center;
-}
 
-.avatar{
-  width: 30%;
-  border-radius: 18px;
-}
 
 .background{
     display: block;
@@ -68,3 +59,48 @@ html, body {
   background-size: 100% auto;
 } 
 
+
+
+#avatar{
+  margin: 60px auto 30px;
+  display: flex;
+  justify-content: center;
+}
+
+.avatar{
+  width: 30%;
+  border-radius: 18px;
+  border-radius: 20px;
+  object-fit: cover;
+
+  border: 2px solid rgba(180,140,255,0.8);
+  box-shadow: 
+    0 0 20px rgba(180,140,255,0.4),
+    0 10px 30px rgba(0,0,0,0.6);
+}
+
+
+.intro{
+  text-align: center;
+  margin: 40px auto;
+  max-width: 800px;
+
+  color: #694a8d;
+  font-size: 36px;
+  line-height: 1.6;
+  font-weight: 600;
+  
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
+  padding: 20px 30px;
+  border-radius: 16px;
+
+
+  border: 1px solid rgba(255,255,255,0.15);
+
+  background: linear-gradient(90deg, #464f9c, #6f618a, #7b5cff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+}

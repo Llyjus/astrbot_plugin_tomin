@@ -111,21 +111,46 @@ cards:cards list
         card_tpl = Template(html)
         return card_tpl.render(**content)
 
+    def lottery_temp(content:dict):
 
+        lottery_html = loader("lottery.html")
+        lottery_css  = loader("lottery.css")
+        lottery = lottery_html.replace("/* style */", lottery_css)
+    
 
+        number = content['number']
+        user_avatar_link = content.get('avatar_path', )
+        avtr = uri(static_link / "logo/logo.jpg") if not user_avatar_link else uri(Path(user_avatar_link))  
+        background = uri(static_link / f"char_backgrounds/{number}.png")
+        html = lottery.replace("avatar_url", avtr)
+        html = html.replace("background_url", background)
+        lottery_tpl = Template(html)
 
-    temp_dict = {
-        'cards':cards_temp
+        return lottery_tpl.render(**content)
+
+        #TODO
+
+    temp_base_dict = {
+        'cards':cards_temp,
 
     }
-
+    temp_other_dict = {
+        'lottery_temp': lottery_temp,
+    }
+    '''
+    用一个新的base替换，在下面
+    '''
 
     # call renderer
-    if temp not in temp_dict:
+    if temp in temp_base_dict:
+        html = background_hardcode_replace(base, content)
+        html = temp_base_dict[temp](html, content)
+    elif temp in temp_other_dict:
+        '''other templates'''
+        html = temp_other_dict[temp](content)
+    else:
         raise Invalid_input(f'未知的模板类型：{temp}')
 
-    html = background_hardcode_replace(base, content)
-    html = temp_dict[temp](html, content)
 
     return html
 

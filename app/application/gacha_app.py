@@ -1,7 +1,7 @@
 from dataclasses import asdict, astuple
 from time import time
 
-from app.gacha import Gacha
+from app.gacha import Gacha, normal_lottery
 from app.data_management import Repository, connection
 from app.services import *
 from app.maintenance import event_creater
@@ -175,5 +175,43 @@ def free_gacha(user_id, *, db_path=None, gacha_cls = Gacha, connect = None):
         
     return result
 
+def lottery_gacha(user_id, *, db_path=None, gacha = normal_lottery, connect = None):
+    # Use async function for the window of the future 
 
+
+    # Find the available card_id and insert into database
+    if connect == None:
+        connect = connection(path=db_path)
+    with connect as conn:
+
+        repo = Repository(conn)
+        fund_ser = Fund_service(repo)
+        fund_ser.ensure_user_exists(user_id)
+        fund_ser.fund_check(user_id, 30)
+        repo.add_fund(user_id, -30)
+
+        number, reward = map(int, gacha())
+
+        repo.add_fund(user_id, reward)
+
+    if reward == 0:
+        txt = f'你抽到了{number}，没有获得奖励哦，再接再厉吧！'
+    elif reward < 30:
+        txt = f'你抽到了{number}，获得了{reward}资金奖励！'
+    elif reward <= 50:
+        txt = f'你抽到了{number}，获得了{reward}资金奖励！今天运气不错呢！'
+    else:   
+        txt = f'你抽到了{number}，获得了{reward}资金奖励！今天运气爆棚啦！'
+    
+    result = {'return_type':'html',
+              'temp_type':'lottery_temp',
+              'content':{'title':'抽签',
+                          'intro':txt,
+                          'number': number,
+                },
+              'txt':txt,
+              'user_id': user_id,
+              'render_width': 720,}
+
+    return result
 

@@ -26,7 +26,7 @@ import asyncio
 
 class Renderer_html_to_png_bytes:
 
-    def __init__(self, sem:int = 2, width: int = 1400, wait_ms: int = 100, timeout_s: int = 15):
+    def __init__(self, sem:int = 2, width: int = 1440, wait_ms: int = 100, timeout_s: int = 15):
         self.width = width
         self.wait_ms = wait_ms
         # make sure the max concurrency of rendering is sem
@@ -56,19 +56,19 @@ class Renderer_html_to_png_bytes:
             await self._p.stop()
             self._p = None
 
-    async def render(self, html: str) -> bytes:
+    async def render(self, html: str, width: int = None) -> bytes:
         if not self._browser:
             raise RuntimeError("Playwright 还没有启动！请重启bot以初始化。")
         
         async with self.sem:
-            return await asyncio.wait_for(self._single_render(html), timeout=self._timeout_s)
+            return await asyncio.wait_for(self._single_render(html, width), timeout=self._timeout_s)
         
 
 
 
-    async def _single_render(self, html: str) -> bytes:
+    async def _single_render(self, html: str, width: int = None) -> bytes:
         context = await self._browser.new_context(
-            viewport={"width": self.width, "height": 1080},
+            viewport={"width": width or self.width, "height": 1080},
         )
 
         page = await context.new_page()
@@ -84,14 +84,13 @@ class Renderer_html_to_png_bytes:
             )""")
 
             height = await page.evaluate("() => Math.ceil(document.documentElement.scrollHeight)")
-            await page.set_viewport_size({"width": self.width, "height": height})
+            await page.set_viewport_size({"width": width or self.width, "height": height})
 
             # give some extra time for font loading and rendering
             await page.wait_for_timeout(100)
             
-            # 【核心修改】使用 clip 严格限制截图只截取 x=0 到 width=720 的区域，切断所有右侧可能溢出的紫边！
             return await page.screenshot(
-                clip={"x": 0, "y": 0, "width": self.width, "height": height},
+                clip={"x": 0, "y": 0, "width": width or self.width, "height": height},
                 type="png"
             )
         finally:

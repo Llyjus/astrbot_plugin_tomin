@@ -1,4 +1,4 @@
-header{
+/* header{
     padding-top: 40px;
     font-size: 36px;
     color: rgb(156, 154, 255);
@@ -58,4 +58,95 @@ h1{
     width: 80%;
     height: 80%;
     object-fit: contain;
+} */
+
+
+header{
+    padding: 40px 40px 0;
+    font-size: 40px;
+    font-weight: 800;
+
+
+    background: linear-gradient(90deg, #fff, #cdb4ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    text-shadow: 0 0 12px rgba(180, 140, 255, 0.5);
+}
+
+h1{
+    margin: 0;
+}
+
+
+.intro{
+    text-align: center;
+    margin: 40px 0 20px;
+    color: #fff;
+    font-weight: 600;
+    font-size: 26px;
+
+    text-shadow: 0 0 8px rgba(255,255,255,0.2);
+}
+
+
+.content{
+  display: flex;
+  justify-content: center; 
+  flex-wrap: wrap;
+  gap: 24px;
+  padding: 40px;
+}
+
+
+.item{
+    width: 320px;
+    padding: 30px 20px;
+
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+
+    background: linear-gradient(
+        180deg,
+        rgba(92, 81, 255, 0.493),
+        rgba(255, 255, 255, 0.192)
+    );
+
+    border-radius: 24px;
+
+    border: 1px solid rgba(255,255,255,0.1);
+
+
+    box-shadow: 
+        0 10px 30px rgba(0,0,0,0.4),
+        0 0 20px rgba(180,140,255,0.15);
+
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+
+
+.char_pic_part{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 260px;
+    width: 100%;
+}
+
+
+.char_pic{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+
+    filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
 }

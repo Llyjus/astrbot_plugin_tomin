@@ -15,6 +15,7 @@ Tomin指令列表：
     '下班'/'xb'
     '工作状态'/'gzzt'/'gzt'
     '卡牌工作状态'/'kpgzzt'/'kgzt'
+    '抽签'/'cq'
     本机器人支持不使用空格分隔指令和参数；
     输入‘帮助 [指令名称]’可查看对应指令的使用说明。例如：
         帮助 zm
@@ -143,6 +144,9 @@ gzzt_text = '''
 kpgzzt_text = '''使用“卡牌工作状态 卡牌id”或“kpgzzt 卡牌id”可以查看特定卡牌的工作状态。
 ''' 
 
+cq_text = '''使用“抽签”或“cq”指令可以使用30资金抽签，获得随机资金。
+'''
+
 help_dict = {'dk':dk_text, '打卡':dk_text, 'qd':dk_text, '签到':dk_text,
              'zm':zm_text, '招募':zm_text,
              '帮助':hp_text, 'help':hp_text,
@@ -156,6 +160,7 @@ help_dict = {'dk':dk_text, '打卡':dk_text, 'qd':dk_text, '签到':dk_text,
              '工作状态':gzzt_text, 'gzzt':gzzt_text, 'gzt':gzzt_text,
              '卡牌工作状态':kpgzzt_text, 'kpgzzt':kpgzzt_text, 'kgzt':kpgzzt_text,
              '停止工作':tzgz_text, 'tzgz':tzgz_text, "tg":tzgz_text,
+             '抽签':cq_text, 'cq':cq_text,
              }
 
 help_simple_list = [hp_text, dk_text, 
@@ -163,7 +168,7 @@ help_simple_list = [hp_text, dk_text,
                     ckpj_text, cs_text, 
                     zj_text, zs_text, 
                     dg_text, xb_text, 
-                    gzzt_text, kpgzzt_text, tzgz_text,]
+                    gzzt_text, kpgzzt_text, tzgz_text,cq_text]
 
 
 band_dict = {'ppp':'popipa', 'popipa':'popipa',

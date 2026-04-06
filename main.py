@@ -21,7 +21,7 @@ from app import *
 
 
 
-@register("Tomin - 少女乐队游戏", "Llyjus", "一个少女乐队游戏插件，实现抽卡、演出等功能。 ", "0.3.1")
+@register("Tomin - 少女乐队游戏", "Llyjus", "一个少女乐队游戏插件，实现抽卡、演出等功能。 ", "0.4.0")
 class TominPlugin(Star):
     def __init__(self, context: Context):
         super().__init__(context)
@@ -1052,6 +1052,57 @@ class TominPlugin(Star):
 #TODO: 快捷工作指令，直接输入即可快速找到3个稀有度最高的卡牌
     #  在加成最高的地点工作8小时 
     
+
+
+    @filter.command('抽签', alias={'cq'})
+    async def lottery(self, event: AstrMessageEvent) ->AsyncGenerator[str, None]:
+        """抽签指令"""
+        result_plain = {}
+        try:
+            self.cleaner.cleaning_check()
+
+            message_id = event.message_obj.message_id
+            user_id = event.get_sender_id()
+            user_id = str(user_id)
+
+            result_plain = await app_inter(
+                "lottery_gacha",
+                {"user_id": user_id},
+                renderer=self.renderer,
+                message_id=message_id,
+                db_path=self.data_path,
+                avatar_path=self.avatar_path,
+                platform=self.platform,
+                request_return_type=self.return_type,
+            )
+
+            if result_plain.get('error'):
+                logger.error(result_plain['error'])
+            if result_plain.get('return_type') == 'png':
+                try:
+                    path = self.picture_path / f"{message_id}.png"
+                    path.write_bytes(result_plain['content'])
+                    yield event.image_result(str(path))
+                finally:
+                    path.unlink(missing_ok=True)
+                return
+            else:
+                result = result_plain['content']
+
+        except ValidationError as e:
+            result = error_message(e)
+        except Exception as e:
+            result = str(e)
+
+
+        if self.bot_id and result_plain.get('error_sign') and result_plain['error_sign'] != 1:
+            node = Node(uin = self.bot_id, 
+                        name = self.bot_name, 
+                        content = [Plain(result)])
+            
+            yield event.chain_result([node])
+        else:
+            yield event.plain_result(result)
 
 
     @filter.permission_type(filter.PermissionType.ADMIN)

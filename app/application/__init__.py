@@ -3,7 +3,7 @@ from app.application.funds_app import *
 from app.application.cards_app import *
 from app.application.working_app import *
 
-__all__ = ['normal_gacha', 'free_gacha',
+__all__ = ['normal_gacha', 'free_gacha', 'lottery_gacha',
            
            'funds_giving',
 

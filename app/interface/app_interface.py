@@ -23,6 +23,7 @@ app_dict = {
     'user_working_status_app': user_working_status_app,
     'stop_working_app': stop_working_app,
     'finish_working_app': finish_working_app,
+    'lottery_gacha': lottery_gacha,
 
 }
 
@@ -83,7 +84,10 @@ async def app_inter(function_name,
                         #convert to image
                         html = template_generator(result['temp_type'], result['content'])
 
-                        img = await renderer.render(html=html)
+                        if result.get('render_width', ):
+                            img = await renderer.render(html=html, width=result['render_width'])
+                        else:
+                            img = await renderer.render(html=html)
 
                         result = {'return_type': 'png', 
                                 'content': img,

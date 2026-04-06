@@ -1,7 +1,7 @@
 name: astrbot_plugin_tomin
 display_name: Tomin - 少女乐队游戏
 desc: 一个少女乐队休闲游戏插件。 
-version: v0.3.0
+version: v0.4.0
 author: Llyjus 
 repo: https://github.com/Llyjus/astrbot_plugin_tomin
 license: MIT

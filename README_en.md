@@ -418,6 +418,9 @@ Planned rarity tiers (6 levels) with default probabilities:
    12. Stop Working Command
       - Use `stop working/tzgz/tg [card id]`can let the card which is working returning to rest status without wages.
 
+   13. Lottery Command  
+      - Use the `lottery` or `cq` command to spend 30 funds on a lottery draw and receive a random amount of funds.
+
 
 ### Performance System
 
@@ -570,7 +573,7 @@ After completing the basic version, a **roguelike system** and **event system** 
 > Note  
 > The system architecture, business rules, and all implementations of this project were designed and developed by the author.  
 > Parts of this README were refined with the assistance of AI for wording and formatting, based strictly on the existing design and actual implementation of the project.  
-> AI was only used as a documentation and language polishing tool, and was not involved in system design or feature implementation.
+> AI was only used as a documentation, language polishing tool and css improvement, and was not involved in system design or feature implementation.
 
 
 

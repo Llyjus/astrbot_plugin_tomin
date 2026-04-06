@@ -1,6 +1,6 @@
 from pytest import raises
 
-from app.application import start_working_app, user_working_status_app, stop_working_app, card_working_status_app, finish_working_app
+from app.application import start_working_app, user_working_status_app, stop_working_app, card_working_status_app, finish_working_app, lottery_gacha
 from app.data_management import Repository
 from app.schemas.errors import *
 
@@ -101,3 +101,26 @@ def test_working_app(memory_db_connection: Repository):
                       hours=1,
                       connect=memory_db_connection.conn,
                       time_now=20000)
+        
+
+def test_lottery(memory_db_connection: Repository):
+    repo = memory_db_connection
+    user = "test_user"
+
+    repo.add_user(user)
+
+    # mock gacha
+    def fake_gacha():
+        return "1", "50"
+
+
+    result = lottery_gacha(
+        user_id=user,
+        connect=repo.conn,
+        gacha=fake_gacha
+    )
+    assert result["content"]["number"] == 1
+    assert "获得了50资金" in result["content"]["intro"]
+    
+    user_info = repo.search_user(user)
+    assert user_info['fund'] == 120
