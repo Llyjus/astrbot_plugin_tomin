@@ -100,7 +100,9 @@ h1{
 }
 
 
-.item{
+
+
+.rarity_1{
     width: 320px;
     padding: 30px 20px;
 
@@ -108,14 +110,13 @@ h1{
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
 
+    border-radius: 24px;
 
     background: linear-gradient(
         180deg,
-        rgba(92, 81, 255, 0.493),
-        rgba(235, 103, 142, 0.527)
+        rgba(92, 81, 255, 0.5),
+        rgba(173, 90, 228, 0.5)
     );
-
-    border-radius: 24px;
 
     border: 1px solid rgba(255,255,255,0.1);
 
@@ -133,15 +134,171 @@ h1{
 }
 
 
+.rarity_2{
+    width: 320px;
+    padding: 30px 20px;
 
-.char_pic_part{
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    border-radius: 24px;
+
+    background: linear-gradient(
+        180deg,
+        rgba(92, 81, 255, 0.5),
+        rgba(173, 90, 228, 0.5),
+        rgba(212, 90, 228, 0.5),
+        rgba(235, 103, 142, 0.5)
+    );
+
+    border: 1px solid rgba(255,255,255,0.1);
+
+
+    box-shadow: 
+        0 10px 30px rgba(0,0,0,0.4),
+        0 0 20px rgba(255, 147, 192, 0.616);
+
+
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
 
-    height: 260px;
-    width: 100%;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+
+
+.rarity_3{
+    width: 320px;
+    padding: 30px 20px;
+
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    border-radius: 24px;
+
+    background: linear-gradient(
+        180deg,
+        rgba(92, 81, 255, 0.5),
+        rgba(235, 103, 142, 0.5)
+    );
+
+    border: 1px solid rgba(255,255,255,0.1);
+
+
+    box-shadow: 
+        0 10px 30px rgba(0,0,0,0.4),
+        0 0 20px rgba(255, 147, 192, 0.616);
+
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+
+.rarity_4{
+    width: 320px;
+    padding: 30px 20px;
+
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    border-radius: 24px;
+
+    background: linear-gradient(
+        180deg,
+        rgba(92, 81, 255, 0.5),
+        rgba(209, 103, 235, 0.5),
+        rgba(255, 73, 97, 0.5)
+    );
+
+    border: 1px solid rgba(255,255,255,0.1);
+
+
+    box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.4),
+        0 0 20px rgba(255, 147, 192, 0.616);
+
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+
+.rarity_5{
+    width: 320px;
+    padding: 30px 20px;
+
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    border-radius: 24px;
+
+    background: linear-gradient(
+        180deg,
+        rgba(92, 81, 255, 0.5),
+        rgba(235, 103, 142, 0.5),
+        rgba(255, 73, 97, 0.5),
+        rgba(253, 38, 67, 0.5)
+    );
+
+    border: 1px solid rgba(255,255,255,0.1);
+
+
+    box-shadow: 
+        0 10px 30px rgba(0,0,0,0.4),
+        0 0 20px rgba(255, 147, 192, 0.616);
+
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+
+.rarity_6{
+    width: 320px;
+    padding: 30px 20px;
+
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    border-radius: 24px;
+
+    background: linear-gradient(
+        180deg,
+        rgba(199, 102, 255, 0.5),
+        rgba(240, 66, 118, 0.5),
+        rgba(255, 0, 34, 0.5)
+    );
+
+    border: 1px solid rgba(255,255,255,0.1);
+
+
+    box-shadow: 
+        0 10px 30px rgba(0,0,0,0.4),
+        0 0 20px rgba(255, 0, 0, 0.719);
+
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
 
 
 .char_pic{

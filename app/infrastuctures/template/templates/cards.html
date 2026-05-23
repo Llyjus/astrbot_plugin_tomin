@@ -1,21 +1,19 @@
-    <div class="content">
-    {% for card in cards %}
-    
-        
-        <div class="item">
-            {% for i in card['text'] %}
-            <p>
-                {{ i }}
-            </p>
-            {% endfor %}
-            <div class="char_pic_part">
+<div class="content">
+{% for card in cards %}
 
+    <div class="rarity_{{ card['picture_key'][1] }}">
+
+            {% for i in card['text'] %}
+                <p>{{ i }}</p>
+            {% endfor %}
+
+            <div class="char_pic_part">
                 {% if card['picture'] %}
                     <img class="char_pic" src="{{ card['picture'] }}" alt="">
                 {% endif %}
 
-            </div>
         </div>
-
-    {% endfor %}
     </div>
+
+{% endfor %}
+</div>
